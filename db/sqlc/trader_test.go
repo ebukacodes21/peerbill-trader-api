@@ -32,6 +32,7 @@ func createRandomTrader(t *testing.T) Trader {
 
 	trader, err := testQueries.CreateTrader(context.Background(), arg)
 	require.NoError(t, err)
+	require.NotEmpty(t, trader)
 
 	return trader
 }

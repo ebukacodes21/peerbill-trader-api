@@ -2,6 +2,7 @@ package utils
 
 import (
 	"fmt"
+	"math"
 	"math/rand"
 	"strings"
 	"time"
@@ -44,12 +45,20 @@ func RandomOwner() string {
 	return RandomString(6)
 }
 
-func RandomAmount() int64 {
-	return RandomInt(0, 1000)
+func RandomFloat(min, max float64, precision int) float64 {
+	factor := math.Pow(10, float64(precision))
+	randValue := min + randSource.Float64()*(max-min)
+	return math.Round(randValue*factor) / factor
 }
 
-func RandomCurrency() string {
-	currencies := []string{"EUR", "NGN", "USD", "CAD"}
+func RandomFiat() string {
+	currencies := []string{"GBP", "NGN", "USD", "CAD", "AUD"}
+	n := len(currencies)
+	return currencies[rand.Intn(n)]
+}
+
+func RandomCrypto() string {
+	currencies := []string{"BTC", "ETH", "BNB", "USDT", "USDC"}
 	n := len(currencies)
 	return currencies[rand.Intn(n)]
 }
