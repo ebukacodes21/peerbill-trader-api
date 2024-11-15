@@ -15,8 +15,8 @@ type Repository struct {
 	db *sql.DB
 }
 
-func NewRepository(db *sql.DB) Repository {
-	return Repository{db: db, Queries: New(db)}
+func NewRepository(db *sql.DB) DatabaseContract {
+	return &Repository{db: db, Queries: New(db)}
 }
 
 // possible transaction

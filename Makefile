@@ -15,4 +15,7 @@ migrateup:
 migratedown:
 	docker run -it --rm --network host --volume ./db:/db migrate/migrate:v4.17.0 -path=/db/migrations -database "$(DB_SOURCE)" -verbose down
 
-.PHONY: start generate init migrateup migratedown
+mock:
+	mockgen -package mockdb -destination db/mock/repository.go peerbill-trader-server/db/sqlc DatabaseContract
+
+.PHONY: start generate init migrateup migratedown mock

@@ -13,9 +13,9 @@ import (
 type TraderRequest struct {
 	FirstName string `db:"first_name" json:"first_name" binding:"required"`
 	LastName  string `db:"last_name" json:"last_name" binding:"required"`
-	Username  string `db:"username" json:"username" binding:"required"`
+	Username  string `db:"username" json:"username" binding:"required,alphanum"`
 	Password  string `db:"password" json:"password" binding:"required"`
-	Email     string `db:"email" json:"email" binding:"required"`
+	Email     string `db:"email" json:"email" binding:"required,email"`
 	Country   string `db:"country" json:"country" binding:"required"`
 	Phone     string `db:"phone" json:"phone" binding:"required"`
 }

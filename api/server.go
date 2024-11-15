@@ -8,12 +8,12 @@ import (
 )
 
 type Server struct {
-	repository db.Repository
+	repository db.DatabaseContract
 	config     utils.Config
 	router     *gin.Engine
 }
 
-func NewServer(config utils.Config, r db.Repository) (*Server, error) {
+func NewServer(config utils.Config, r db.DatabaseContract) (*Server, error) {
 	server := &Server{config: config, repository: r}
 
 	server.setupRouter()
