@@ -18,8 +18,8 @@ CREATE TABLE "trade_pairs" (
   "trader_id" bigint NOT NULL,
   "base_asset" varchar NOT NULL,
   "quote_asset" varchar NOT NULL,
-  "buy_rate" decimal(18,8) NOT NULL,
-  "sell_rate" decimal(18,8) NOT NULL,
+  "buy_rate" double precision NOT NULL,
+  "sell_rate" double precision NOT NULL,
   "created_at" timestamptz NOT NULL DEFAULT (now())
 );
 

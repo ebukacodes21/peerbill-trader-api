@@ -14,8 +14,8 @@ type TradePair struct {
 	TraderID   int64     `db:"trader_id" json:"trader_id"`
 	BaseAsset  string    `db:"base_asset" json:"base_asset"`
 	QuoteAsset string    `db:"quote_asset" json:"quote_asset"`
-	BuyRate    string    `db:"buy_rate" json:"buy_rate"`
-	SellRate   string    `db:"sell_rate" json:"sell_rate"`
+	BuyRate    float64   `db:"buy_rate" json:"buy_rate"`
+	SellRate   float64   `db:"sell_rate" json:"sell_rate"`
 	CreatedAt  time.Time `db:"created_at" json:"created_at"`
 }
 
