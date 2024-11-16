@@ -15,7 +15,7 @@ INSERT INTO traders (
 ) VALUES (
   $1, $2, $3, $4, $5, $6, $7
 )
-RETURNING id, first_name, last_name, username, password, email, country, phone, status, role, profile_pic, created_at
+RETURNING id, first_name, last_name, username, password, email, country, phone, role, profile_pic, created_at
 `
 
 type CreateTraderParams struct {
@@ -48,7 +48,6 @@ func (q *Queries) CreateTrader(ctx context.Context, arg CreateTraderParams) (Tra
 		&i.Email,
 		&i.Country,
 		&i.Phone,
-		&i.Status,
 		&i.Role,
 		&i.ProfilePic,
 		&i.CreatedAt,

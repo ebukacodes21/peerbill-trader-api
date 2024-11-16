@@ -7,9 +7,12 @@ import (
 )
 
 type Config struct {
-	ServerAddr string `mapstructure:"SERVER_ADDR"`
-	DBDriver   string `mapstructure:"DB_DRIVER"`
-	DBSource   string `mapstructure:"DB_SOURCE"`
+	ServerAddr    string `mapstructure:"SERVER_ADDR"`
+	DBDriver      string `mapstructure:"DB_DRIVER"`
+	DBSource      string `mapstructure:"DB_SOURCE"`
+	EmailSender   string `mapstructure:"EMAIL_SENDER"`
+	EmailAddress  string `mapstructure:"EMAIL_SENDER_ADDRESS"`
+	EmailPassword string `mapstructure:"EMAIL_SENDER_PASSWORD"`
 }
 
 func LoadConfig(pathname string) (config Config, err error) {

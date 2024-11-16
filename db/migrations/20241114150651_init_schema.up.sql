@@ -7,7 +7,6 @@ CREATE TABLE "traders" (
   "email" varchar UNIQUE NOT NULL,
   "country" varchar NOT NULL,
   "phone" varchar UNIQUE NOT NULL,
-  "status" varchar NOT NULL DEFAULT 'disabled',
   "role" varchar NOT NULL DEFAULT 'user',
   "profile_pic" varchar,
   "created_at" timestamptz NOT NULL DEFAULT (now())

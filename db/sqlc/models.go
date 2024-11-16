@@ -28,7 +28,6 @@ type Trader struct {
 	Email      string         `db:"email" json:"email"`
 	Country    string         `db:"country" json:"country"`
 	Phone      string         `db:"phone" json:"phone"`
-	Status     string         `db:"status" json:"status"`
 	Role       string         `db:"role" json:"role"`
 	ProfilePic sql.NullString `db:"profile_pic" json:"profile_pic"`
 	CreatedAt  time.Time      `db:"created_at" json:"created_at"`
