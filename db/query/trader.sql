@@ -5,3 +5,8 @@ INSERT INTO traders (
   $1, $2, $3, $4, $5, $6, $7
 )
 RETURNING *;
+
+-- name: GetTrader :one
+SELECT * FROM traders 
+WHERE username = $1
+LIMIT 1;

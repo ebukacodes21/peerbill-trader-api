@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package pb;
+
+import "rpc_create_trader.proto";
+import "rpc_login_trader.proto";
+
+option go_package = "peerbill-trader-server/pb";
+
+service PeerBillTrader {
+    rpc CreateTrader (CreateTraderRequest) returns (CreateTraderResponse) {}
+    rpc LoginTrader (LoginTraderRequest) returns (LoginTraderResponse) {}
+}

@@ -11,6 +11,8 @@ import (
 type Querier interface {
 	CreateTradePair(ctx context.Context, arg CreateTradePairParams) (TradePair, error)
 	CreateTrader(ctx context.Context, arg CreateTraderParams) (Trader, error)
+	CreateVerifyEmail(ctx context.Context, arg CreateVerifyEmailParams) (VerifyEmail, error)
+	GetTrader(ctx context.Context, username string) (Trader, error)
 }
 
 var _ Querier = (*Queries)(nil)
