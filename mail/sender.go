@@ -45,7 +45,7 @@ func (gs *GmailSender) SendMail(subject, content string, to, cc, bcc, attachFile
 	auth := smtp.PlainAuth("", gs.fromEmailAddress, gs.fromEmailPassword, smtpAuthAddr)
 
 	// Dial the SMTP server directly using SSL on port 465
-	conn, err := tls.Dial("tcp", smtpServerAddr, &tls.Config{InsecureSkipVerify: true}) // Skipping certificate verification in test
+	conn, err := tls.Dial("tcp", smtpServerAddr, &tls.Config{InsecureSkipVerify: true})
 	if err != nil {
 		return fmt.Errorf("failed to connect to SMTP server: %v", err)
 	}

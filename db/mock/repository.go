@@ -64,3 +64,33 @@ func (mr *MockDatabaseContractMockRecorder) CreateTrader(arg0, arg1 interface{})
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateTrader", reflect.TypeOf((*MockDatabaseContract)(nil).CreateTrader), arg0, arg1)
 }
+
+// CreateVerifyEmail mocks base method.
+func (m *MockDatabaseContract) CreateVerifyEmail(arg0 context.Context, arg1 db.CreateVerifyEmailParams) (db.VerifyEmail, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateVerifyEmail", arg0, arg1)
+	ret0, _ := ret[0].(db.VerifyEmail)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateVerifyEmail indicates an expected call of CreateVerifyEmail.
+func (mr *MockDatabaseContractMockRecorder) CreateVerifyEmail(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateVerifyEmail", reflect.TypeOf((*MockDatabaseContract)(nil).CreateVerifyEmail), arg0, arg1)
+}
+
+// GetTrader mocks base method.
+func (m *MockDatabaseContract) GetTrader(arg0 context.Context, arg1 string) (db.Trader, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetTrader", arg0, arg1)
+	ret0, _ := ret[0].(db.Trader)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetTrader indicates an expected call of GetTrader.
+func (mr *MockDatabaseContractMockRecorder) GetTrader(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTrader", reflect.TypeOf((*MockDatabaseContract)(nil).GetTrader), arg0, arg1)
+}

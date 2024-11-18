@@ -15,7 +15,7 @@ INSERT INTO traders (
 ) VALUES (
   $1, $2, $3, $4, $5, $6, $7
 )
-RETURNING id, first_name, last_name, username, password, email, country, phone, role, profile_pic, created_at
+RETURNING id, first_name, last_name, username, password, email, country, phone, role, profile_pic, created_at, "isVerified"
 `
 
 type CreateTraderParams struct {
@@ -51,6 +51,33 @@ func (q *Queries) CreateTrader(ctx context.Context, arg CreateTraderParams) (Tra
 		&i.Role,
 		&i.ProfilePic,
 		&i.CreatedAt,
+		&i.IsVerified,
+	)
+	return i, err
+}
+
+const getTrader = `-- name: GetTrader :one
+SELECT id, first_name, last_name, username, password, email, country, phone, role, profile_pic, created_at, "isVerified" FROM traders 
+WHERE username = $1
+LIMIT 1
+`
+
+func (q *Queries) GetTrader(ctx context.Context, username string) (Trader, error) {
+	row := q.db.QueryRowContext(ctx, getTrader, username)
+	var i Trader
+	err := row.Scan(
+		&i.ID,
+		&i.FirstName,
+		&i.LastName,
+		&i.Username,
+		&i.Password,
+		&i.Email,
+		&i.Country,
+		&i.Phone,
+		&i.Role,
+		&i.ProfilePic,
+		&i.CreatedAt,
+		&i.IsVerified,
 	)
 	return i, err
 }

@@ -31,4 +31,15 @@ type Trader struct {
 	Role       string         `db:"role" json:"role"`
 	ProfilePic sql.NullString `db:"profile_pic" json:"profile_pic"`
 	CreatedAt  time.Time      `db:"created_at" json:"created_at"`
+	IsVerified bool           `db:"isVerified" json:"isVerified"`
+}
+
+type VerifyEmail struct {
+	ID         int64     `db:"id" json:"id"`
+	Username   string    `db:"username" json:"username"`
+	Email      string    `db:"email" json:"email"`
+	SecretCode string    `db:"secret_code" json:"secret_code"`
+	IsUsed     bool      `db:"is_used" json:"is_used"`
+	CreatedAt  time.Time `db:"created_at" json:"created_at"`
+	ExpiredAt  time.Time `db:"expired_at" json:"expired_at"`
 }

@@ -45,13 +45,13 @@ func newTraderResponse(trader db.Trader) TraderResponse {
 func (s *Server) RegisterTrader(ctx *gin.Context) {
 	var traderReq TraderRequest
 	if err := ctx.ShouldBindJSON(&traderReq); err != nil {
-		ctx.JSON(http.StatusBadRequest, err)
+		ctx.JSON(http.StatusBadRequest, errorRes(err))
 		return
 	}
 
 	hash, err := utils.HashPassword(traderReq.Password)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, err)
+		ctx.JSON(http.StatusBadRequest, errorRes(err))
 		return
 	}
 
