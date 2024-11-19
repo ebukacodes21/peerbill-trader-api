@@ -34,7 +34,16 @@ proto:
 	rm -f pb/*.go
 	protoc --proto_path=proto --go_out=pb --go_opt=paths=source_relative \
 	--go-grpc_out=pb --go-grpc_opt=paths=source_relative \
+	--grpc-gateway_out=pb --grpc-gateway_opt=paths=source_relative \
 	proto/*.proto
 
+evans:
+	docker run --rm -it -v "/Users/george/workspace/peerbill-trader-server:/mount:ro" \
+    ghcr.io/ktr0731/evans:latest \
+    --path /mount/proto/ \
+    --proto peerbill-trader.proto \
+    --host host.docker.internal \
+    --port 9092 \
+    repl
 
-.PHONY: start generate init migrateup migratedown mock test migrateup1 migratedown1 force proto
+.PHONY: start generate init migrateup migratedown mock test migrateup1 migratedown1 force proto evans

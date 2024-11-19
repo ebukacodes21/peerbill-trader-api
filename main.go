@@ -1,9 +1,11 @@
 package main
 
 import (
+	"context"
 	"database/sql"
 	"log"
 	"net"
+	"net/http"
 
 	_ "github.com/lib/pq"
 
@@ -14,6 +16,7 @@ import (
 	"peerbill-trader-server/pb"
 	"peerbill-trader-server/utils"
 
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
@@ -30,8 +33,38 @@ func main() {
 	}
 
 	repository := db.NewRepository(conn)
+	go runGatewayServer(config, repository)
 	runGrpcServer(config, repository)
 
+}
+
+func runGatewayServer(config utils.Config, repository db.DatabaseContract) {
+	server, err := gapi.NewServer(config, repository)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	grpcMux := runtime.NewServeMux()
+	err = pb.RegisterPeerBillTraderHandlerServer(ctx, grpcMux, server)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// re route client request to the grpc gateway
+	httpMux := http.NewServeMux()
+	httpMux.Handle("/", grpcMux)
+
+	listener, err := net.Listen("tcp", config.HTTPServerAddr)
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Print("listening...", config.HTTPServerAddr)
+	err = http.Serve(listener, httpMux)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func runGrpcServer(config utils.Config, repository db.DatabaseContract) {
@@ -48,7 +81,7 @@ func runGrpcServer(config utils.Config, repository db.DatabaseContract) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Print("listening...")
+	log.Print("listening...", config.GRPCServerAddr)
 	err = grpcServer.Serve(listener)
 	if err != nil {
 		log.Fatal(err)
