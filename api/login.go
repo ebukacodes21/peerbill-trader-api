@@ -3,10 +3,13 @@ package api
 import (
 	"database/sql"
 	"net/http"
+	"time"
 
+	db "peerbill-trader-server/db/sqlc"
 	"peerbill-trader-server/utils"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 type loginUserRequest struct {
@@ -15,8 +18,12 @@ type loginUserRequest struct {
 }
 
 type loginUserResponse struct {
-	AccessToken string         `db:"access_token" json:"access_token"`
-	Trader      TraderResponse `db:"trader" json:"trader"`
+	SessionId              uuid.UUID      `json:"session_id"`
+	AccessToken            string         ` json:"access_token"`
+	AccessTokenExpiration  time.Time      ` json:"access_token_expiration"`
+	RefreshToken           string         `json:"refresh_token"`
+	RefreshTokenExpiration time.Time      ` json:"refresh_token_expiration"`
+	Trader                 TraderResponse `db:"trader" json:"trader"`
 }
 
 func (s *Server) LoginTrader(ctx *gin.Context) {
@@ -42,15 +49,39 @@ func (s *Server) LoginTrader(ctx *gin.Context) {
 		return
 	}
 
-	accessToken, err := s.token.CreateToken(trader.Username, s.config.TokenAccess)
+	accessToken, accessPayload, err := s.token.CreateToken(trader.Username, s.config.TokenAccess)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorRes(err))
+		return
+	}
+
+	refreshToken, refreshPayload, err := s.token.CreateToken(trader.Username, s.config.RefreshAccess)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorRes(err))
+		return
+	}
+
+	session, err := s.repository.CreateSession(ctx, db.CreateSessionParams{
+		ID:           refreshPayload.ID,
+		Username:     trader.Username,
+		RefreshToken: refreshToken,
+		UserAgent:    ctx.Request.UserAgent(),
+		ClientIp:     ctx.ClientIP(),
+		IsBlocked:    false,
+		ExpiredAt:    refreshPayload.ExpiredAt,
+	})
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorRes(err))
 		return
 	}
 
 	resp := loginUserResponse{
-		AccessToken: accessToken,
-		Trader:      newTraderResponse(trader),
+		SessionId:              session.ID,
+		AccessToken:            accessToken,
+		AccessTokenExpiration:  accessPayload.ExpiredAt,
+		RefreshToken:           refreshToken,
+		RefreshTokenExpiration: refreshPayload.ExpiredAt,
+		Trader:                 newTraderResponse(trader),
 	}
 
 	ctx.JSON(http.StatusOK, resp)

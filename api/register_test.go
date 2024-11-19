@@ -181,9 +181,9 @@ func TestCreateTrader(t *testing.T) {
 			tc.buildStubs(repository)
 
 			config := utils.Config{
-				ServerAddr: utils.RandomOwner(),
-				DBDriver:   utils.RandomOwner(),
-				DBSource:   utils.RandomOwner(),
+				HTTPServerAddr: utils.RandomOwner(),
+				DBDriver:       utils.RandomOwner(),
+				DBSource:       utils.RandomOwner(),
 			}
 
 			server, _ := NewServer(config, repository)

@@ -42,6 +42,7 @@ func (s *Server) setupRouter() {
 	// authRouter := router.Group("/").Use(authMiddleware(s.token))
 	router.POST("/api/register-trader", s.RegisterTrader)
 	router.POST("/api/login-trader", s.LoginTrader)
+	router.POST("/api/refresh-access", s.refreshAccess)
 	s.router = router
 }
 

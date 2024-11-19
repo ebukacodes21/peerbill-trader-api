@@ -19,11 +19,12 @@ func TestToken(t *testing.T) {
 	expiredAt := issueAt.Add(duration)
 
 	// create token
-	newToken, err := token.CreateToken(username, duration)
+	newToken, payload, err := token.CreateToken(username, duration)
 	require.NoError(t, err)
 	require.NotEmpty(t, token)
+	require.NotEmpty(t, payload)
 
-	payload, err := token.VerifyToken(newToken)
+	payload, err = token.VerifyToken(newToken)
 	require.NoError(t, err)
 	require.NotEmpty(t, payload)
 
@@ -37,11 +38,12 @@ func TestExpiredToken(t *testing.T) {
 	token, err := NewToken(utils.RandomString(32))
 	require.NoError(t, err)
 
-	newToken, err := token.CreateToken(utils.RandomOwner(), -time.Minute)
+	newToken, payload, err := token.CreateToken(utils.RandomOwner(), -time.Minute)
 	require.NoError(t, err)
 	require.NotEmpty(t, token)
+	require.NotEmpty(t, payload)
 
-	payload, err := token.VerifyToken(newToken)
+	payload, err = token.VerifyToken(newToken)
 	require.Error(t, err)
 	require.EqualError(t, err, ErrExpiredToken.Error())
 	require.Nil(t, payload)

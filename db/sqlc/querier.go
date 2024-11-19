@@ -6,12 +6,16 @@ package db
 
 import (
 	"context"
+
+	"github.com/google/uuid"
 )
 
 type Querier interface {
+	CreateSession(ctx context.Context, arg CreateSessionParams) (Session, error)
 	CreateTradePair(ctx context.Context, arg CreateTradePairParams) (TradePair, error)
 	CreateTrader(ctx context.Context, arg CreateTraderParams) (Trader, error)
 	CreateVerifyEmail(ctx context.Context, arg CreateVerifyEmailParams) (VerifyEmail, error)
+	GetSession(ctx context.Context, id uuid.UUID) (Session, error)
 	GetTrader(ctx context.Context, username string) (Trader, error)
 }
 
