@@ -8,14 +8,16 @@ import (
 )
 
 type Config struct {
-	ServerAddr    string        `mapstructure:"SERVER_ADDR"`
-	DBDriver      string        `mapstructure:"DB_DRIVER"`
-	DBSource      string        `mapstructure:"DB_SOURCE"`
-	EmailSender   string        `mapstructure:"EMAIL_SENDER"`
-	EmailAddress  string        `mapstructure:"EMAIL_SENDER_ADDRESS"`
-	EmailPassword string        `mapstructure:"EMAIL_SENDER_PASSWORD"`
-	TokenAccess   time.Duration `mapstructure:"TOKEN_ACCESS"`
-	TokenKey      string        `mapstructure:"TOKEN_KEY"`
+	HTTPServerAddr string        `mapstructure:"HTTP_SERVER_ADDR"`
+	GRPCServerAddr string        `mapstructure:"GRPC_SERVER_ADDR"`
+	DBDriver       string        `mapstructure:"DB_DRIVER"`
+	DBSource       string        `mapstructure:"DB_SOURCE"`
+	EmailSender    string        `mapstructure:"EMAIL_SENDER"`
+	EmailAddress   string        `mapstructure:"EMAIL_SENDER_ADDRESS"`
+	EmailPassword  string        `mapstructure:"EMAIL_SENDER_PASSWORD"`
+	TokenKey       string        `mapstructure:"TOKEN_KEY"`
+	TokenAccess    time.Duration `mapstructure:"TOKEN_ACCESS"`
+	RefreshAccess  time.Duration `mapstructure:"REFRESH_ACCESS"`
 }
 
 func LoadConfig(pathname string) (config Config, err error) {

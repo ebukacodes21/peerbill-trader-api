@@ -10,6 +10,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	uuid "github.com/google/uuid"
 )
 
 // MockDatabaseContract is a mock of DatabaseContract interface.
@@ -33,6 +34,21 @@ func NewMockDatabaseContract(ctrl *gomock.Controller) *MockDatabaseContract {
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockDatabaseContract) EXPECT() *MockDatabaseContractMockRecorder {
 	return m.recorder
+}
+
+// CreateSession mocks base method.
+func (m *MockDatabaseContract) CreateSession(arg0 context.Context, arg1 db.CreateSessionParams) (db.Session, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateSession", arg0, arg1)
+	ret0, _ := ret[0].(db.Session)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateSession indicates an expected call of CreateSession.
+func (mr *MockDatabaseContractMockRecorder) CreateSession(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateSession", reflect.TypeOf((*MockDatabaseContract)(nil).CreateSession), arg0, arg1)
 }
 
 // CreateTradePair mocks base method.
@@ -78,6 +94,21 @@ func (m *MockDatabaseContract) CreateVerifyEmail(arg0 context.Context, arg1 db.C
 func (mr *MockDatabaseContractMockRecorder) CreateVerifyEmail(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateVerifyEmail", reflect.TypeOf((*MockDatabaseContract)(nil).CreateVerifyEmail), arg0, arg1)
+}
+
+// GetSession mocks base method.
+func (m *MockDatabaseContract) GetSession(arg0 context.Context, arg1 uuid.UUID) (db.Session, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetSession", arg0, arg1)
+	ret0, _ := ret[0].(db.Session)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetSession indicates an expected call of GetSession.
+func (mr *MockDatabaseContractMockRecorder) GetSession(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSession", reflect.TypeOf((*MockDatabaseContract)(nil).GetSession), arg0, arg1)
 }
 
 // GetTrader mocks base method.

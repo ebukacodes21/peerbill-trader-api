@@ -7,7 +7,20 @@ package db
 import (
 	"database/sql"
 	"time"
+
+	"github.com/google/uuid"
 )
+
+type Session struct {
+	ID           uuid.UUID `db:"id" json:"id"`
+	Username     string    `db:"username" json:"username"`
+	RefreshToken string    `db:"refresh_token" json:"refresh_token"`
+	UserAgent    string    `db:"user_agent" json:"user_agent"`
+	ClientIp     string    `db:"client_ip" json:"client_ip"`
+	IsBlocked    bool      `db:"is_blocked" json:"is_blocked"`
+	ExpiredAt    time.Time `db:"expired_at" json:"expired_at"`
+	CreatedAt    time.Time `db:"created_at" json:"created_at"`
+}
 
 type TradePair struct {
 	ID         int64     `db:"id" json:"id"`
