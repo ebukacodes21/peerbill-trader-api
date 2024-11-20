@@ -5,8 +5,10 @@ go 1.23.2
 require (
 	github.com/golang/mock v1.6.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.23.0
+	github.com/rakyll/statik v0.1.7
 	github.com/stretchr/testify v1.9.0
 	golang.org/x/crypto v0.29.0
+	google.golang.org/genproto/googleapis/api v0.0.0-20241021214115-324edc3d5d38
 	google.golang.org/grpc v1.67.1
 	google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.5.1
 	google.golang.org/protobuf v1.35.1
@@ -55,7 +57,6 @@ require (
 	golang.org/x/net v0.28.0 // indirect
 	golang.org/x/sys v0.27.0 // indirect
 	golang.org/x/text v0.20.0 // indirect
-	google.golang.org/genproto/googleapis/api v0.0.0-20241021214115-324edc3d5d38 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20241021214115-324edc3d5d38 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 )

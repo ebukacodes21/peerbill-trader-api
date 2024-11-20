@@ -1,0 +1,219 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Peerbill",
+    "version": "1.0",
+    "contact": {
+      "name": "Peerbill",
+      "email": "peerbillofficial@gmail.com"
+    }
+  },
+  "tags": [
+    {
+      "name": "PeerBillTrader"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/v1/login-trader": {
+      "post": {
+        "summary": "login trader",
+        "description": "Use this API to login trader",
+        "operationId": "PeerBillTrader_LoginTrader",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbLoginTraderResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbLoginTraderRequest"
+            }
+          }
+        ],
+        "tags": [
+          "PeerBillTrader"
+        ]
+      }
+    },
+    "/api/v1/register-trader": {
+      "post": {
+        "summary": "create a new trader",
+        "description": "Use this API to create a new trader",
+        "operationId": "PeerBillTrader_RegisterTrader",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbRegisterTraderResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbRegisterTraderRequest"
+            }
+          }
+        ],
+        "tags": [
+          "PeerBillTrader"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "pbLoginTraderRequest": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "pbLoginTraderResponse": {
+      "type": "object",
+      "properties": {
+        "accessToken": {
+          "type": "string"
+        },
+        "sessionId": {
+          "type": "string"
+        },
+        "refreshToken": {
+          "type": "string"
+        },
+        "accessTokenExpiresAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "refreshTokenExpiresAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "trader": {
+          "$ref": "#/definitions/pbTrader"
+        }
+      }
+    },
+    "pbRegisterTraderRequest": {
+      "type": "object",
+      "properties": {
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "pbRegisterTraderResponse": {
+      "type": "object",
+      "properties": {
+        "trader": {
+          "$ref": "#/definitions/pbTrader"
+        }
+      }
+    },
+    "pbTrader": {
+      "type": "object",
+      "properties": {
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}
