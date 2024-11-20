@@ -37,17 +37,19 @@ func (s *Server) LoginTrader(ctx context.Context, req *pb.LoginTraderRequest) (*
 		return nil, status.Errorf(codes.NotFound, "failed to create refresh token")
 	}
 
+	metaData := s.extractMetaData(ctx)
+
 	session, err := s.repository.CreateSession(ctx, db.CreateSessionParams{
 		ID:           refreshPayload.ID,
 		Username:     trader.Username,
 		RefreshToken: refreshToken,
-		UserAgent:    "",
-		ClientIp:     "",
+		UserAgent:    metaData.UserAgent,
+		ClientIp:     metaData.ClientIp,
 		IsBlocked:    false,
 		ExpiredAt:    refreshPayload.ExpiredAt,
 	})
 	if err != nil {
-		log.Print(err)
+		log.Print(err, "here")
 		return nil, status.Errorf(codes.Internal, "failed to create session")
 	}
 

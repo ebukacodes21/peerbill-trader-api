@@ -8,10 +8,12 @@ import (
 	"net/http"
 
 	_ "github.com/lib/pq"
+	"github.com/rakyll/statik/fs"
 
 	// "peerbill-trader-server/api"
 	"peerbill-trader-server/api"
 	db "peerbill-trader-server/db/sqlc"
+	_ "peerbill-trader-server/doc/statik"
 	"peerbill-trader-server/gapi"
 	"peerbill-trader-server/pb"
 	"peerbill-trader-server/utils"
@@ -19,6 +21,7 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
+	"google.golang.org/protobuf/encoding/protojson"
 )
 
 func main() {
@@ -44,9 +47,18 @@ func runGatewayServer(config utils.Config, repository db.DatabaseContract) {
 		log.Fatal(err)
 	}
 
+	options := runtime.WithMarshalerOption(runtime.MIMEWildcard, &runtime.JSONPb{
+		MarshalOptions: protojson.MarshalOptions{
+			UseProtoNames: true,
+		},
+		UnmarshalOptions: protojson.UnmarshalOptions{
+			DiscardUnknown: true,
+		},
+	})
+	grpcMux := runtime.NewServeMux(options)
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
-	grpcMux := runtime.NewServeMux()
+
 	err = pb.RegisterPeerBillTraderHandlerServer(ctx, grpcMux, server)
 	if err != nil {
 		log.Fatal(err)
@@ -55,6 +67,16 @@ func runGatewayServer(config utils.Config, repository db.DatabaseContract) {
 	// re route client request to the grpc gateway
 	httpMux := http.NewServeMux()
 	httpMux.Handle("/", grpcMux)
+
+	// fserver := http.FileServer(http.Dir("./doc/swagger"))
+	// httpMux.Handle("/swagger/", http.StripPrefix("/swagger/", fserver))
+
+	statikFS, err := fs.New()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	httpMux.Handle("/swagger/", http.StripPrefix("/swagger/", http.FileServer(statikFS)))
 
 	listener, err := net.Listen("tcp", config.HTTPServerAddr)
 	if err != nil {

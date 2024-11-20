@@ -5,6 +5,7 @@ go 1.23.2
 require (
 	github.com/golang/mock v1.6.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.23.0
+	github.com/rakyll/statik v0.1.7
 	github.com/stretchr/testify v1.9.0
 	golang.org/x/crypto v0.29.0
 	google.golang.org/grpc v1.67.1
