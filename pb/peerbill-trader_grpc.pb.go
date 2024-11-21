@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	PeerBillTrader_RegisterTrader_FullMethodName = "/pb.PeerBillTrader/RegisterTrader"
 	PeerBillTrader_LoginTrader_FullMethodName    = "/pb.PeerBillTrader/LoginTrader"
+	PeerBillTrader_UpdateTrader_FullMethodName   = "/pb.PeerBillTrader/UpdateTrader"
 )
 
 // PeerBillTraderClient is the client API for PeerBillTrader service.
@@ -29,6 +30,7 @@ const (
 type PeerBillTraderClient interface {
 	RegisterTrader(ctx context.Context, in *RegisterTraderRequest, opts ...grpc.CallOption) (*RegisterTraderResponse, error)
 	LoginTrader(ctx context.Context, in *LoginTraderRequest, opts ...grpc.CallOption) (*LoginTraderResponse, error)
+	UpdateTrader(ctx context.Context, in *UpdateTraderRequest, opts ...grpc.CallOption) (*UpdateTraderResponse, error)
 }
 
 type peerBillTraderClient struct {
@@ -59,12 +61,23 @@ func (c *peerBillTraderClient) LoginTrader(ctx context.Context, in *LoginTraderR
 	return out, nil
 }
 
+func (c *peerBillTraderClient) UpdateTrader(ctx context.Context, in *UpdateTraderRequest, opts ...grpc.CallOption) (*UpdateTraderResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdateTraderResponse)
+	err := c.cc.Invoke(ctx, PeerBillTrader_UpdateTrader_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // PeerBillTraderServer is the server API for PeerBillTrader service.
 // All implementations must embed UnimplementedPeerBillTraderServer
 // for forward compatibility.
 type PeerBillTraderServer interface {
 	RegisterTrader(context.Context, *RegisterTraderRequest) (*RegisterTraderResponse, error)
 	LoginTrader(context.Context, *LoginTraderRequest) (*LoginTraderResponse, error)
+	UpdateTrader(context.Context, *UpdateTraderRequest) (*UpdateTraderResponse, error)
 	mustEmbedUnimplementedPeerBillTraderServer()
 }
 
@@ -80,6 +93,9 @@ func (UnimplementedPeerBillTraderServer) RegisterTrader(context.Context, *Regist
 }
 func (UnimplementedPeerBillTraderServer) LoginTrader(context.Context, *LoginTraderRequest) (*LoginTraderResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LoginTrader not implemented")
+}
+func (UnimplementedPeerBillTraderServer) UpdateTrader(context.Context, *UpdateTraderRequest) (*UpdateTraderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateTrader not implemented")
 }
 func (UnimplementedPeerBillTraderServer) mustEmbedUnimplementedPeerBillTraderServer() {}
 func (UnimplementedPeerBillTraderServer) testEmbeddedByValue()                        {}
@@ -138,6 +154,24 @@ func _PeerBillTrader_LoginTrader_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _PeerBillTrader_UpdateTrader_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateTraderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PeerBillTraderServer).UpdateTrader(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PeerBillTrader_UpdateTrader_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PeerBillTraderServer).UpdateTrader(ctx, req.(*UpdateTraderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // PeerBillTrader_ServiceDesc is the grpc.ServiceDesc for PeerBillTrader service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -152,6 +186,10 @@ var PeerBillTrader_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "LoginTrader",
 			Handler:    _PeerBillTrader_LoginTrader_Handler,
+		},
+		{
+			MethodName: "UpdateTrader",
+			Handler:    _PeerBillTrader_UpdateTrader_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

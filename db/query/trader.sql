@@ -10,3 +10,17 @@ RETURNING *;
 SELECT * FROM traders 
 WHERE username = $1
 LIMIT 1;
+
+-- name: UpdateTrader :one
+UPDATE traders
+SET
+  first_name = COALESCE(sqlc.narg(first_name), first_name),
+  last_name = COALESCE(sqlc.narg(last_name), last_name),
+  username = COALESCE(sqlc.narg(username), username),
+  password = COALESCE(sqlc.narg(password), password),
+  email = COALESCE(sqlc.narg(email), email),
+  phone = COALESCE(sqlc.narg(phone), phone),
+  country = COALESCE(sqlc.narg(country), country)
+WHERE 
+  id = sqlc.arg(id)
+RETURNING *;

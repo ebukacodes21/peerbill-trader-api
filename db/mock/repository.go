@@ -125,3 +125,18 @@ func (mr *MockDatabaseContractMockRecorder) GetTrader(arg0, arg1 interface{}) *g
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTrader", reflect.TypeOf((*MockDatabaseContract)(nil).GetTrader), arg0, arg1)
 }
+
+// UpdateTrader mocks base method.
+func (m *MockDatabaseContract) UpdateTrader(arg0 context.Context, arg1 db.UpdateTraderParams) (db.Trader, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateTrader", arg0, arg1)
+	ret0, _ := ret[0].(db.Trader)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdateTrader indicates an expected call of UpdateTrader.
+func (mr *MockDatabaseContractMockRecorder) UpdateTrader(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateTrader", reflect.TypeOf((*MockDatabaseContract)(nil).UpdateTrader), arg0, arg1)
+}
