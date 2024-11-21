@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package pb;
+
+import "trader.proto";
+
+option go_package = "peerbill-trader-server/pb";
+
+message UpdateTraderRequest {
+    int64 id = 1;
+    optional string        first_name = 2;
+    optional string        last_name = 3;
+    optional string        username = 4;
+    optional string        email = 5;
+    optional string        country = 6;
+    optional string        phone = 7;
+    optional string        password = 8;
+}
+
+message UpdateTraderResponse {
+    Trader trader = 1;
+}

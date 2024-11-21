@@ -74,11 +74,11 @@ func (s *Server) LoginTrader(ctx context.Context, req *pb.LoginTraderRequest) (*
 
 func validateLoginTraderRequest(req *pb.LoginTraderRequest) (violations []*errdetails.BadRequest_FieldViolation) {
 	if err := validate.ValidateUsername(req.GetUsername()); err != nil {
-		violations = append(violations, fieldViolation(req.GetUsername(), err))
+		violations = append(violations, fieldViolation("username", err))
 	}
 
 	if err := validate.ValidatePassword(req.GetPassword()); err != nil {
-		violations = append(violations, fieldViolation(req.GetPassword(), err))
+		violations = append(violations, fieldViolation("password", err))
 	}
 
 	return violations

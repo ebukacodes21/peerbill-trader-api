@@ -18,6 +18,9 @@ import (
 	"peerbill-trader-server/pb"
 	"peerbill-trader-server/utils"
 
+	"github.com/golang-migrate/migrate/v4"
+	_ "github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -36,9 +39,23 @@ func main() {
 	}
 
 	repository := db.NewRepository(conn)
+	runDBMigration(config.MigrationURL, config.DBSource)
 	go runGatewayServer(config, repository)
 	runGrpcServer(config, repository)
 
+}
+
+func runDBMigration(url string, source string) {
+	migration, err := migrate.New(url, source)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if err = migration.Up(); err != nil && err != migrate.ErrNoChange {
+		log.Fatal(err)
+	}
+
+	log.Print("migration successful")
 }
 
 func runGatewayServer(config utils.Config, repository db.DatabaseContract) {
@@ -71,6 +88,7 @@ func runGatewayServer(config utils.Config, repository db.DatabaseContract) {
 	// fserver := http.FileServer(http.Dir("./doc/swagger"))
 	// httpMux.Handle("/swagger/", http.StripPrefix("/swagger/", fserver))
 
+	// load from server
 	statikFS, err := fs.New()
 	if err != nil {
 		log.Fatal(err)

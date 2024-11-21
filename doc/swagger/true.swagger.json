@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "title": "Peerbill",
-    "version": "1.0",
+    "version": "1.2",
     "contact": {
       "name": "Peerbill",
       "email": "peerbillofficial@gmail.com"
@@ -20,7 +20,7 @@
     "application/json"
   ],
   "paths": {
-    "/api/v1/login-trader": {
+    "/api/login-trader": {
       "post": {
         "summary": "login trader",
         "description": "Use this API to login trader",
@@ -54,7 +54,7 @@
         ]
       }
     },
-    "/api/v1/register-trader": {
+    "/api/register-trader": {
       "post": {
         "summary": "create a new trader",
         "description": "Use this API to create a new trader",
@@ -80,6 +80,40 @@
             "required": true,
             "schema": {
               "$ref": "#/definitions/pbRegisterTraderRequest"
+            }
+          }
+        ],
+        "tags": [
+          "PeerBillTrader"
+        ]
+      }
+    },
+    "/api/update-trader": {
+      "patch": {
+        "summary": "update a trader",
+        "description": "Use this API to update a trader",
+        "operationId": "PeerBillTrader_UpdateTrader",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbUpdateTraderResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbUpdateTraderRequest"
             }
           }
         ],
@@ -184,6 +218,44 @@
         "createdAt": {
           "type": "string",
           "format": "date-time"
+        }
+      }
+    },
+    "pbUpdateTraderRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "pbUpdateTraderResponse": {
+      "type": "object",
+      "properties": {
+        "trader": {
+          "$ref": "#/definitions/pbTrader"
         }
       }
     },

@@ -55,31 +55,31 @@ func (s *Server) RegisterTrader(ctx context.Context, req *pb.RegisterTraderReque
 
 func validateRegisterTraderRequest(req *pb.RegisterTraderRequest) (violations []*errdetails.BadRequest_FieldViolation) {
 	if err := validate.ValidateFirstname(req.GetFirstName()); err != nil {
-		violations = append(violations, fieldViolation(req.GetFirstName(), err))
+		violations = append(violations, fieldViolation("first_name", err))
 	}
 
 	if err := validate.ValidateLastname(req.GetLastName()); err != nil {
-		violations = append(violations, fieldViolation(req.GetFirstName(), err))
+		violations = append(violations, fieldViolation("last_name", err))
 	}
 
 	if err := validate.ValidateUsername(req.GetUsername()); err != nil {
-		violations = append(violations, fieldViolation(req.GetUsername(), err))
+		violations = append(violations, fieldViolation("username", err))
 	}
 
 	if err := validate.ValidateEmail(req.GetEmail()); err != nil {
-		violations = append(violations, fieldViolation(req.GetEmail(), err))
+		violations = append(violations, fieldViolation("email", err))
 	}
 
 	if err := validate.ValidatePassword(req.GetPassword()); err != nil {
-		violations = append(violations, fieldViolation(req.GetPassword(), err))
+		violations = append(violations, fieldViolation("password", err))
 	}
 
 	if err := validate.ValidatePhone(req.GetPhone()); err != nil {
-		violations = append(violations, fieldViolation(req.GetPhone(), err))
+		violations = append(violations, fieldViolation("phone", err))
 	}
 
 	if err := validate.ValidateCountry(req.GetCountry()); err != nil {
-		violations = append(violations, fieldViolation(req.GetCountry(), err))
+		violations = append(violations, fieldViolation("country", err))
 	}
 
 	return violations

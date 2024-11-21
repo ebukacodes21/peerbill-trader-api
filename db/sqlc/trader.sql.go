@@ -7,6 +7,7 @@ package db
 
 import (
 	"context"
+	"database/sql"
 )
 
 const createTrader = `-- name: CreateTrader :one
@@ -64,6 +65,61 @@ LIMIT 1
 
 func (q *Queries) GetTrader(ctx context.Context, username string) (Trader, error) {
 	row := q.db.QueryRowContext(ctx, getTrader, username)
+	var i Trader
+	err := row.Scan(
+		&i.ID,
+		&i.FirstName,
+		&i.LastName,
+		&i.Username,
+		&i.Password,
+		&i.Email,
+		&i.Country,
+		&i.Phone,
+		&i.Role,
+		&i.ProfilePic,
+		&i.CreatedAt,
+		&i.IsVerified,
+	)
+	return i, err
+}
+
+const updateTrader = `-- name: UpdateTrader :one
+UPDATE traders
+SET
+  first_name = COALESCE($1, first_name),
+  last_name = COALESCE($2, last_name),
+  username = COALESCE($3, username),
+  password = COALESCE($4, password),
+  email = COALESCE($5, email),
+  phone = COALESCE($6, phone),
+  country = COALESCE($7, country)
+WHERE 
+  id = $8
+RETURNING id, first_name, last_name, username, password, email, country, phone, role, profile_pic, created_at, "isVerified"
+`
+
+type UpdateTraderParams struct {
+	FirstName sql.NullString `db:"first_name" json:"first_name"`
+	LastName  sql.NullString `db:"last_name" json:"last_name"`
+	Username  sql.NullString `db:"username" json:"username"`
+	Password  sql.NullString `db:"password" json:"password"`
+	Email     sql.NullString `db:"email" json:"email"`
+	Phone     sql.NullString `db:"phone" json:"phone"`
+	Country   sql.NullString `db:"country" json:"country"`
+	ID        int64          `db:"id" json:"id"`
+}
+
+func (q *Queries) UpdateTrader(ctx context.Context, arg UpdateTraderParams) (Trader, error) {
+	row := q.db.QueryRowContext(ctx, updateTrader,
+		arg.FirstName,
+		arg.LastName,
+		arg.Username,
+		arg.Password,
+		arg.Email,
+		arg.Phone,
+		arg.Country,
+		arg.ID,
+	)
 	var i Trader
 	err := row.Scan(
 		&i.ID,

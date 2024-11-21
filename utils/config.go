@@ -10,6 +10,7 @@ import (
 type Config struct {
 	HTTPServerAddr string        `mapstructure:"HTTP_SERVER_ADDR"`
 	GRPCServerAddr string        `mapstructure:"GRPC_SERVER_ADDR"`
+	MigrationURL   string        `mapstructure:"MIGRATION_URL"`
 	DBDriver       string        `mapstructure:"DB_DRIVER"`
 	DBSource       string        `mapstructure:"DB_SOURCE"`
 	EmailSender    string        `mapstructure:"EMAIL_SENDER"`
