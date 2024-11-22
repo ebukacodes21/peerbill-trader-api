@@ -7,6 +7,7 @@ import (
 	"net"
 	"net/http"
 
+	"github.com/hibiken/asynq"
 	_ "github.com/lib/pq"
 	"github.com/rakyll/statik/fs"
 
@@ -17,6 +18,7 @@ import (
 	"peerbill-trader-server/gapi"
 	"peerbill-trader-server/pb"
 	"peerbill-trader-server/utils"
+	"peerbill-trader-server/worker"
 
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
@@ -37,11 +39,18 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	repository := db.NewRepository(conn)
 	runDBMigration(config.MigrationURL, config.DBSource)
-	go runGatewayServer(config, repository)
-	runGrpcServer(config, repository)
+	repository := db.NewRepository(conn)
+
+	// message broker
+	redisOption := asynq.RedisClientOpt{
+		Addr: config.REDISServerAddr,
+	}
+
+	taskDistributor := worker.NewRedisTaskDistributor(redisOption)
+	go runGatewayServer(config, repository, taskDistributor)
+	go runTaskProcessor(redisOption, repository)
+	runGrpcServer(config, repository, taskDistributor)
 
 }
 
@@ -58,8 +67,8 @@ func runDBMigration(url string, source string) {
 	log.Print("migration successful")
 }
 
-func runGatewayServer(config utils.Config, repository db.DatabaseContract) {
-	server, err := gapi.NewServer(config, repository)
+func runGatewayServer(config utils.Config, repository db.DatabaseContract, td worker.TaskDistributor) {
+	server, err := gapi.NewServer(config, repository, td)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -108,8 +117,19 @@ func runGatewayServer(config utils.Config, repository db.DatabaseContract) {
 	}
 }
 
-func runGrpcServer(config utils.Config, repository db.DatabaseContract) {
-	server, err := gapi.NewServer(config, repository)
+func runTaskProcessor(options asynq.RedisClientOpt, repository db.DatabaseContract) {
+	log.Print("running processor")
+
+	taskProcessor := worker.NewRedisTaskProcessor(options, repository)
+
+	err := taskProcessor.Start()
+	if err != nil {
+		log.Fatal("failed to process tasks")
+	}
+}
+
+func runGrpcServer(config utils.Config, repository db.DatabaseContract, td worker.TaskDistributor) {
+	server, err := gapi.NewServer(config, repository, td)
 	if err != nil {
 		log.Fatal(err)
 	}

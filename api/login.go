@@ -12,12 +12,12 @@ import (
 	"github.com/google/uuid"
 )
 
-type loginUserRequest struct {
+type loginTraderRequest struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
 }
 
-type loginUserResponse struct {
+type loginTraderResponse struct {
 	SessionId              uuid.UUID      `json:"session_id"`
 	AccessToken            string         ` json:"access_token"`
 	AccessTokenExpiration  time.Time      ` json:"access_token_expiration"`
@@ -27,7 +27,7 @@ type loginUserResponse struct {
 }
 
 func (s *Server) LoginTrader(ctx *gin.Context) {
-	var loginReq loginUserRequest
+	var loginReq loginTraderRequest
 	if err := ctx.ShouldBindJSON(&loginReq); err != nil {
 		ctx.JSON(http.StatusBadRequest, errorRes(err))
 		return
@@ -75,7 +75,7 @@ func (s *Server) LoginTrader(ctx *gin.Context) {
 		return
 	}
 
-	resp := loginUserResponse{
+	resp := loginTraderResponse{
 		SessionId:              session.ID,
 		AccessToken:            accessToken,
 		AccessTokenExpiration:  accessPayload.ExpiredAt,
