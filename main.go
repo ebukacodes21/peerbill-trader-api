@@ -101,7 +101,8 @@ func runGatewayServer(config utils.Config, repository db.DatabaseContract) {
 		log.Fatal(err)
 	}
 	log.Print("listening...", config.HTTPServerAddr)
-	err = http.Serve(listener, httpMux)
+	handler := gapi.HttpLogger(httpMux)
+	err = http.Serve(listener, handler)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -113,7 +114,8 @@ func runGrpcServer(config utils.Config, repository db.DatabaseContract) {
 		log.Fatal(err)
 	}
 
-	grpcServer := grpc.NewServer()
+	logger := grpc.UnaryInterceptor(gapi.Logger)
+	grpcServer := grpc.NewServer(logger)
 	pb.RegisterPeerBillTraderServer(grpcServer, server)
 	reflection.Register(grpcServer)
 
