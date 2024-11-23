@@ -7,10 +7,10 @@ generate:
 	sqlc generate
 
 init:
-	docker run -it --rm --network host --volume "/Users/george/workspace/peerbill-trader-server/db:/db" migrate/migrate:v4.17.0 create -ext sql -dir /db/migrations $(name)
+	docker run -it --rm --network host --volume "/Users/george/workspace/peerbill-server/db:/db" migrate/migrate:v4.17.0 create -ext sql -dir /db/migrations $(name)
 
 force:
-	docker run -it --rm --network host --volume "/Users/george/workspace/peerbill-trader-server/db:/db" migrate/migrate:v4.17.0 create -ext sql -dir /db/migrations force $(version)
+	docker run -it --rm --network host --volume "/Users/george/workspace/peerbill-server/db:/db" migrate/migrate:v4.17.0 create -ext sql -dir /db/migrations force $(version)
 
 migrateup:
 	docker run -it --rm --network host --volume ./db:/db migrate/migrate:v4.17.0 -path=/db/migrations -database "$(DB_SOURCE)" -verbose up
@@ -28,7 +28,7 @@ test:
 	go test -v -cover -short ./...
 
 mock:
-	mockgen -package mockdb -destination db/mock/repository.go peerbill-trader-server/db/sqlc DatabaseContract
+	mockgen -package mockdb -destination db/mock/repository.go peerbill-server/db/sqlc DatabaseContract
 
 proto:
 	rm -f pb/*.go
@@ -41,7 +41,7 @@ proto:
 	statik -src=./doc/swagger -dest=./doc
 
 evans:
-	docker run --rm -it -v "/Users/george/workspace/peerbill-trader-server:/mount:ro" \
+	docker run --rm -it -v "/Users/george/workspace/peerbill-server:/mount:ro" \
     ghcr.io/ktr0731/evans:latest \
     --path /mount/proto/ \
     --proto peerbill-trader.proto \

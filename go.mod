@@ -1,4 +1,4 @@
-module peerbill-trader-server
+module peerbill-server
 
 go 1.23.2
 

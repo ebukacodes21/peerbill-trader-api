@@ -2,9 +2,9 @@ package gapi
 
 import (
 	"context"
-	db "peerbill-trader-server/db/sqlc"
-	"peerbill-trader-server/pb"
-	"peerbill-trader-server/validate"
+	db "peerbill-server/db/sqlc"
+	"peerbill-server/pb"
+	"peerbill-server/validate"
 
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc/codes"

@@ -2,9 +2,9 @@ package api
 
 import (
 	"fmt"
-	db "peerbill-trader-server/db/sqlc"
-	"peerbill-trader-server/token"
-	"peerbill-trader-server/utils"
+	db "peerbill-server/db/sqlc"
+	"peerbill-server/token"
+	"peerbill-server/utils"
 
 	"github.com/gin-gonic/gin"
 )

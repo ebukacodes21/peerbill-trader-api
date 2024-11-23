@@ -2,8 +2,8 @@ package worker
 
 import (
 	"context"
-	db "peerbill-trader-server/db/sqlc"
-	"peerbill-trader-server/mail"
+	db "peerbill-server/db/sqlc"
+	"peerbill-server/mail"
 
 	"github.com/hibiken/asynq"
 	"github.com/rs/zerolog/log"

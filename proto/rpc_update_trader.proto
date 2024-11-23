@@ -4,7 +4,7 @@ package pb;
 
 import "trader.proto";
 
-option go_package = "peerbill-trader-server/pb";
+option go_package = "peerbill-server/pb";
 
 message UpdateTraderRequest {
     int64 id = 1;

@@ -3,7 +3,7 @@ package api
 import (
 	"errors"
 	"net/http"
-	"peerbill-trader-server/token"
+	"peerbill-server/token"
 	"strings"
 
 	"github.com/gin-gonic/gin"
