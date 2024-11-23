@@ -14,7 +14,7 @@ const (
 	authorizationBearer = "bearer"
 )
 
-func (s *Server) authorizeTrader(ctx context.Context) (*token.Payload, error) {
+func (s *Server) authorizeTrader(ctx context.Context, accessibleRoles []string) (*token.Payload, error) {
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
 		return nil, fmt.Errorf("missing metadata")
@@ -42,5 +42,19 @@ func (s *Server) authorizeTrader(ctx context.Context) (*token.Payload, error) {
 		return nil, err
 	}
 
+	if !hasAccess(payload.Role, accessibleRoles) {
+		return nil, fmt.Errorf("permission denied")
+	}
+
 	return payload, nil
+}
+
+func hasAccess(role string, accessibleRoles []string) bool {
+	for _, v := range accessibleRoles {
+		if role == v {
+			return true
+		}
+	}
+
+	return false
 }
