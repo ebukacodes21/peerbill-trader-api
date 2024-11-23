@@ -35,7 +35,7 @@ func NewRedisTaskProcessor(redisOpt asynq.RedisConnOpt, repository db.DatabaseCo
 			ErrorHandler: asynq.ErrorHandlerFunc(func(ctx context.Context, task *asynq.Task, err error) {
 				log.Error().Err(err).Str("task_type", task.Type()).Bytes("payload", task.Payload()).Msg("task failed")
 			}),
-			// Logger: ,
+			Logger: NewLogger(),
 		})
 	return &RedisTaskProcessor{server: server, repository: repository, mailer: mailer}
 }

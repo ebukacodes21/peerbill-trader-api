@@ -18,6 +18,7 @@ type Querier interface {
 	GetSession(ctx context.Context, id uuid.UUID) (Session, error)
 	GetTrader(ctx context.Context, username string) (Trader, error)
 	UpdateTrader(ctx context.Context, arg UpdateTraderParams) (Trader, error)
+	UpdateVerifyEmail(ctx context.Context, arg UpdateVerifyEmailParams) (VerifyEmail, error)
 }
 
 var _ Querier = (*Queries)(nil)

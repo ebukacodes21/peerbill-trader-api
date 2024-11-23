@@ -59,3 +59,14 @@ func ValidatePhone(value string) error {
 func ValidateCountry(value string) error {
 	return ValidateString(value, 1, 30)
 }
+
+func ValidateEmailId(value int64) error {
+	if value <= 0 {
+		return fmt.Errorf("value must be a positive integer")
+	}
+	return nil
+}
+
+func ValidateCode(value string) error {
+	return ValidateString(value, 32, 128)
+}

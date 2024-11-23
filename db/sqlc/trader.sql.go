@@ -16,7 +16,7 @@ INSERT INTO traders (
 ) VALUES (
   $1, $2, $3, $4, $5, $6, $7
 )
-RETURNING id, first_name, last_name, username, password, email, country, phone, role, profile_pic, created_at, "isVerified"
+RETURNING id, first_name, last_name, username, password, email, country, phone, role, profile_pic, created_at, is_verified
 `
 
 type CreateTraderParams struct {
@@ -58,7 +58,7 @@ func (q *Queries) CreateTrader(ctx context.Context, arg CreateTraderParams) (Tra
 }
 
 const getTrader = `-- name: GetTrader :one
-SELECT id, first_name, last_name, username, password, email, country, phone, role, profile_pic, created_at, "isVerified" FROM traders 
+SELECT id, first_name, last_name, username, password, email, country, phone, role, profile_pic, created_at, is_verified FROM traders 
 WHERE username = $1
 LIMIT 1
 `
@@ -92,21 +92,23 @@ SET
   password = COALESCE($4, password),
   email = COALESCE($5, email),
   phone = COALESCE($6, phone),
-  country = COALESCE($7, country)
+  country = COALESCE($7, country),
+  is_verified = COALESCE($8, is_verified)
 WHERE 
-  id = $8
-RETURNING id, first_name, last_name, username, password, email, country, phone, role, profile_pic, created_at, "isVerified"
+  id = $9
+RETURNING id, first_name, last_name, username, password, email, country, phone, role, profile_pic, created_at, is_verified
 `
 
 type UpdateTraderParams struct {
-	FirstName sql.NullString `db:"first_name" json:"first_name"`
-	LastName  sql.NullString `db:"last_name" json:"last_name"`
-	Username  sql.NullString `db:"username" json:"username"`
-	Password  sql.NullString `db:"password" json:"password"`
-	Email     sql.NullString `db:"email" json:"email"`
-	Phone     sql.NullString `db:"phone" json:"phone"`
-	Country   sql.NullString `db:"country" json:"country"`
-	ID        int64          `db:"id" json:"id"`
+	FirstName  sql.NullString `db:"first_name" json:"first_name"`
+	LastName   sql.NullString `db:"last_name" json:"last_name"`
+	Username   sql.NullString `db:"username" json:"username"`
+	Password   sql.NullString `db:"password" json:"password"`
+	Email      sql.NullString `db:"email" json:"email"`
+	Phone      sql.NullString `db:"phone" json:"phone"`
+	Country    sql.NullString `db:"country" json:"country"`
+	IsVerified sql.NullBool   `db:"is_verified" json:"is_verified"`
+	ID         int64          `db:"id" json:"id"`
 }
 
 func (q *Queries) UpdateTrader(ctx context.Context, arg UpdateTraderParams) (Trader, error) {
@@ -118,6 +120,7 @@ func (q *Queries) UpdateTrader(ctx context.Context, arg UpdateTraderParams) (Tra
 		arg.Email,
 		arg.Phone,
 		arg.Country,
+		arg.IsVerified,
 		arg.ID,
 	)
 	var i Trader
