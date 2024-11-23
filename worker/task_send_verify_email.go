@@ -2,7 +2,10 @@ package worker
 
 import (
 	"context"
-	"database/sql"
+	db "peerbill-trader-server/db/sqlc"
+	"peerbill-trader-server/utils"
+
+	// "database/sql"
 	"encoding/json"
 	"fmt"
 
@@ -42,12 +45,37 @@ func (rtp *RedisTaskProcessor) ProcessTaskSendVerifyEmail(ctx context.Context, t
 
 	trader, err := rtp.repository.GetTrader(ctx, payload.Username)
 	if err != nil {
-		if err == sql.ErrNoRows {
-			return fmt.Errorf("trader not found %w", asynq.SkipRetry)
-		}
+		// if err == sql.ErrNoRows {
+		// 	return fmt.Errorf("trader not found %w", asynq.SkipRetry)
+		// }
 
 		return fmt.Errorf("failed to get trader")
 	}
+
+	args := db.CreateVerifyEmailParams{
+		Username:   trader.Username,
+		Email:      trader.Email,
+		SecretCode: utils.RandomString(32),
+	}
+
+	emailData, err := rtp.repository.CreateVerifyEmail(ctx, args)
+	if err != nil {
+		return fmt.Errorf("failed to create verify email")
+	}
+
+	url := fmt.Sprintf("http://localhost:3000/auth/verify?id=%d&code=%s", emailData.ID, emailData.SecretCode)
+
+	subject := "Welcome to Peerbill"
+	content := fmt.Sprintf(`Hello %s,<br/>
+	You have registered on Peerbill as a Trader. <br/>
+	Kindly <a href="%s">click this link to verify your email address</a>
+	`, trader.Username, url)
+	to := []string{trader.Email}
+
+	if err := rtp.mailer.SendMail(subject, content, to, nil, nil, nil); err != nil {
+		return fmt.Errorf("failed to send verify email")
+	}
+
 	log.Info().Str("type", task.Type()).Bytes("payload", task.Payload()).Str("email", trader.Email).Msg("message enqueued")
 	return nil
 }

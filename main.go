@@ -16,6 +16,7 @@ import (
 	db "peerbill-trader-server/db/sqlc"
 	_ "peerbill-trader-server/doc/statik"
 	"peerbill-trader-server/gapi"
+	"peerbill-trader-server/mail"
 	"peerbill-trader-server/pb"
 	"peerbill-trader-server/utils"
 	"peerbill-trader-server/worker"
@@ -49,7 +50,7 @@ func main() {
 
 	taskDistributor := worker.NewRedisTaskDistributor(redisOption)
 	go runGatewayServer(config, repository, taskDistributor)
-	go runTaskProcessor(redisOption, repository)
+	go runTaskProcessor(redisOption, repository, config)
 	runGrpcServer(config, repository, taskDistributor)
 
 }
@@ -117,10 +118,10 @@ func runGatewayServer(config utils.Config, repository db.DatabaseContract, td wo
 	}
 }
 
-func runTaskProcessor(options asynq.RedisClientOpt, repository db.DatabaseContract) {
+func runTaskProcessor(options asynq.RedisClientOpt, repository db.DatabaseContract, config utils.Config) {
 	log.Print("running processor")
-
-	taskProcessor := worker.NewRedisTaskProcessor(options, repository)
+	mailer := mail.NewGmailSender(config.EmailSender, config.EmailAddress, config.EmailPassword)
+	taskProcessor := worker.NewRedisTaskProcessor(options, repository, mailer)
 
 	err := taskProcessor.Start()
 	if err != nil {

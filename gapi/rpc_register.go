@@ -27,17 +27,31 @@ func (s *Server) RegisterTrader(ctx context.Context, req *pb.RegisterTraderReque
 		return nil, status.Errorf(codes.Internal, "failed to hash password")
 	}
 
-	args := db.CreateTraderParams{
-		FirstName: req.GetFirstName(),
-		LastName:  req.GetLastName(),
-		Username:  req.GetUsername(),
-		Password:  hash,
-		Email:     req.GetEmail(),
-		Country:   req.GetCountry(),
-		Phone:     req.GetPhone(),
+	args := db.CreateTraderTxParams{
+		CreateTraderParams: db.CreateTraderParams{
+			FirstName: req.GetFirstName(),
+			LastName:  req.GetLastName(),
+			Username:  req.GetUsername(),
+			Password:  hash,
+			Email:     req.GetEmail(),
+			Country:   req.GetCountry(),
+			Phone:     req.GetPhone(),
+		},
+		AfterCreate: func(trader db.Trader) error {
+			payload := worker.SendVerifyEmailPayload{
+				Username: trader.Username,
+			}
+
+			opts := []asynq.Option{
+				asynq.MaxRetry(10),
+				asynq.ProcessIn(10 * time.Second),
+				asynq.Queue(worker.Critical),
+			}
+			return s.taskDistributor.DistributeTaskSendVerifyEmail(ctx, &payload, opts...)
+		},
 	}
 
-	trader, err := s.repository.CreateTrader(ctx, args)
+	result, err := s.repository.CreateTraderTx(ctx, args)
 	if err != nil {
 		if pgErr, ok := err.(*pg.Error); ok {
 			switch pgErr.Code.Name() {
@@ -48,22 +62,8 @@ func (s *Server) RegisterTrader(ctx context.Context, req *pb.RegisterTraderReque
 		return nil, status.Errorf(codes.Internal, "failed to create user")
 	}
 
-	payload := worker.SendVerifyEmailPayload{
-		Username: trader.Username,
-	}
-
-	opts := []asynq.Option{
-		asynq.MaxRetry(10),
-		asynq.ProcessIn(10 * time.Second),
-		asynq.Queue(worker.Critical),
-	}
-	err = s.taskDistributor.DistributeTaskSendVerifyEmail(ctx, &payload, opts...)
-	if err != nil {
-		return nil, status.Errorf(codes.Internal, "failed to send verify email")
-	}
-
 	resp := &pb.RegisterTraderResponse{
-		Trader: convert(trader),
+		Trader: convert(result.Trader),
 	}
 
 	return resp, nil
