@@ -34,12 +34,12 @@ func (s *Server) LoginTrader(ctx context.Context, req *pb.LoginTraderRequest) (*
 		return nil, status.Errorf(codes.NotFound, "incorrect password")
 	}
 
-	accessToken, accessPayload, err := s.token.CreateToken(trader.Username, s.config.TokenAccess)
+	accessToken, accessPayload, err := s.token.CreateToken(trader.Username, trader.Role, s.config.TokenAccess)
 	if err != nil {
 		return nil, status.Errorf(codes.NotFound, "failed to create access token")
 	}
 
-	refreshToken, refreshPayload, err := s.token.CreateToken(trader.Username, s.config.RefreshAccess)
+	refreshToken, refreshPayload, err := s.token.CreateToken(trader.Username, trader.Role, s.config.RefreshAccess)
 	if err != nil {
 		return nil, status.Errorf(codes.NotFound, "failed to create refresh token")
 	}

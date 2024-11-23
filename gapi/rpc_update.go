@@ -14,7 +14,7 @@ import (
 )
 
 func (s *Server) UpdateTrader(ctx context.Context, req *pb.UpdateTraderRequest) (*pb.UpdateTraderResponse, error) {
-	authPayload, err := s.authorizeTrader(ctx)
+	authPayload, err := s.authorizeTrader(ctx, []string{"user", "admin"})
 	if err != nil {
 		return nil, unauthenticatedError(err)
 	}
@@ -24,7 +24,7 @@ func (s *Server) UpdateTrader(ctx context.Context, req *pb.UpdateTraderRequest) 
 		return nil, invalidArgumentError(violations)
 	}
 
-	if authPayload.Username != *req.Username {
+	if authPayload.Role != "admin" && authPayload.Username != *req.Username {
 		return nil, status.Errorf(codes.PermissionDenied, "cannot update user info: %s", err)
 	}
 

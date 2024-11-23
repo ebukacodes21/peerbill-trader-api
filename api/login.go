@@ -49,13 +49,13 @@ func (s *Server) LoginTrader(ctx *gin.Context) {
 		return
 	}
 
-	accessToken, accessPayload, err := s.token.CreateToken(trader.Username, s.config.TokenAccess)
+	accessToken, accessPayload, err := s.token.CreateToken(trader.Username, trader.Role, s.config.TokenAccess)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorRes(err))
 		return
 	}
 
-	refreshToken, refreshPayload, err := s.token.CreateToken(trader.Username, s.config.RefreshAccess)
+	refreshToken, refreshPayload, err := s.token.CreateToken(trader.Username, trader.Role, s.config.RefreshAccess)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorRes(err))
 		return
