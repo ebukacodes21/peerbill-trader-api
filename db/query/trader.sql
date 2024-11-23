@@ -20,7 +20,8 @@ SET
   password = COALESCE(sqlc.narg(password), password),
   email = COALESCE(sqlc.narg(email), email),
   phone = COALESCE(sqlc.narg(phone), phone),
-  country = COALESCE(sqlc.narg(country), country)
+  country = COALESCE(sqlc.narg(country), country),
+  is_verified = COALESCE(sqlc.narg(is_verified), is_verified)
 WHERE 
   id = sqlc.arg(id)
 RETURNING *;

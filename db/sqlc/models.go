@@ -44,12 +44,12 @@ type Trader struct {
 	Role       string         `db:"role" json:"role"`
 	ProfilePic sql.NullString `db:"profile_pic" json:"profile_pic"`
 	CreatedAt  time.Time      `db:"created_at" json:"created_at"`
-	IsVerified bool           `db:"isVerified" json:"isVerified"`
+	IsVerified bool           `db:"is_verified" json:"is_verified"`
 }
 
 type VerifyEmail struct {
 	ID         int64     `db:"id" json:"id"`
-	Username   string    `db:"username" json:"username"`
+	UserID     int64     `db:"user_id" json:"user_id"`
 	Email      string    `db:"email" json:"email"`
 	SecretCode string    `db:"secret_code" json:"secret_code"`
 	IsUsed     bool      `db:"is_used" json:"is_used"`

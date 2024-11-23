@@ -53,7 +53,7 @@ func (rtp *RedisTaskProcessor) ProcessTaskSendVerifyEmail(ctx context.Context, t
 	}
 
 	args := db.CreateVerifyEmailParams{
-		Username:   trader.Username,
+		UserID:     trader.ID,
 		Email:      trader.Email,
 		SecretCode: utils.RandomString(32),
 	}
@@ -63,7 +63,7 @@ func (rtp *RedisTaskProcessor) ProcessTaskSendVerifyEmail(ctx context.Context, t
 		return fmt.Errorf("failed to create verify email")
 	}
 
-	url := fmt.Sprintf("http://localhost:3000/auth/verify?id=%d&code=%s", emailData.ID, emailData.SecretCode)
+	url := fmt.Sprintf("http://localhost:8002/api/verify-email?email_id=%d&secret_code=%s", emailData.ID, emailData.SecretCode)
 
 	subject := "Welcome to Peerbill"
 	content := fmt.Sprintf(`Hello %s,<br/>
@@ -76,6 +76,6 @@ func (rtp *RedisTaskProcessor) ProcessTaskSendVerifyEmail(ctx context.Context, t
 		return fmt.Errorf("failed to send verify email")
 	}
 
-	log.Info().Str("type", task.Type()).Bytes("payload", task.Payload()).Str("email", trader.Email).Msg("message enqueued")
+	log.Info().Str("type", task.Type()).Bytes("payload", task.Payload()).Str("email", trader.Email).Msg("message processed")
 	return nil
 }

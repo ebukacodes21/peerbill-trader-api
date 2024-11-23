@@ -56,8 +56,7 @@ service PeerBillTrader {
     }
     rpc VerifyEmail (VerifyEmailRequest) returns (VerifyEmailResponse) {
         option (google.api.http) = {
-            patch: "/api/verify-email"
-            body: "*"
+            get: "/api/verify-email"
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
             description: "Use this API to verify email address";

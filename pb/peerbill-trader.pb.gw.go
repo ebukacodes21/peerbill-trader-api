@@ -109,11 +109,18 @@ func local_request_PeerBillTrader_UpdateTrader_0(ctx context.Context, marshaler 
 
 }
 
+var (
+	filter_PeerBillTrader_VerifyEmail_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
+)
+
 func request_PeerBillTrader_VerifyEmail_0(ctx context.Context, marshaler runtime.Marshaler, client PeerBillTraderClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq VerifyEmailRequest
 	var metadata runtime.ServerMetadata
 
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_PeerBillTrader_VerifyEmail_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -126,7 +133,10 @@ func local_request_PeerBillTrader_VerifyEmail_0(ctx context.Context, marshaler r
 	var protoReq VerifyEmailRequest
 	var metadata runtime.ServerMetadata
 
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_PeerBillTrader_VerifyEmail_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
@@ -217,7 +227,7 @@ func RegisterPeerBillTraderHandlerServer(ctx context.Context, mux *runtime.Serve
 
 	})
 
-	mux.Handle("PATCH", pattern_PeerBillTrader_VerifyEmail_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_PeerBillTrader_VerifyEmail_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -349,7 +359,7 @@ func RegisterPeerBillTraderHandlerClient(ctx context.Context, mux *runtime.Serve
 
 	})
 
-	mux.Handle("PATCH", pattern_PeerBillTrader_VerifyEmail_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_PeerBillTrader_VerifyEmail_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
