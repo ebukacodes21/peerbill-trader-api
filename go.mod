@@ -9,6 +9,7 @@ require (
 	github.com/rakyll/statik v0.1.7
 	github.com/stretchr/testify v1.9.0
 	golang.org/x/crypto v0.29.0
+	golang.org/x/sync v0.9.0
 	google.golang.org/genproto/googleapis/api v0.0.0-20241021214115-324edc3d5d38
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20241021214115-324edc3d5d38
 	google.golang.org/grpc v1.68.0
@@ -80,6 +81,7 @@ require (
 	github.com/lib/pq v1.10.9
 	github.com/o1egl/paseto v1.0.0
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
+	github.com/rs/cors v1.11.1
 	github.com/rs/zerolog v1.33.0
 	github.com/spf13/viper v1.19.0
 	gopkg.in/yaml.v3 v3.0.1 // indirect

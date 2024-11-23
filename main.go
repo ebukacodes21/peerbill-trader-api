@@ -6,10 +6,14 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/hibiken/asynq"
 	_ "github.com/lib/pq"
 	"github.com/rakyll/statik/fs"
+	"golang.org/x/sync/errgroup"
 
 	// "peerbill-server/api"
 	"peerbill-server/api"
@@ -25,10 +29,13 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"github.com/rs/cors"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 	"google.golang.org/protobuf/encoding/protojson"
 )
+
+var signals = []os.Signal{os.Interrupt, syscall.SIGTERM, syscall.SIGINT}
 
 func main() {
 	config, err := utils.LoadConfig(".")
@@ -40,6 +47,10 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	ctx, stop := signal.NotifyContext(context.Background(), signals...)
+	defer stop()
+
 	runDBMigration(config.MigrationURL, config.DBSource)
 	repository := db.NewRepository(conn)
 
@@ -48,10 +59,18 @@ func main() {
 		Addr: config.REDISServerAddr,
 	}
 
+	group, ctx := errgroup.WithContext(ctx)
+
 	taskDistributor := worker.NewRedisTaskDistributor(redisOption)
-	go runGatewayServer(config, repository, taskDistributor)
-	go runTaskProcessor(redisOption, repository, config)
-	runGrpcServer(config, repository, taskDistributor)
+	runGatewayServer(group, ctx, config, repository, taskDistributor)
+	runTaskProcessor(group, ctx, redisOption, repository, config)
+	runGrpcServer(group, ctx, config, repository, taskDistributor)
+
+	// wait bfr exiting main fn
+	err = group.Wait()
+	if err != nil {
+		log.Fatal(err)
+	}
 
 }
 
@@ -68,7 +87,7 @@ func runDBMigration(url string, source string) {
 	log.Print("migration successful")
 }
 
-func runGatewayServer(config utils.Config, repository db.DatabaseContract, td worker.TaskDistributor) {
+func runGatewayServer(group *errgroup.Group, ctx context.Context, config utils.Config, repository db.DatabaseContract, td worker.TaskDistributor) {
 	server, err := gapi.NewServer(config, repository, td)
 	if err != nil {
 		log.Fatal(err)
@@ -82,10 +101,8 @@ func runGatewayServer(config utils.Config, repository db.DatabaseContract, td wo
 			DiscardUnknown: true,
 		},
 	})
-	grpcMux := runtime.NewServeMux(options)
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
 
+	grpcMux := runtime.NewServeMux(options)
 	err = pb.RegisterPeerBillTraderHandlerServer(ctx, grpcMux, server)
 	if err != nil {
 		log.Fatal(err)
@@ -95,9 +112,6 @@ func runGatewayServer(config utils.Config, repository db.DatabaseContract, td wo
 	httpMux := http.NewServeMux()
 	httpMux.Handle("/", grpcMux)
 
-	// fserver := http.FileServer(http.Dir("./doc/swagger"))
-	// httpMux.Handle("/swagger/", http.StripPrefix("/swagger/", fserver))
-
 	// load from server
 	statikFS, err := fs.New()
 	if err != nil {
@@ -106,19 +120,53 @@ func runGatewayServer(config utils.Config, repository db.DatabaseContract, td wo
 
 	httpMux.Handle("/swagger/", http.StripPrefix("/swagger/", http.FileServer(statikFS)))
 
-	listener, err := net.Listen("tcp", config.HTTPServerAddr)
-	if err != nil {
-		log.Fatal(err)
+	c := cors.New(cors.Options{
+		AllowedOrigins: config.AllowedOrigins,
+		AllowedMethods: []string{
+			http.MethodGet,
+			http.MethodPost,
+			http.MethodPut,
+			http.MethodPatch,
+			http.MethodDelete,
+		},
+		AllowedHeaders: []string{
+			"Authorization",
+			"Content-Type",
+		},
+	})
+	handler := c.Handler(gapi.HttpLogger(httpMux))
+
+	httpServer := &http.Server{
+		Handler: handler,
+		Addr:    config.HTTPServerAddr,
 	}
-	log.Print("listening...", config.HTTPServerAddr)
-	handler := gapi.HttpLogger(httpMux)
-	err = http.Serve(listener, handler)
-	if err != nil {
-		log.Fatal(err)
-	}
+
+	group.Go(func() error {
+		log.Print("listening...", config.HTTPServerAddr)
+		err = httpServer.ListenAndServe()
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		return nil
+	})
+
+	group.Go(func() error {
+		<-ctx.Done()
+		log.Print("gracefully shutting down...")
+
+		err = httpServer.Shutdown(context.Background())
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		log.Print("http gateway server shutdown.. goodbye")
+		return nil
+	})
+
 }
 
-func runTaskProcessor(options asynq.RedisClientOpt, repository db.DatabaseContract, config utils.Config) {
+func runTaskProcessor(group *errgroup.Group, ctx context.Context, options asynq.RedisClientOpt, repository db.DatabaseContract, config utils.Config) {
 	log.Print("running processor")
 	mailer := mail.NewGmailSender(config.EmailSender, config.EmailAddress, config.EmailPassword)
 	taskProcessor := worker.NewRedisTaskProcessor(options, repository, mailer)
@@ -127,9 +175,19 @@ func runTaskProcessor(options asynq.RedisClientOpt, repository db.DatabaseContra
 	if err != nil {
 		log.Fatal("failed to process tasks")
 	}
+
+	group.Go(func() error {
+		<-ctx.Done()
+		log.Print("gracefully shutting down...")
+
+		taskProcessor.Shutdown()
+		log.Print("task processor shutdown.. goodbye")
+
+		return nil
+	})
 }
 
-func runGrpcServer(config utils.Config, repository db.DatabaseContract, td worker.TaskDistributor) {
+func runGrpcServer(group *errgroup.Group, ctx context.Context, config utils.Config, repository db.DatabaseContract, td worker.TaskDistributor) {
 	server, err := gapi.NewServer(config, repository, td)
 	if err != nil {
 		log.Fatal(err)
@@ -144,11 +202,28 @@ func runGrpcServer(config utils.Config, repository db.DatabaseContract, td worke
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Print("listening...", config.GRPCServerAddr)
-	err = grpcServer.Serve(listener)
-	if err != nil {
-		log.Fatal(err)
-	}
+
+	// starting server in go routine
+	group.Go(func() error {
+		log.Print("listening...", config.GRPCServerAddr)
+		err = grpcServer.Serve(listener)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		return nil
+	})
+
+	// graceful shutdown
+	group.Go(func() error {
+		<-ctx.Done()
+		log.Print("gracefully shutting down...")
+
+		grpcServer.GracefulStop()
+		log.Print("grpc server shutdown.. goodbye")
+
+		return nil
+	})
 }
 
 func runGinServer(config utils.Config, repository db.DatabaseContract) {

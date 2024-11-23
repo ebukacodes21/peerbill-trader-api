@@ -11,6 +11,7 @@ type Config struct {
 	HTTPServerAddr  string        `mapstructure:"HTTP_SERVER_ADDR"`
 	GRPCServerAddr  string        `mapstructure:"GRPC_SERVER_ADDR"`
 	REDISServerAddr string        `mapstructure:"REDIS_SERVER_ADDR"`
+	AllowedOrigins  []string      `mapstructure:"ALLOWED_ORIGINS"`
 	MigrationURL    string        `mapstructure:"MIGRATION_URL"`
 	DBDriver        string        `mapstructure:"DB_DRIVER"`
 	DBSource        string        `mapstructure:"DB_SOURCE"`
