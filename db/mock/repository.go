@@ -81,6 +81,21 @@ func (mr *MockDatabaseContractMockRecorder) CreateTrader(arg0, arg1 interface{})
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateTrader", reflect.TypeOf((*MockDatabaseContract)(nil).CreateTrader), arg0, arg1)
 }
 
+// CreateTraderTx mocks base method.
+func (m *MockDatabaseContract) CreateTraderTx(arg0 context.Context, arg1 db.CreateTraderTxParams) (db.CreateTraderTxResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateTraderTx", arg0, arg1)
+	ret0, _ := ret[0].(db.CreateTraderTxResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateTraderTx indicates an expected call of CreateTraderTx.
+func (mr *MockDatabaseContractMockRecorder) CreateTraderTx(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateTraderTx", reflect.TypeOf((*MockDatabaseContract)(nil).CreateTraderTx), arg0, arg1)
+}
+
 // CreateVerifyEmail mocks base method.
 func (m *MockDatabaseContract) CreateVerifyEmail(arg0 context.Context, arg1 db.CreateVerifyEmailParams) (db.VerifyEmail, error) {
 	m.ctrl.T.Helper()

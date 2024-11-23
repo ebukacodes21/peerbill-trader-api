@@ -2,12 +2,14 @@ package db
 
 import (
 	// "context"
+	"context"
 	"database/sql"
 )
 
 // contract to be implemented by both mock and real db
 type DatabaseContract interface {
 	Querier
+	CreateTraderTx(ctx context.Context, args CreateTraderTxParams) (CreateTraderTxResponse, error)
 }
 
 type Repository struct {
@@ -19,21 +21,20 @@ func NewRepository(db *sql.DB) DatabaseContract {
 	return &Repository{db: db, Queries: New(db)}
 }
 
-// possible transaction
-// func (r *Repository) execTx(ctx context.Context, fn func(queries *Queries) error) error {
-// 	sqlTx, err := r.db.BeginTx(ctx, nil)
-// 	if err != nil {
-// 		return err
-// 	}
+func (r *Repository) execTx(ctx context.Context, fn func(queries *Queries) error) error {
+	sqlTx, err := r.db.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
 
-// 	q := New(sqlTx)
-// 	err = fn(q)
-// 	if err != nil {
-// 		if rbErr := sqlTx.Rollback(); rbErr != nil {
-// 			return rbErr
-// 		}
-// 		return err
-// 	}
+	q := New(sqlTx)
+	err = fn(q)
+	if err != nil {
+		if rbErr := sqlTx.Rollback(); rbErr != nil {
+			return rbErr
+		}
+		return err
+	}
 
-// 	return sqlTx.Commit()
-// }
+	return sqlTx.Commit()
+}
