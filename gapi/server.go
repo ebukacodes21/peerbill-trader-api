@@ -10,7 +10,7 @@ import (
 )
 
 type Server struct {
-	pb.UnimplementedPeerBillTraderServer
+	pb.UnimplementedPeerbillServer
 	repository      db.DatabaseContract
 	token           token.TokenMaker
 	config          utils.Config

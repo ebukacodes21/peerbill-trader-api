@@ -1,0 +1,77 @@
+syntax = "proto3";
+
+package pb;
+
+import "google/api/annotations.proto";
+import "rpc_register_trader.proto";
+import "rpc_login_trader.proto";
+import "rpc_update_trader.proto";
+import "rpc_verify_email.proto";
+import "rpc_subscribe_rate.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "peerbill-server/pb";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+    info: {
+      title: "Peerbill"
+      version: "1.2"
+      contact: {
+        name: "Peerbill"
+        url: ""
+        email: "peerbillofficial@gmail.com"
+      }
+    }
+};
+
+service Peerbill {
+    rpc RegisterTrader (RegisterTraderRequest) returns (RegisterTraderResponse) {
+        option (google.api.http) = {
+            post: "/api/register-trader"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            description: "Use this API to create a new trader";
+            summary: "create a new trader";
+        };
+    }
+    rpc LoginTrader (LoginTraderRequest) returns (LoginTraderResponse) {
+        option (google.api.http) = {
+            post: "/api/login-trader"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            description: "Use this API to login trader";
+            summary: "login trader";
+        };
+    }
+    rpc UpdateTrader (UpdateTraderRequest) returns (UpdateTraderResponse) {
+        option (google.api.http) = {
+            patch: "/api/update-trader"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            description: "Use this API to update a trader";
+            summary: "update a trader";
+        };
+    }
+    rpc VerifyEmail (VerifyEmailRequest) returns (VerifyEmailResponse) {
+        option (google.api.http) = {
+            get: "/api/verify-email"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            description: "Use this API to verify email address";
+            summary: "verify email address";
+        };
+    }
+    rpc SubscribeRate (stream SubscribeRateRequest) returns (stream SubscribeRateResponse) {
+        option (google.api.http) = {
+            post: "/api/subscribe-rate"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            description: "Use this API to subscribe to crypto/fiat rate";
+            summary: "subscribe to crypto/fiat rate";
+        };
+    }
+}

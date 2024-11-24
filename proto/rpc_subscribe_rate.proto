@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package = "peerbill-server/pb";
+
+message SubscribeRateRequest {
+    string fiat = 1;
+    string crypto = 2;
+}
+
+message SubscribeRateResponse {
+    float rate = 1;
+}
