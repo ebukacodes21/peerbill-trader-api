@@ -2,8 +2,8 @@ package api
 
 import (
 	"net/http"
-	db "peerbill-trader-server/db/sqlc"
-	"peerbill-trader-server/utils"
+	db "peerbill-server/db/sqlc"
+	"peerbill-server/utils"
 	"time"
 
 	"github.com/gin-gonic/gin"

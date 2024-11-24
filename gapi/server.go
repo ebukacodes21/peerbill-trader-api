@@ -2,11 +2,11 @@ package gapi
 
 import (
 	"fmt"
-	db "peerbill-trader-server/db/sqlc"
-	"peerbill-trader-server/pb"
-	"peerbill-trader-server/token"
-	"peerbill-trader-server/utils"
-	"peerbill-trader-server/worker"
+	db "peerbill-server/db/sqlc"
+	"peerbill-server/pb"
+	"peerbill-server/token"
+	"peerbill-server/utils"
+	"peerbill-server/worker"
 )
 
 type Server struct {

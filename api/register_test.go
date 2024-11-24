@@ -8,9 +8,9 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
-	mockdb "peerbill-trader-server/db/mock"
-	db "peerbill-trader-server/db/sqlc"
-	"peerbill-trader-server/utils"
+	mockdb "peerbill-server/db/mock"
+	db "peerbill-server/db/sqlc"
+	"peerbill-server/utils"
 	"reflect"
 	"testing"
 

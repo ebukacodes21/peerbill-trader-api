@@ -1,7 +1,7 @@
 package token
 
 import (
-	"peerbill-trader-server/utils"
+	"peerbill-server/utils"
 	"testing"
 	"time"
 

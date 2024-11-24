@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"time"
 
-	db "peerbill-trader-server/db/sqlc"
-	"peerbill-trader-server/utils"
+	db "peerbill-server/db/sqlc"
+	"peerbill-server/utils"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
