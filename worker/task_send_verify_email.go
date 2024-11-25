@@ -2,8 +2,8 @@ package worker
 
 import (
 	"context"
-	db "peerbill-server/db/sqlc"
-	"peerbill-server/utils"
+	db "peerbill-trader-api/db/sqlc"
+	"peerbill-trader-api/utils"
 
 	// "database/sql"
 	"encoding/json"

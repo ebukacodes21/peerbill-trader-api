@@ -10,7 +10,7 @@
   },
   "tags": [
     {
-      "name": "Peerbill"
+      "name": "PeerbillTrader"
     }
   ],
   "consumes": [
@@ -24,7 +24,7 @@
       "post": {
         "summary": "login trader",
         "description": "Use this API to login trader",
-        "operationId": "Peerbill_LoginTrader",
+        "operationId": "PeerbillTrader_LoginTrader",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -50,7 +50,7 @@
           }
         ],
         "tags": [
-          "Peerbill"
+          "PeerbillTrader"
         ]
       }
     },
@@ -58,7 +58,7 @@
       "post": {
         "summary": "create a new trader",
         "description": "Use this API to create a new trader",
-        "operationId": "Peerbill_RegisterTrader",
+        "operationId": "PeerbillTrader_RegisterTrader",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -84,51 +84,7 @@
           }
         ],
         "tags": [
-          "Peerbill"
-        ]
-      }
-    },
-    "/api/subscribe-rate": {
-      "post": {
-        "summary": "subscribe to crypto/fiat rate",
-        "description": "Use this API to subscribe to crypto/fiat rate",
-        "operationId": "Peerbill_SubscribeRate",
-        "responses": {
-          "200": {
-            "description": "A successful response.(streaming responses)",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "result": {
-                  "$ref": "#/definitions/pbSubscribeRateResponse"
-                },
-                "error": {
-                  "$ref": "#/definitions/rpcStatus"
-                }
-              },
-              "title": "Stream result of pbSubscribeRateResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "description": " (streaming inputs)",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/pbSubscribeRateRequest"
-            }
-          }
-        ],
-        "tags": [
-          "Peerbill"
+          "PeerbillTrader"
         ]
       }
     },
@@ -136,7 +92,7 @@
       "patch": {
         "summary": "update a trader",
         "description": "Use this API to update a trader",
-        "operationId": "Peerbill_UpdateTrader",
+        "operationId": "PeerbillTrader_UpdateTrader",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -162,7 +118,7 @@
           }
         ],
         "tags": [
-          "Peerbill"
+          "PeerbillTrader"
         ]
       }
     },
@@ -170,7 +126,7 @@
       "get": {
         "summary": "verify email address",
         "description": "Use this API to verify email address",
-        "operationId": "Peerbill_VerifyEmail",
+        "operationId": "PeerbillTrader_VerifyEmail",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -201,7 +157,7 @@
           }
         ],
         "tags": [
-          "Peerbill"
+          "PeerbillTrader"
         ]
       }
     }
@@ -274,26 +230,6 @@
       "properties": {
         "trader": {
           "$ref": "#/definitions/pbTrader"
-        }
-      }
-    },
-    "pbSubscribeRateRequest": {
-      "type": "object",
-      "properties": {
-        "fiat": {
-          "type": "string"
-        },
-        "crypto": {
-          "type": "string"
-        }
-      }
-    },
-    "pbSubscribeRateResponse": {
-      "type": "object",
-      "properties": {
-        "rate": {
-          "type": "number",
-          "format": "float"
         }
       }
     },

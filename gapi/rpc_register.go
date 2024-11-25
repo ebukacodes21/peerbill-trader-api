@@ -2,11 +2,11 @@ package gapi
 
 import (
 	"context"
-	db "peerbill-server/db/sqlc"
-	"peerbill-server/pb"
-	"peerbill-server/utils"
-	"peerbill-server/validate"
-	"peerbill-server/worker"
+	db "peerbill-trader-api/db/sqlc"
+	"peerbill-trader-api/pb"
+	"peerbill-trader-api/utils"
+	"peerbill-trader-api/validate"
+	"peerbill-trader-api/worker"
 	"time"
 
 	"github.com/hibiken/asynq"

@@ -1,7 +1,7 @@
 package mail
 
 import (
-	"peerbill-server/utils"
+	"peerbill-trader-api/utils"
 	"testing"
 
 	"github.com/stretchr/testify/require"

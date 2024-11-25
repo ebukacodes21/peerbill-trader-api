@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package pb;
 
-option go_package = "peerbill-server/pb";
+option go_package = "peerbill-trader-api/pb";
 
 message SubscribeRateRequest {
     string fiat = 1;

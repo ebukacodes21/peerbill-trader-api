@@ -1,8 +1,8 @@
 package gapi
 
 import (
-	db "peerbill-server/db/sqlc"
-	"peerbill-server/pb"
+	db "peerbill-trader-api/db/sqlc"
+	"peerbill-trader-api/pb"
 
 	"google.golang.org/protobuf/types/known/timestamppb"
 )

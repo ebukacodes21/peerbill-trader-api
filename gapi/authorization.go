@@ -3,7 +3,7 @@ package gapi
 import (
 	"context"
 	"fmt"
-	"peerbill-server/token"
+	"peerbill-trader-api/token"
 	"strings"
 
 	"google.golang.org/grpc/metadata"

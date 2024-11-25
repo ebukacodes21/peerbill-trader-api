@@ -7,7 +7,7 @@ import (
 	"log"
 	"net/http"
 
-	"peerbill-server/pb"
+	"peerbill-trader-api/pb"
 
 	"google.golang.org/grpc"
 )
