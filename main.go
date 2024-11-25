@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+
+	// "crypto/tls"
 	"database/sql"
 	"log"
 	"net"
@@ -10,20 +12,20 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/gorilla/websocket"
 	"github.com/hibiken/asynq"
 	_ "github.com/lib/pq"
 	"github.com/rakyll/statik/fs"
 	"golang.org/x/sync/errgroup"
 
-	// "peerbill-server/api"
-	"peerbill-server/api"
-	db "peerbill-server/db/sqlc"
-	_ "peerbill-server/doc/statik"
-	"peerbill-server/gapi"
-	"peerbill-server/mail"
-	"peerbill-server/pb"
-	"peerbill-server/utils"
-	"peerbill-server/worker"
+	db "peerbill-trader-api/db/sqlc"
+	_ "peerbill-trader-api/doc/statik"
+	"peerbill-trader-api/gapi"
+	"peerbill-trader-api/mail"
+	"peerbill-trader-api/pb"
+	"peerbill-trader-api/socket"
+	"peerbill-trader-api/utils"
+	"peerbill-trader-api/worker"
 
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
@@ -31,11 +33,70 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/rs/cors"
 	"google.golang.org/grpc"
+
 	"google.golang.org/grpc/reflection"
 	"google.golang.org/protobuf/encoding/protojson"
 )
 
+/*
+*
+signals to look out for a graceful shutdown
+*/
 var signals = []os.Signal{os.Interrupt, syscall.SIGTERM, syscall.SIGINT}
+
+/*
+*
+set up websocket upgrader
+used to upgrade http conn
+to websocket. the Upgrade method
+will accept rw,r and return a websocket
+connection | err
+*/
+var upgrader = websocket.Upgrader{
+	CheckOrigin: func(r *http.Request) bool {
+		return true
+	},
+}
+
+// WebSocket handler function
+
+func runWebSocketServer(group *errgroup.Group, ctx context.Context, config utils.Config) {
+	// Define WebSocket handler route
+	httpMux := http.NewServeMux()
+	httpMux.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
+		socket.HandleWebSocketConnection(upgrader, config, w, r)
+	})
+
+	// Set up your HTTP server
+	httpServer := &http.Server{
+		Handler: httpMux,
+		Addr:    config.WebsocketAddr,
+	}
+
+	// Start the WebSocket server in a goroutine
+	group.Go(func() error {
+		log.Print("WebSocket server listening on ", config.WebsocketAddr)
+		err := httpServer.ListenAndServe()
+		if err != nil && err != http.ErrServerClosed {
+			log.Fatal(err)
+		}
+		return nil
+	})
+
+	// Gracefully shutdown WebSocket server
+	group.Go(func() error {
+		<-ctx.Done()
+		log.Print("Gracefully shutting down WebSocket server...")
+
+		err := httpServer.Shutdown(context.Background())
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		log.Print("WebSocket server shutdown completed.")
+		return nil
+	})
+}
 
 func main() {
 	config, err := utils.LoadConfig(".")
@@ -65,6 +126,7 @@ func main() {
 	runGatewayServer(group, ctx, config, repository, taskDistributor)
 	runTaskProcessor(group, ctx, redisOption, repository, config)
 	runGrpcServer(group, ctx, config, repository, taskDistributor)
+	runWebSocketServer(group, ctx, config)
 
 	// wait bfr exiting main fn
 	err = group.Wait()
@@ -103,7 +165,7 @@ func runGatewayServer(group *errgroup.Group, ctx context.Context, config utils.C
 	})
 
 	grpcMux := runtime.NewServeMux(options)
-	err = pb.RegisterPeerBillTraderHandlerServer(ctx, grpcMux, server)
+	err = pb.RegisterPeerbillTraderHandlerServer(ctx, grpcMux, server)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -194,8 +256,9 @@ func runGrpcServer(group *errgroup.Group, ctx context.Context, config utils.Conf
 	}
 
 	logger := grpc.UnaryInterceptor(gapi.Logger)
+
 	grpcServer := grpc.NewServer(logger)
-	pb.RegisterPeerBillTraderServer(grpcServer, server)
+	pb.RegisterPeerbillTraderServer(grpcServer, server)
 	reflection.Register(grpcServer)
 
 	listener, err := net.Listen("tcp", config.GRPCServerAddr)
@@ -224,16 +287,4 @@ func runGrpcServer(group *errgroup.Group, ctx context.Context, config utils.Conf
 
 		return nil
 	})
-}
-
-func runGinServer(config utils.Config, repository db.DatabaseContract) {
-	server, err := api.NewServer(config, repository)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	err = server.StartServer(config.HTTPServerAddr)
-	if err != nil {
-		log.Fatal(err)
-	}
 }

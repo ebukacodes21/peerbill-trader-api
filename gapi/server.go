@@ -2,15 +2,15 @@ package gapi
 
 import (
 	"fmt"
-	db "peerbill-server/db/sqlc"
-	"peerbill-server/pb"
-	"peerbill-server/token"
-	"peerbill-server/utils"
-	"peerbill-server/worker"
+	db "peerbill-trader-api/db/sqlc"
+	"peerbill-trader-api/pb"
+	"peerbill-trader-api/token"
+	"peerbill-trader-api/utils"
+	"peerbill-trader-api/worker"
 )
 
 type Server struct {
-	pb.UnimplementedPeerBillTraderServer
+	pb.UnimplementedPeerbillTraderServer
 	repository      db.DatabaseContract
 	token           token.TokenMaker
 	config          utils.Config

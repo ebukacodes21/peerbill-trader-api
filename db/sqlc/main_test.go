@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"log"
 	"os"
-	"peerbill-server/utils"
+	"peerbill-trader-api/utils"
 	"testing"
 
 	_ "github.com/lib/pq"

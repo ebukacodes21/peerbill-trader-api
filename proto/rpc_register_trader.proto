@@ -4,7 +4,7 @@ package pb;
 
 import "trader.proto";
 
-option go_package = "peerbill-server/pb";
+option go_package = "peerbill-trader-api/pb";
 
 message RegisterTraderRequest {
     string        first_name = 1;

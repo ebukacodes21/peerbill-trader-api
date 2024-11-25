@@ -5,7 +5,7 @@ package pb;
 import "trader.proto";
 import "google/protobuf/timestamp.proto";
 
-option go_package = "peerbill-server/pb";
+option go_package = "peerbill-trader-api/pb";
 
 message LoginTraderRequest {
     string        username = 1;
