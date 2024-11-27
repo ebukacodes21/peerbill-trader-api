@@ -15,8 +15,8 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
-func RunGrpcServer(group *errgroup.Group, ctx context.Context, config utils.Config, repository db.DatabaseContract, td worker.TaskDistributor) {
-	server, err := gapi.NewServer(config, repository, td)
+func RunGrpcServer(group *errgroup.Group, ctx context.Context, config utils.Config, repository db.DatabaseContract, td worker.TaskDistributor, tp worker.TaskProcessor) {
+	server, err := gapi.NewServer(config, repository, td, tp)
 	if err != nil {
 		log.Fatal(err)
 	}

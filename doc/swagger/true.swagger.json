@@ -211,11 +211,11 @@
     "pbGetTradersResponse": {
       "type": "object",
       "properties": {
-        "trader": {
+        "result": {
           "type": "array",
           "items": {
             "type": "object",
-            "$ref": "#/definitions/pbTrader"
+            "$ref": "#/definitions/pbTraderWithDetails"
           }
         }
       }
@@ -314,6 +314,39 @@
         "createdAt": {
           "type": "string",
           "format": "date-time"
+        }
+      }
+    },
+    "pbTraderPair": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "crypto": {
+          "type": "string"
+        },
+        "fiat": {
+          "type": "string"
+        },
+        "buyRate": {
+          "type": "number",
+          "format": "float"
+        },
+        "sellRate": {
+          "type": "number",
+          "format": "float"
+        }
+      }
+    },
+    "pbTraderWithDetails": {
+      "type": "object",
+      "properties": {
+        "trader": {
+          "$ref": "#/definitions/pbTrader"
+        },
+        "tradePair": {
+          "$ref": "#/definitions/pbTraderPair"
         }
       }
     },

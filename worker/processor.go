@@ -4,7 +4,9 @@ import (
 	"context"
 	db "peerbill-trader-api/db/sqlc"
 	"peerbill-trader-api/mail"
+	"peerbill-trader-api/utils"
 
+	"github.com/go-redis/redis/v8"
 	"github.com/hibiken/asynq"
 	"github.com/rs/zerolog/log"
 )
@@ -13,12 +15,16 @@ type TaskProcessor interface {
 	Start() error
 	Shutdown()
 	ProcessTaskSendVerifyEmail(ctx context.Context, task *asynq.Task) error
+	Get(ctx context.Context, value string) (string, error)
+	Set(key string, value string) error
 }
 
 type RedisTaskProcessor struct {
 	server     *asynq.Server
+	redis      *redis.Client
 	repository db.DatabaseContract
 	mailer     mail.EmailSender
+	config     utils.Config
 }
 
 const (
@@ -26,7 +32,11 @@ const (
 	Default  = "default"
 )
 
-func NewRedisTaskProcessor(redisOpt asynq.RedisConnOpt, repository db.DatabaseContract, mailer mail.EmailSender) TaskProcessor {
+func NewRedisTaskProcessor(config utils.Config, redisOpt asynq.RedisConnOpt, repository db.DatabaseContract, mailer mail.EmailSender) TaskProcessor {
+	cache := redis.NewClient(&redis.Options{
+		Addr: config.REDISServerAddr,
+	})
+
 	server := asynq.NewServer(redisOpt,
 		asynq.Config{
 			Queues: map[string]int{
@@ -38,7 +48,7 @@ func NewRedisTaskProcessor(redisOpt asynq.RedisConnOpt, repository db.DatabaseCo
 			}),
 			Logger: NewLogger(),
 		})
-	return &RedisTaskProcessor{server: server, repository: repository, mailer: mailer}
+	return &RedisTaskProcessor{server: server, repository: repository, mailer: mailer, redis: cache, config: config}
 }
 
 func (rtp *RedisTaskProcessor) Start() error {

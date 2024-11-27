@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package = "peerbill-trader-api/pb";
+
+message TraderPair {
+    string        username = 1;
+    string        crypto = 2;
+    string        fiat = 3;
+    float        buy_rate = 4;
+    float        sell_rate = 5;
+}
+

@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package pb;
+
+import "trader.proto";
+import "trade_pair.proto";
+
+option go_package = "peerbill-trader-api/pb";
+
+message TraderWithDetails {
+  Trader trader = 1;
+  TraderPair tradePair = 2;
+}

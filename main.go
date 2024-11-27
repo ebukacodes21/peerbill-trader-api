@@ -13,6 +13,7 @@ import (
 	"golang.org/x/sync/errgroup"
 
 	db "peerbill-trader-api/db/sqlc"
+	"peerbill-trader-api/mail"
 
 	"peerbill-trader-api/servers"
 	"peerbill-trader-api/utils"
@@ -48,10 +49,13 @@ func main() {
 
 	group, ctx := errgroup.WithContext(ctx)
 
+	mailer := mail.NewGmailSender(config.EmailSender, config.EmailAddress, config.EmailPassword)
 	taskDistributor := worker.NewRedisTaskDistributor(redisOption)
-	servers.RunGatewayServer(group, ctx, config, repository, taskDistributor)
+	taskProcessor := worker.NewRedisTaskProcessor(config, redisOption, repository, mailer)
+
+	servers.RunGatewayServer(group, ctx, config, repository, taskDistributor, taskProcessor)
 	servers.RunTaskProcessor(group, ctx, redisOption, repository, config)
-	servers.RunGrpcServer(group, ctx, config, repository, taskDistributor)
+	servers.RunGrpcServer(group, ctx, config, repository, taskDistributor, taskProcessor)
 	servers.RunWebSocketServer(group, ctx, config)
 
 	// wait bfr exiting main fn

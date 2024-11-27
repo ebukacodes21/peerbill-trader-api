@@ -13,6 +13,4 @@ VALUES ($1, $2, $3, $4, $5) RETURNING *;
 SELECT * FROM trade_pairs 
 WHERE crypto = $1
 AND fiat = $2
-ORDER BY id
-LIMIT $3
-OFFSET $4;
+ORDER BY id;

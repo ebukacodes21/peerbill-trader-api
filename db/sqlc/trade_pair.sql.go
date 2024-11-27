@@ -55,24 +55,15 @@ SELECT id, username, crypto, fiat, buy_rate, sell_rate, created_at FROM trade_pa
 WHERE crypto = $1
 AND fiat = $2
 ORDER BY id
-LIMIT $3
-OFFSET $4
 `
 
 type GetTradePairsParams struct {
 	Crypto string `db:"crypto" json:"crypto"`
 	Fiat   string `db:"fiat" json:"fiat"`
-	Limit  int32  `db:"limit" json:"limit"`
-	Offset int32  `db:"offset" json:"offset"`
 }
 
 func (q *Queries) GetTradePairs(ctx context.Context, arg GetTradePairsParams) ([]TradePair, error) {
-	rows, err := q.db.QueryContext(ctx, getTradePairs,
-		arg.Crypto,
-		arg.Fiat,
-		arg.Limit,
-		arg.Offset,
-	)
+	rows, err := q.db.QueryContext(ctx, getTradePairs, arg.Crypto, arg.Fiat)
 	if err != nil {
 		return nil, err
 	}

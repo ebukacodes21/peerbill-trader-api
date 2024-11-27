@@ -25,5 +25,5 @@ CREATE TABLE "trade_pairs" (
 ALTER TABLE "trade_pairs" ADD CONSTRAINT "fk_username" FOREIGN KEY ("username") REFERENCES "traders" ("username");
 
 -- CREATE UNIQUE INDEX ON "trade_pairs" ("crypto", "fiat", "username")
-ALTER TABLE "trade_pairs" ADD CONSTRAINT "base_quote_trader_key" UNIQUE ("crypto", "fiat", "username");
+ALTER TABLE "trade_pairs" ADD CONSTRAINT "crypto_fiat_trader_key" UNIQUE ("crypto", "fiat", "username");
 
