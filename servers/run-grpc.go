@@ -34,7 +34,7 @@ func RunGrpcServer(group *errgroup.Group, ctx context.Context, config utils.Conf
 
 	// starting server in go routine
 	group.Go(func() error {
-		log.Print("listening...", config.GRPCServerAddr)
+		log.Print("Grpc server running on ", config.GRPCServerAddr)
 		err = grpcServer.Serve(listener)
 		if err != nil {
 			log.Fatal(err)
@@ -46,10 +46,10 @@ func RunGrpcServer(group *errgroup.Group, ctx context.Context, config utils.Conf
 	// graceful shutdown
 	group.Go(func() error {
 		<-ctx.Done()
-		log.Print("gracefully shutting down...")
+		log.Print("grpc gracefully shutting down...")
 
 		grpcServer.GracefulStop()
-		log.Print("grpc server shutdown.. goodbye")
+		log.Print("goodbye")
 
 		return nil
 	})

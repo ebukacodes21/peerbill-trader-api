@@ -83,6 +83,54 @@ func (q *Queries) GetTrader(ctx context.Context, username string) (Trader, error
 	return i, err
 }
 
+const getTraders = `-- name: GetTraders :many
+SELECT id, first_name, last_name, username, password, email, country, phone, role, profile_pic, created_at, is_verified FROM traders 
+ORDER BY id
+LIMIT $1
+OFFSET $2
+`
+
+type GetTradersParams struct {
+	Limit  int32 `db:"limit" json:"limit"`
+	Offset int32 `db:"offset" json:"offset"`
+}
+
+func (q *Queries) GetTraders(ctx context.Context, arg GetTradersParams) ([]Trader, error) {
+	rows, err := q.db.QueryContext(ctx, getTraders, arg.Limit, arg.Offset)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []Trader{}
+	for rows.Next() {
+		var i Trader
+		if err := rows.Scan(
+			&i.ID,
+			&i.FirstName,
+			&i.LastName,
+			&i.Username,
+			&i.Password,
+			&i.Email,
+			&i.Country,
+			&i.Phone,
+			&i.Role,
+			&i.ProfilePic,
+			&i.CreatedAt,
+			&i.IsVerified,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const updateTrader = `-- name: UpdateTrader :one
 UPDATE traders
 SET

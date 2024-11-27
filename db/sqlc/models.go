@@ -23,13 +23,13 @@ type Session struct {
 }
 
 type TradePair struct {
-	ID         int64     `db:"id" json:"id"`
-	TraderID   int64     `db:"trader_id" json:"trader_id"`
-	BaseAsset  string    `db:"base_asset" json:"base_asset"`
-	QuoteAsset string    `db:"quote_asset" json:"quote_asset"`
-	BuyRate    float64   `db:"buy_rate" json:"buy_rate"`
-	SellRate   float64   `db:"sell_rate" json:"sell_rate"`
-	CreatedAt  time.Time `db:"created_at" json:"created_at"`
+	ID        int64     `db:"id" json:"id"`
+	Username  string    `db:"username" json:"username"`
+	Crypto    string    `db:"crypto" json:"crypto"`
+	Fiat      string    `db:"fiat" json:"fiat"`
+	BuyRate   float64   `db:"buy_rate" json:"buy_rate"`
+	SellRate  float64   `db:"sell_rate" json:"sell_rate"`
+	CreatedAt time.Time `db:"created_at" json:"created_at"`
 }
 
 type Trader struct {

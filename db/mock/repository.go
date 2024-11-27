@@ -126,6 +126,21 @@ func (mr *MockDatabaseContractMockRecorder) GetSession(arg0, arg1 interface{}) *
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSession", reflect.TypeOf((*MockDatabaseContract)(nil).GetSession), arg0, arg1)
 }
 
+// GetTradePairs mocks base method.
+func (m *MockDatabaseContract) GetTradePairs(arg0 context.Context, arg1 db.GetTradePairsParams) ([]db.TradePair, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetTradePairs", arg0, arg1)
+	ret0, _ := ret[0].([]db.TradePair)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetTradePairs indicates an expected call of GetTradePairs.
+func (mr *MockDatabaseContractMockRecorder) GetTradePairs(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTradePairs", reflect.TypeOf((*MockDatabaseContract)(nil).GetTradePairs), arg0, arg1)
+}
+
 // GetTrader mocks base method.
 func (m *MockDatabaseContract) GetTrader(arg0 context.Context, arg1 string) (db.Trader, error) {
 	m.ctrl.T.Helper()
@@ -139,6 +154,21 @@ func (m *MockDatabaseContract) GetTrader(arg0 context.Context, arg1 string) (db.
 func (mr *MockDatabaseContractMockRecorder) GetTrader(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTrader", reflect.TypeOf((*MockDatabaseContract)(nil).GetTrader), arg0, arg1)
+}
+
+// GetTraders mocks base method.
+func (m *MockDatabaseContract) GetTraders(arg0 context.Context, arg1 db.GetTradersParams) ([]db.Trader, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetTraders", arg0, arg1)
+	ret0, _ := ret[0].([]db.Trader)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetTraders indicates an expected call of GetTraders.
+func (mr *MockDatabaseContractMockRecorder) GetTraders(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTraders", reflect.TypeOf((*MockDatabaseContract)(nil).GetTraders), arg0, arg1)
 }
 
 // UpdateTrader mocks base method.

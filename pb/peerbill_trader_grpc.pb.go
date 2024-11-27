@@ -23,6 +23,7 @@ const (
 	PeerbillTrader_LoginTrader_FullMethodName    = "/pb.PeerbillTrader/LoginTrader"
 	PeerbillTrader_UpdateTrader_FullMethodName   = "/pb.PeerbillTrader/UpdateTrader"
 	PeerbillTrader_VerifyEmail_FullMethodName    = "/pb.PeerbillTrader/VerifyEmail"
+	PeerbillTrader_GetTraders_FullMethodName     = "/pb.PeerbillTrader/GetTraders"
 )
 
 // PeerbillTraderClient is the client API for PeerbillTrader service.
@@ -33,6 +34,7 @@ type PeerbillTraderClient interface {
 	LoginTrader(ctx context.Context, in *LoginTraderRequest, opts ...grpc.CallOption) (*LoginTraderResponse, error)
 	UpdateTrader(ctx context.Context, in *UpdateTraderRequest, opts ...grpc.CallOption) (*UpdateTraderResponse, error)
 	VerifyEmail(ctx context.Context, in *VerifyEmailRequest, opts ...grpc.CallOption) (*VerifyEmailResponse, error)
+	GetTraders(ctx context.Context, in *GetTradersRequest, opts ...grpc.CallOption) (*GetTradersResponse, error)
 }
 
 type peerbillTraderClient struct {
@@ -83,6 +85,16 @@ func (c *peerbillTraderClient) VerifyEmail(ctx context.Context, in *VerifyEmailR
 	return out, nil
 }
 
+func (c *peerbillTraderClient) GetTraders(ctx context.Context, in *GetTradersRequest, opts ...grpc.CallOption) (*GetTradersResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetTradersResponse)
+	err := c.cc.Invoke(ctx, PeerbillTrader_GetTraders_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // PeerbillTraderServer is the server API for PeerbillTrader service.
 // All implementations must embed UnimplementedPeerbillTraderServer
 // for forward compatibility.
@@ -91,6 +103,7 @@ type PeerbillTraderServer interface {
 	LoginTrader(context.Context, *LoginTraderRequest) (*LoginTraderResponse, error)
 	UpdateTrader(context.Context, *UpdateTraderRequest) (*UpdateTraderResponse, error)
 	VerifyEmail(context.Context, *VerifyEmailRequest) (*VerifyEmailResponse, error)
+	GetTraders(context.Context, *GetTradersRequest) (*GetTradersResponse, error)
 	mustEmbedUnimplementedPeerbillTraderServer()
 }
 
@@ -112,6 +125,9 @@ func (UnimplementedPeerbillTraderServer) UpdateTrader(context.Context, *UpdateTr
 }
 func (UnimplementedPeerbillTraderServer) VerifyEmail(context.Context, *VerifyEmailRequest) (*VerifyEmailResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method VerifyEmail not implemented")
+}
+func (UnimplementedPeerbillTraderServer) GetTraders(context.Context, *GetTradersRequest) (*GetTradersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetTraders not implemented")
 }
 func (UnimplementedPeerbillTraderServer) mustEmbedUnimplementedPeerbillTraderServer() {}
 func (UnimplementedPeerbillTraderServer) testEmbeddedByValue()                        {}
@@ -206,6 +222,24 @@ func _PeerbillTrader_VerifyEmail_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _PeerbillTrader_GetTraders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetTradersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PeerbillTraderServer).GetTraders(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PeerbillTrader_GetTraders_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PeerbillTraderServer).GetTraders(ctx, req.(*GetTradersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // PeerbillTrader_ServiceDesc is the grpc.ServiceDesc for PeerbillTrader service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -228,6 +262,10 @@ var PeerbillTrader_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "VerifyEmail",
 			Handler:    _PeerbillTrader_VerifyEmail_Handler,
+		},
+		{
+			MethodName: "GetTraders",
+			Handler:    _PeerbillTrader_GetTraders_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

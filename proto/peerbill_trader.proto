@@ -7,6 +7,7 @@ import "rpc_register_trader.proto";
 import "rpc_login_trader.proto";
 import "rpc_update_trader.proto";
 import "rpc_verify_email.proto";
+import "rpc_get_traders.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
 option go_package = "peerbill-trader-api/pb";
@@ -61,6 +62,16 @@ service PeerbillTrader {
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
             description: "Use this API to verify email address";
             summary: "verify email address";
+        };
+    }
+    rpc GetTraders (GetTradersRequest) returns (GetTradersResponse) {
+        option (google.api.http) = {
+            post: "/api/get-traders"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            description: "Use this API to get list of traders";
+            summary: "Get a list of traders";
         };
     }
 }

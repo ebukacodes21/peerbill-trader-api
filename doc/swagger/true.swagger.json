@@ -20,6 +20,40 @@
     "application/json"
   ],
   "paths": {
+    "/api/get-traders": {
+      "post": {
+        "summary": "Get a list of traders",
+        "description": "Use this API to get list of traders",
+        "operationId": "PeerbillTrader_GetTraders",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbGetTradersResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbGetTradersRequest"
+            }
+          }
+        ],
+        "tags": [
+          "PeerbillTrader"
+        ]
+      }
+    },
     "/api/login-trader": {
       "post": {
         "summary": "login trader",
@@ -163,6 +197,29 @@
     }
   },
   "definitions": {
+    "pbGetTradersRequest": {
+      "type": "object",
+      "properties": {
+        "fiat": {
+          "type": "string"
+        },
+        "crypto": {
+          "type": "string"
+        }
+      }
+    },
+    "pbGetTradersResponse": {
+      "type": "object",
+      "properties": {
+        "trader": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/pbTrader"
+          }
+        }
+      }
+    },
     "pbLoginTraderRequest": {
       "type": "object",
       "properties": {

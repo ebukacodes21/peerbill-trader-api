@@ -3,18 +3,23 @@ package servers
 import (
 	"log"
 
-	"github.com/golang-migrate/migrate"
+	"github.com/golang-migrate/migrate/v4"
+	_ "github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
+	_ "github.com/lib/pq"
 )
 
-func RunDBMigration(url string, source string) {
-	migration, err := migrate.New(url, source)
+// RunDBMigration runs the migration process for the given source and database URL
+func RunDBMigration(source string, url string) {
+	migration, err := migrate.New(source, url)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("Unable to start migration:", err)
 	}
 
-	if err = migration.Up(); err != nil && err != migrate.ErrNoChange {
-		log.Fatal(err)
+	// Run migrations
+	if err := migration.Up(); err != nil && err != migrate.ErrNoChange {
+		log.Fatal("Error running migration:", err)
 	}
 
-	log.Print("migration successful")
+	log.Println("Migration completed successfully")
 }
