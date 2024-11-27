@@ -10,6 +10,8 @@ import (
 	"peerbill-trader-api/utils"
 	"peerbill-trader-api/worker"
 
+	_ "peerbill-trader-api/doc/statik"
+
 	"github.com/rakyll/statik/fs"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
@@ -73,7 +75,7 @@ func RunGatewayServer(group *errgroup.Group, ctx context.Context, config utils.C
 	}
 
 	group.Go(func() error {
-		log.Print("listening...", config.HTTPServerAddr)
+		log.Print("Gateway server running on ", config.HTTPServerAddr)
 		err = httpServer.ListenAndServe()
 		if err != nil {
 			log.Fatal(err)
@@ -84,14 +86,14 @@ func RunGatewayServer(group *errgroup.Group, ctx context.Context, config utils.C
 
 	group.Go(func() error {
 		<-ctx.Done()
-		log.Print("gracefully shutting down...")
+		log.Print("gateway gracefully shutting down...")
 
 		err = httpServer.Shutdown(context.Background())
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		log.Print("http gateway server shutdown.. goodbye")
+		log.Print("goodbye")
 		return nil
 	})
 

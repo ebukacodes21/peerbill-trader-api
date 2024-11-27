@@ -21,7 +21,7 @@ func (s *Server) LoginTrader(ctx context.Context, req *pb.LoginTraderRequest) (*
 		return nil, invalidArgumentError(violations)
 	}
 
-	trader, err := s.repository.GetTrader(ctx, req.Username)
+	trader, err := s.repository.GetTrader(ctx, req.GetUsername())
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, status.Errorf(codes.NotFound, "trader not found")

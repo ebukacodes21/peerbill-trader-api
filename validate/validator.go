@@ -70,3 +70,11 @@ func ValidateEmailId(value int64) error {
 func ValidateCode(value string) error {
 	return ValidateString(value, 32, 128)
 }
+
+func ValidateFiat(value string) error {
+	return ValidateString(value, 3, 4)
+}
+
+func ValidateCrypto(value string) error {
+	return ValidateString(value, 3, 4)
+}

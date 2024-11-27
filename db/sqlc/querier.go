@@ -16,7 +16,9 @@ type Querier interface {
 	CreateTrader(ctx context.Context, arg CreateTraderParams) (Trader, error)
 	CreateVerifyEmail(ctx context.Context, arg CreateVerifyEmailParams) (VerifyEmail, error)
 	GetSession(ctx context.Context, id uuid.UUID) (Session, error)
+	GetTradePairs(ctx context.Context, arg GetTradePairsParams) ([]TradePair, error)
 	GetTrader(ctx context.Context, username string) (Trader, error)
+	GetTraders(ctx context.Context, arg GetTradersParams) ([]Trader, error)
 	UpdateTrader(ctx context.Context, arg UpdateTraderParams) (Trader, error)
 	UpdateVerifyEmail(ctx context.Context, arg UpdateVerifyEmailParams) (VerifyEmail, error)
 }

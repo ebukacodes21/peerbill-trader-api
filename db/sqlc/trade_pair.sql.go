@@ -10,39 +10,94 @@ import (
 )
 
 const createTradePair = `-- name: CreateTradePair :one
-INSERT INTO trade_pairs (
-  trader_id, base_asset, quote_asset, buy_rate, sell_rate
-) VALUES (
-  $1, $2, $3, $4, $5
-)
-RETURNING id, trader_id, base_asset, quote_asset, buy_rate, sell_rate, created_at
+INSERT INTO
+    trade_pairs (
+        username,
+        crypto,
+        fiat,
+        buy_rate,
+        sell_rate
+    )
+VALUES ($1, $2, $3, $4, $5) RETURNING id, username, crypto, fiat, buy_rate, sell_rate, created_at
 `
 
 type CreateTradePairParams struct {
-	TraderID   int64   `db:"trader_id" json:"trader_id"`
-	BaseAsset  string  `db:"base_asset" json:"base_asset"`
-	QuoteAsset string  `db:"quote_asset" json:"quote_asset"`
-	BuyRate    float64 `db:"buy_rate" json:"buy_rate"`
-	SellRate   float64 `db:"sell_rate" json:"sell_rate"`
+	Username string  `db:"username" json:"username"`
+	Crypto   string  `db:"crypto" json:"crypto"`
+	Fiat     string  `db:"fiat" json:"fiat"`
+	BuyRate  float64 `db:"buy_rate" json:"buy_rate"`
+	SellRate float64 `db:"sell_rate" json:"sell_rate"`
 }
 
 func (q *Queries) CreateTradePair(ctx context.Context, arg CreateTradePairParams) (TradePair, error) {
 	row := q.db.QueryRowContext(ctx, createTradePair,
-		arg.TraderID,
-		arg.BaseAsset,
-		arg.QuoteAsset,
+		arg.Username,
+		arg.Crypto,
+		arg.Fiat,
 		arg.BuyRate,
 		arg.SellRate,
 	)
 	var i TradePair
 	err := row.Scan(
 		&i.ID,
-		&i.TraderID,
-		&i.BaseAsset,
-		&i.QuoteAsset,
+		&i.Username,
+		&i.Crypto,
+		&i.Fiat,
 		&i.BuyRate,
 		&i.SellRate,
 		&i.CreatedAt,
 	)
 	return i, err
+}
+
+const getTradePairs = `-- name: GetTradePairs :many
+SELECT id, username, crypto, fiat, buy_rate, sell_rate, created_at FROM trade_pairs 
+WHERE crypto = $1
+AND fiat = $2
+ORDER BY id
+LIMIT $3
+OFFSET $4
+`
+
+type GetTradePairsParams struct {
+	Crypto string `db:"crypto" json:"crypto"`
+	Fiat   string `db:"fiat" json:"fiat"`
+	Limit  int32  `db:"limit" json:"limit"`
+	Offset int32  `db:"offset" json:"offset"`
+}
+
+func (q *Queries) GetTradePairs(ctx context.Context, arg GetTradePairsParams) ([]TradePair, error) {
+	rows, err := q.db.QueryContext(ctx, getTradePairs,
+		arg.Crypto,
+		arg.Fiat,
+		arg.Limit,
+		arg.Offset,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []TradePair{}
+	for rows.Next() {
+		var i TradePair
+		if err := rows.Scan(
+			&i.ID,
+			&i.Username,
+			&i.Crypto,
+			&i.Fiat,
+			&i.BuyRate,
+			&i.SellRate,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }

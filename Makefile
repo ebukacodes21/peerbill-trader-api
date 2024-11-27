@@ -48,5 +48,8 @@ evans:
     --host host.docker.internal \
     --port 9092 \
     repl
+	
+server:
+	go run main.go
 
-.PHONY: start generate init migrateup migratedown mock test migrateup1 migratedown1 force proto evans
+.PHONY: start generate init migrateup migratedown mock test migrateup1 migratedown1 force proto evans server

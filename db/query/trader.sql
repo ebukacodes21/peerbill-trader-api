@@ -11,6 +11,12 @@ SELECT * FROM traders
 WHERE username = $1
 LIMIT 1;
 
+-- name: GetTraders :many
+SELECT * FROM traders 
+ORDER BY id
+LIMIT $1
+OFFSET $2;
+
 -- name: UpdateTrader :one
 UPDATE traders
 SET

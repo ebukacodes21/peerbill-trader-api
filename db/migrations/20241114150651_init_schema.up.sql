@@ -14,16 +14,16 @@ CREATE TABLE "traders" (
 
 CREATE TABLE "trade_pairs" (
   "id" bigserial PRIMARY KEY,
-  "trader_id" bigint NOT NULL,
-  "base_asset" varchar NOT NULL,
-  "quote_asset" varchar NOT NULL,
+  "username" VARCHAR NOT NULL,
+  "crypto" varchar NOT NULL,
+  "fiat" varchar NOT NULL,
   "buy_rate" double precision NOT NULL,
   "sell_rate" double precision NOT NULL,
   "created_at" timestamptz NOT NULL DEFAULT (now())
 );
 
-ALTER TABLE "trade_pairs" ADD CONSTRAINT "fk_trader_id" FOREIGN KEY ("trader_id") REFERENCES "traders" ("id");
+ALTER TABLE "trade_pairs" ADD CONSTRAINT "fk_username" FOREIGN KEY ("username") REFERENCES "traders" ("username");
 
--- CREATE UNIQUE INDEX ON "trade_pairs" ("base_asset", "quote_asset", "trader_id")
-ALTER TABLE "trade_pairs" ADD CONSTRAINT "base_quote_trader_key" UNIQUE ("base_asset", "quote_asset", "trader_id");
+-- CREATE UNIQUE INDEX ON "trade_pairs" ("crypto", "fiat", "username")
+ALTER TABLE "trade_pairs" ADD CONSTRAINT "base_quote_trader_key" UNIQUE ("crypto", "fiat", "username");
 
