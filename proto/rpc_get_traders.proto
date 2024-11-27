@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package pb;
 
-import "trader.proto";
+import "trader_details.proto";
 
 option go_package = "peerbill-trader-api/pb";
 
@@ -12,5 +12,5 @@ message GetTradersRequest {
 }
 
 message GetTradersResponse {
-    repeated Trader trader = 1;
+    repeated TraderWithDetails result = 1;
 }

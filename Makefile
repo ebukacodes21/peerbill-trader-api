@@ -44,7 +44,7 @@ evans:
 	docker run --rm -it -v "/Users/george/workspace/peerbill-trader-api:/mount:ro" \
     ghcr.io/ktr0731/evans:latest \
     --path /mount/proto/ \
-    --proto peerbill-trader.proto \
+    --proto peerbill_trader.proto \
     --host host.docker.internal \
     --port 9092 \
     repl

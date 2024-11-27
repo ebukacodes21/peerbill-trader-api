@@ -15,9 +15,10 @@ type Server struct {
 	token           token.TokenMaker
 	config          utils.Config
 	taskDistributor worker.TaskDistributor
+	taskProcessor   worker.TaskProcessor
 }
 
-func NewServer(config utils.Config, r db.DatabaseContract, taskDistributor worker.TaskDistributor) (*Server, error) {
+func NewServer(config utils.Config, r db.DatabaseContract, taskDistributor worker.TaskDistributor, taskProcessor worker.TaskProcessor) (*Server, error) {
 	token, err := token.NewToken(config.TokenKey)
 	if err != nil {
 		return nil, fmt.Errorf("unable to create token maker%w", err)
@@ -28,6 +29,7 @@ func NewServer(config utils.Config, r db.DatabaseContract, taskDistributor worke
 		repository:      r,
 		token:           token,
 		taskDistributor: taskDistributor,
+		taskProcessor:   taskProcessor,
 	}
 
 	return server, nil

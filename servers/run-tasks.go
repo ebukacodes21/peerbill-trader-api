@@ -15,7 +15,7 @@ import (
 func RunTaskProcessor(group *errgroup.Group, ctx context.Context, options asynq.RedisClientOpt, repository db.DatabaseContract, config utils.Config) {
 	log.Print("running processor")
 	mailer := mail.NewGmailSender(config.EmailSender, config.EmailAddress, config.EmailPassword)
-	taskProcessor := worker.NewRedisTaskProcessor(options, repository, mailer)
+	taskProcessor := worker.NewRedisTaskProcessor(config, options, repository, mailer)
 
 	err := taskProcessor.Start()
 	if err != nil {
