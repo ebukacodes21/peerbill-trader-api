@@ -2,7 +2,7 @@ package worker
 
 import (
 	"context"
-	"time"
+	// "time"
 
 	"github.com/go-redis/redis/v8"
 )
@@ -21,7 +21,7 @@ func (rtp *RedisTaskProcessor) Get(ctx context.Context, key string) (string, err
 
 func (rtp *RedisTaskProcessor) Set(key string, value string) error {
 	// Set the value in Redis for the provided key.
-	err := rtp.redis.Set(context.Background(), key, value, time.Hour).Err()
+	err := rtp.redis.Set(context.Background(), key, value, 0).Err()
 	if err != nil {
 		return err
 	}

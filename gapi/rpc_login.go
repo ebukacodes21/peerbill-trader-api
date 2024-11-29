@@ -34,6 +34,10 @@ func (s *Server) LoginTrader(ctx context.Context, req *pb.LoginTraderRequest) (*
 		return nil, status.Errorf(codes.NotFound, "incorrect password")
 	}
 
+	if !trader.IsVerified {
+		return nil, status.Errorf(codes.Unauthenticated, "not verified")
+	}
+
 	accessToken, accessPayload, err := s.token.CreateToken(trader.Username, trader.Role, s.config.TokenAccess)
 	if err != nil {
 		return nil, status.Errorf(codes.NotFound, "failed to create access token")

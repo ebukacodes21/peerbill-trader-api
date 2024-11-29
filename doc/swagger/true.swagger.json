@@ -157,7 +157,7 @@
       }
     },
     "/api/verify-email": {
-      "get": {
+      "post": {
         "summary": "verify email address",
         "description": "Use this API to verify email address",
         "operationId": "PeerbillTrader_VerifyEmail",
@@ -177,17 +177,12 @@
         },
         "parameters": [
           {
-            "name": "emailId",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "int64"
-          },
-          {
-            "name": "secretCode",
-            "in": "query",
-            "required": false,
-            "type": "string"
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbVerifyEmailRequest"
+            }
           }
         ],
         "tags": [
@@ -385,6 +380,18 @@
       "properties": {
         "trader": {
           "$ref": "#/definitions/pbTrader"
+        }
+      }
+    },
+    "pbVerifyEmailRequest": {
+      "type": "object",
+      "properties": {
+        "emailId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "secretCode": {
+          "type": "string"
         }
       }
     },

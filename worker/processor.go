@@ -33,7 +33,7 @@ const (
 )
 
 func NewRedisTaskProcessor(config utils.Config, redisOpt asynq.RedisConnOpt, repository db.DatabaseContract, mailer mail.EmailSender) TaskProcessor {
-	cache := redis.NewClient(&redis.Options{
+	redisCache := redis.NewClient(&redis.Options{
 		Addr: config.REDISServerAddr,
 	})
 
@@ -48,7 +48,7 @@ func NewRedisTaskProcessor(config utils.Config, redisOpt asynq.RedisConnOpt, rep
 			}),
 			Logger: NewLogger(),
 		})
-	return &RedisTaskProcessor{server: server, repository: repository, mailer: mailer, redis: cache, config: config}
+	return &RedisTaskProcessor{server: server, repository: repository, mailer: mailer, redis: redisCache, config: config}
 }
 
 func (rtp *RedisTaskProcessor) Start() error {
