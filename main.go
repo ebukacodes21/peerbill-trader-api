@@ -14,6 +14,7 @@ import (
 
 	db "peerbill-trader-api/db/sqlc"
 	"peerbill-trader-api/mail"
+	"peerbill-trader-api/token"
 
 	"peerbill-trader-api/servers"
 	"peerbill-trader-api/utils"
@@ -47,14 +48,19 @@ func main() {
 		Addr: config.REDISServerAddr,
 	}
 
+	token, err := token.NewToken(config.TokenKey)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	group, ctx := errgroup.WithContext(ctx)
 
 	mailer := mail.NewGmailSender(config.EmailSender, config.EmailAddress, config.EmailPassword)
 	taskDistributor := worker.NewRedisTaskDistributor(redisOption)
-	taskProcessor := worker.NewRedisTaskProcessor(config, redisOption, repository, mailer)
+	taskProcessor := worker.NewRedisTaskProcessor(config, redisOption, repository, mailer, token)
 
 	servers.RunGatewayServer(group, ctx, config, repository, taskDistributor, taskProcessor)
-	servers.RunTaskProcessor(group, ctx, redisOption, repository, config)
+	servers.RunTaskProcessor(group, ctx, redisOption, repository, config, token)
 	servers.RunGrpcServer(group, ctx, config, repository, taskDistributor, taskProcessor)
 	servers.RunWebSocketServer(group, ctx, config)
 

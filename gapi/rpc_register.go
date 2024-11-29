@@ -26,19 +26,21 @@ func (s *Server) RegisterTrader(ctx context.Context, req *pb.RegisterTraderReque
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to hash password")
 	}
+	code := utils.RandomString(32)
 
 	args := db.CreateTraderTxParams{
 		CreateTraderParams: db.CreateTraderParams{
-			FirstName: req.GetFirstName(),
-			LastName:  req.GetLastName(),
-			Username:  req.GetUsername(),
-			Password:  hash,
-			Email:     req.GetEmail(),
-			Country:   req.GetCountry(),
-			Phone:     req.GetPhone(),
+			FirstName:        req.GetFirstName(),
+			LastName:         req.GetLastName(),
+			Username:         req.GetUsername(),
+			Password:         hash,
+			Email:            req.GetEmail(),
+			Country:          req.GetCountry(),
+			Phone:            req.GetPhone(),
+			VerificationCode: code,
 		},
 		AfterCreate: func(trader db.Trader) error {
-			payload := worker.SendVerifyEmailPayload{
+			payload := worker.SendEmailPayload{
 				Username: trader.Username,
 			}
 

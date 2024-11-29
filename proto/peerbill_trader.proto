@@ -8,6 +8,8 @@ import "rpc_login_trader.proto";
 import "rpc_update_trader.proto";
 import "rpc_verify_email.proto";
 import "rpc_get_traders.proto";
+import "rpc_forgot_password.proto";
+import "rpc_reset.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
 option go_package = "peerbill-trader-api/pb";
@@ -57,12 +59,32 @@ service PeerbillTrader {
     }
     rpc VerifyEmail (VerifyEmailRequest) returns (VerifyEmailResponse) {
         option (google.api.http) = {
-            post: "/api/verify-email"
+            post: "/api/verify"
             body: "*"
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
             description: "Use this API to verify email address";
             summary: "verify email address";
+        };
+    }
+    rpc Forgot (ForgotPasswordRequest) returns (ForgotPasswordResponse) {
+        option (google.api.http) = {
+            post: "/api/forgot"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            description: "Use this API to send password reset link";
+            summary: "Send password reset link";
+        };
+    }
+    rpc Reset (ResetPasswordRequest) returns (ResetPasswordResponse) {
+        option (google.api.http) = {
+            post: "/api/reset"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            description: "Use this API to reset password";
+            summary: "Password reset link";
         };
     }
     rpc GetTraders (GetTradersRequest) returns (GetTradersResponse) {

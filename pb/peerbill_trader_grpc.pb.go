@@ -23,6 +23,8 @@ const (
 	PeerbillTrader_LoginTrader_FullMethodName    = "/pb.PeerbillTrader/LoginTrader"
 	PeerbillTrader_UpdateTrader_FullMethodName   = "/pb.PeerbillTrader/UpdateTrader"
 	PeerbillTrader_VerifyEmail_FullMethodName    = "/pb.PeerbillTrader/VerifyEmail"
+	PeerbillTrader_Forgot_FullMethodName         = "/pb.PeerbillTrader/Forgot"
+	PeerbillTrader_Reset_FullMethodName          = "/pb.PeerbillTrader/Reset"
 	PeerbillTrader_GetTraders_FullMethodName     = "/pb.PeerbillTrader/GetTraders"
 )
 
@@ -34,6 +36,8 @@ type PeerbillTraderClient interface {
 	LoginTrader(ctx context.Context, in *LoginTraderRequest, opts ...grpc.CallOption) (*LoginTraderResponse, error)
 	UpdateTrader(ctx context.Context, in *UpdateTraderRequest, opts ...grpc.CallOption) (*UpdateTraderResponse, error)
 	VerifyEmail(ctx context.Context, in *VerifyEmailRequest, opts ...grpc.CallOption) (*VerifyEmailResponse, error)
+	Forgot(ctx context.Context, in *ForgotPasswordRequest, opts ...grpc.CallOption) (*ForgotPasswordResponse, error)
+	Reset(ctx context.Context, in *ResetPasswordRequest, opts ...grpc.CallOption) (*ResetPasswordResponse, error)
 	GetTraders(ctx context.Context, in *GetTradersRequest, opts ...grpc.CallOption) (*GetTradersResponse, error)
 }
 
@@ -85,6 +89,26 @@ func (c *peerbillTraderClient) VerifyEmail(ctx context.Context, in *VerifyEmailR
 	return out, nil
 }
 
+func (c *peerbillTraderClient) Forgot(ctx context.Context, in *ForgotPasswordRequest, opts ...grpc.CallOption) (*ForgotPasswordResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ForgotPasswordResponse)
+	err := c.cc.Invoke(ctx, PeerbillTrader_Forgot_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *peerbillTraderClient) Reset(ctx context.Context, in *ResetPasswordRequest, opts ...grpc.CallOption) (*ResetPasswordResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ResetPasswordResponse)
+	err := c.cc.Invoke(ctx, PeerbillTrader_Reset_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *peerbillTraderClient) GetTraders(ctx context.Context, in *GetTradersRequest, opts ...grpc.CallOption) (*GetTradersResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetTradersResponse)
@@ -103,6 +127,8 @@ type PeerbillTraderServer interface {
 	LoginTrader(context.Context, *LoginTraderRequest) (*LoginTraderResponse, error)
 	UpdateTrader(context.Context, *UpdateTraderRequest) (*UpdateTraderResponse, error)
 	VerifyEmail(context.Context, *VerifyEmailRequest) (*VerifyEmailResponse, error)
+	Forgot(context.Context, *ForgotPasswordRequest) (*ForgotPasswordResponse, error)
+	Reset(context.Context, *ResetPasswordRequest) (*ResetPasswordResponse, error)
 	GetTraders(context.Context, *GetTradersRequest) (*GetTradersResponse, error)
 	mustEmbedUnimplementedPeerbillTraderServer()
 }
@@ -125,6 +151,12 @@ func (UnimplementedPeerbillTraderServer) UpdateTrader(context.Context, *UpdateTr
 }
 func (UnimplementedPeerbillTraderServer) VerifyEmail(context.Context, *VerifyEmailRequest) (*VerifyEmailResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method VerifyEmail not implemented")
+}
+func (UnimplementedPeerbillTraderServer) Forgot(context.Context, *ForgotPasswordRequest) (*ForgotPasswordResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Forgot not implemented")
+}
+func (UnimplementedPeerbillTraderServer) Reset(context.Context, *ResetPasswordRequest) (*ResetPasswordResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Reset not implemented")
 }
 func (UnimplementedPeerbillTraderServer) GetTraders(context.Context, *GetTradersRequest) (*GetTradersResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTraders not implemented")
@@ -222,6 +254,42 @@ func _PeerbillTrader_VerifyEmail_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _PeerbillTrader_Forgot_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ForgotPasswordRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PeerbillTraderServer).Forgot(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PeerbillTrader_Forgot_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PeerbillTraderServer).Forgot(ctx, req.(*ForgotPasswordRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PeerbillTrader_Reset_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ResetPasswordRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PeerbillTraderServer).Reset(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PeerbillTrader_Reset_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PeerbillTraderServer).Reset(ctx, req.(*ResetPasswordRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _PeerbillTrader_GetTraders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetTradersRequest)
 	if err := dec(in); err != nil {
@@ -262,6 +330,14 @@ var PeerbillTrader_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "VerifyEmail",
 			Handler:    _PeerbillTrader_VerifyEmail_Handler,
+		},
+		{
+			MethodName: "Forgot",
+			Handler:    _PeerbillTrader_Forgot_Handler,
+		},
+		{
+			MethodName: "Reset",
+			Handler:    _PeerbillTrader_Reset_Handler,
 		},
 		{
 			MethodName: "GetTraders",

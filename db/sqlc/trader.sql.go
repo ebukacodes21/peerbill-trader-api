@@ -14,19 +14,20 @@ const createTrader = `-- name: CreateTrader :one
 INSERT INTO traders (
   first_name, last_name, username, password, email, country, phone, verification_code
 ) VALUES (
-  $1, $2, $3, $4, $5, $6, $7, &8
+  $1, $2, $3, $4, $5, $6, $7, $8
 )
 RETURNING id, first_name, last_name, username, password, email, is_verified, verification_code, country, phone, role, profile_pic, created_at
 `
 
 type CreateTraderParams struct {
-	FirstName string `db:"first_name" json:"first_name"`
-	LastName  string `db:"last_name" json:"last_name"`
-	Username  string `db:"username" json:"username"`
-	Password  string `db:"password" json:"password"`
-	Email     string `db:"email" json:"email"`
-	Country   string `db:"country" json:"country"`
-	Phone     string `db:"phone" json:"phone"`
+	FirstName        string `db:"first_name" json:"first_name"`
+	LastName         string `db:"last_name" json:"last_name"`
+	Username         string `db:"username" json:"username"`
+	Password         string `db:"password" json:"password"`
+	Email            string `db:"email" json:"email"`
+	Country          string `db:"country" json:"country"`
+	Phone            string `db:"phone" json:"phone"`
+	VerificationCode string `db:"verification_code" json:"verification_code"`
 }
 
 func (q *Queries) CreateTrader(ctx context.Context, arg CreateTraderParams) (Trader, error) {
@@ -38,7 +39,41 @@ func (q *Queries) CreateTrader(ctx context.Context, arg CreateTraderParams) (Tra
 		arg.Email,
 		arg.Country,
 		arg.Phone,
+		arg.VerificationCode,
 	)
+	var i Trader
+	err := row.Scan(
+		&i.ID,
+		&i.FirstName,
+		&i.LastName,
+		&i.Username,
+		&i.Password,
+		&i.Email,
+		&i.IsVerified,
+		&i.VerificationCode,
+		&i.Country,
+		&i.Phone,
+		&i.Role,
+		&i.ProfilePic,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
+const findTrader = `-- name: FindTrader :one
+SELECT id, first_name, last_name, username, password, email, is_verified, verification_code, country, phone, role, profile_pic, created_at FROM traders 
+WHERE id = $1
+AND verification_code = $2
+LIMIT 1
+`
+
+type FindTraderParams struct {
+	ID               int64  `db:"id" json:"id"`
+	VerificationCode string `db:"verification_code" json:"verification_code"`
+}
+
+func (q *Queries) FindTrader(ctx context.Context, arg FindTraderParams) (Trader, error) {
+	row := q.db.QueryRowContext(ctx, findTrader, arg.ID, arg.VerificationCode)
 	var i Trader
 	err := row.Scan(
 		&i.ID,
@@ -85,14 +120,14 @@ func (q *Queries) GetTrader(ctx context.Context, username string) (Trader, error
 	return i, err
 }
 
-const getTraderCode = `-- name: GetTraderCode :one
+const getTraderEmail = `-- name: GetTraderEmail :one
 SELECT id, first_name, last_name, username, password, email, is_verified, verification_code, country, phone, role, profile_pic, created_at FROM traders 
-WHERE verification_code = $1
+WHERE email = $1
 LIMIT 1
 `
 
-func (q *Queries) GetTraderCode(ctx context.Context, verificationCode string) (Trader, error) {
-	row := q.db.QueryRowContext(ctx, getTraderCode, verificationCode)
+func (q *Queries) GetTraderEmail(ctx context.Context, email string) (Trader, error) {
+	row := q.db.QueryRowContext(ctx, getTraderEmail, email)
 	var i Trader
 	err := row.Scan(
 		&i.ID,

@@ -2,7 +2,7 @@
 INSERT INTO traders (
   first_name, last_name, username, password, email, country, phone, verification_code
 ) VALUES (
-  $1, $2, $3, $4, $5, $6, $7, &8
+  $1, $2, $3, $4, $5, $6, $7, $8
 )
 RETURNING *;
 
@@ -11,9 +11,15 @@ SELECT * FROM traders
 WHERE username = $1
 LIMIT 1;
 
--- name: GetTraderCode :one
+-- name: FindTrader :one
 SELECT * FROM traders 
-WHERE verification_code = $1
+WHERE id = $1
+AND verification_code = $2
+LIMIT 1;
+
+-- name: GetTraderEmail :one
+SELECT * FROM traders 
+WHERE email = $1
 LIMIT 1;
 
 -- name: GetTraders :many

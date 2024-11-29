@@ -35,7 +35,7 @@ func (s *Server) LoginTrader(ctx context.Context, req *pb.LoginTraderRequest) (*
 	}
 
 	if !trader.IsVerified {
-		return nil, status.Errorf(codes.Unauthenticated, "not verified")
+		return nil, status.Errorf(codes.Unauthenticated, "trader yet not verified")
 	}
 
 	accessToken, accessPayload, err := s.token.CreateToken(trader.Username, trader.Role, s.config.TokenAccess)
