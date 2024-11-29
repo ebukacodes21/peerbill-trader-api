@@ -15,19 +15,21 @@ func TestCreateTrader(t *testing.T) {
 
 func createRandomTrader(t *testing.T) Trader {
 	password := utils.RandomString(8)
+	code := utils.RandomString(32)
 	hash, err := utils.HashPassword(password)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	arg := CreateTraderParams{
-		FirstName: utils.RandomOwner(),
-		LastName:  utils.RandomOwner(),
-		Username:  utils.RandomOwner(),
-		Password:  hash,
-		Email:     utils.RandomEmail(),
-		Country:   utils.RandomOwner(),
-		Phone:     utils.RandomPhone(),
+		FirstName:        utils.RandomOwner(),
+		LastName:         utils.RandomOwner(),
+		Username:         utils.RandomOwner(),
+		Password:         hash,
+		Email:            utils.RandomEmail(),
+		Country:          utils.RandomOwner(),
+		Phone:            utils.RandomPhone(),
+		VerificationCode: code,
 	}
 
 	trader, err := testQueries.CreateTrader(context.Background(), arg)

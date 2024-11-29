@@ -60,7 +60,7 @@ func ValidateCountry(value string) error {
 	return ValidateString(value, 1, 30)
 }
 
-func ValidateEmailId(value int64) error {
+func ValidateUserId(value int64) error {
 	if value <= 0 {
 		return fmt.Errorf("value must be a positive integer")
 	}
@@ -69,6 +69,13 @@ func ValidateEmailId(value int64) error {
 
 func ValidateCode(value string) error {
 	return ValidateString(value, 32, 128)
+}
+
+func ValidateToken(value string) error {
+	if len(value) <= 0 {
+		return fmt.Errorf("token cannot be empty")
+	}
+	return nil
 }
 
 func ValidateFiat(value string) error {

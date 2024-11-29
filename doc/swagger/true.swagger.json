@@ -20,6 +20,40 @@
     "application/json"
   ],
   "paths": {
+    "/api/forgot": {
+      "post": {
+        "summary": "Send password reset link",
+        "description": "Use this API to send password reset link",
+        "operationId": "PeerbillTrader_Forgot",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbForgotPasswordResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbForgotPasswordRequest"
+            }
+          }
+        ],
+        "tags": [
+          "PeerbillTrader"
+        ]
+      }
+    },
     "/api/get-traders": {
       "post": {
         "summary": "Get a list of traders",
@@ -122,6 +156,40 @@
         ]
       }
     },
+    "/api/reset": {
+      "post": {
+        "summary": "Password reset link",
+        "description": "Use this API to reset password",
+        "operationId": "PeerbillTrader_Reset",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbResetPasswordResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbResetPasswordRequest"
+            }
+          }
+        ],
+        "tags": [
+          "PeerbillTrader"
+        ]
+      }
+    },
     "/api/update-trader": {
       "patch": {
         "summary": "update a trader",
@@ -156,7 +224,7 @@
         ]
       }
     },
-    "/api/verify-email": {
+    "/api/verify": {
       "post": {
         "summary": "verify email address",
         "description": "Use this API to verify email address",
@@ -192,6 +260,22 @@
     }
   },
   "definitions": {
+    "pbForgotPasswordRequest": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        }
+      }
+    },
+    "pbForgotPasswordResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        }
+      }
+    },
     "pbGetTradersRequest": {
       "type": "object",
       "properties": {
@@ -282,6 +366,25 @@
       "properties": {
         "trader": {
           "$ref": "#/definitions/pbTrader"
+        }
+      }
+    },
+    "pbResetPasswordRequest": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "pbResetPasswordResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
         }
       }
     },
@@ -386,11 +489,11 @@
     "pbVerifyEmailRequest": {
       "type": "object",
       "properties": {
-        "emailId": {
+        "userId": {
           "type": "string",
           "format": "int64"
         },
-        "secretCode": {
+        "verificationCode": {
           "type": "string"
         }
       }

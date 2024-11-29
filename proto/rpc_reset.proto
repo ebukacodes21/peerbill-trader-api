@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package = "peerbill-trader-api/pb";
+
+message ResetPasswordRequest {
+    string token = 1;
+    string password = 2;
+}
+
+message ResetPasswordResponse {
+   string message = 1;
+}

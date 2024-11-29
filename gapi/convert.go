@@ -19,23 +19,6 @@ func convert(trader db.Trader) *pb.Trader {
 	}
 }
 
-func convertTraders(traders []db.Trader) []*pb.Trader {
-	var pbTraders []*pb.Trader
-	for _, trader := range traders {
-		pbTrader := &pb.Trader{
-			FirstName: trader.FirstName,
-			LastName:  trader.LastName,
-			Username:  trader.Username,
-			Email:     trader.Email,
-			Country:   trader.Country,
-			Phone:     trader.Phone,
-			CreatedAt: timestamppb.New(trader.CreatedAt),
-		}
-		pbTraders = append(pbTraders, pbTrader)
-	}
-	return pbTraders
-}
-
 func convertTradePair(tradePair db.TradePair) *pb.TraderPair {
 	return &pb.TraderPair{
 		Crypto:   tradePair.Crypto,
