@@ -96,21 +96,6 @@ func (mr *MockDatabaseContractMockRecorder) CreateTraderTx(arg0, arg1 interface{
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateTraderTx", reflect.TypeOf((*MockDatabaseContract)(nil).CreateTraderTx), arg0, arg1)
 }
 
-// CreateVerifyEmail mocks base method.
-func (m *MockDatabaseContract) CreateVerifyEmail(arg0 context.Context, arg1 db.CreateVerifyEmailParams) (db.VerifyEmail, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateVerifyEmail", arg0, arg1)
-	ret0, _ := ret[0].(db.VerifyEmail)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// CreateVerifyEmail indicates an expected call of CreateVerifyEmail.
-func (mr *MockDatabaseContractMockRecorder) CreateVerifyEmail(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateVerifyEmail", reflect.TypeOf((*MockDatabaseContract)(nil).CreateVerifyEmail), arg0, arg1)
-}
-
 // GetSession mocks base method.
 func (m *MockDatabaseContract) GetSession(arg0 context.Context, arg1 uuid.UUID) (db.Session, error) {
 	m.ctrl.T.Helper()
@@ -156,6 +141,21 @@ func (mr *MockDatabaseContractMockRecorder) GetTrader(arg0, arg1 interface{}) *g
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTrader", reflect.TypeOf((*MockDatabaseContract)(nil).GetTrader), arg0, arg1)
 }
 
+// GetTraderCode mocks base method.
+func (m *MockDatabaseContract) GetTraderCode(arg0 context.Context, arg1 string) (db.Trader, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetTraderCode", arg0, arg1)
+	ret0, _ := ret[0].(db.Trader)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetTraderCode indicates an expected call of GetTraderCode.
+func (mr *MockDatabaseContractMockRecorder) GetTraderCode(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTraderCode", reflect.TypeOf((*MockDatabaseContract)(nil).GetTraderCode), arg0, arg1)
+}
+
 // GetTraders mocks base method.
 func (m *MockDatabaseContract) GetTraders(arg0 context.Context, arg1 db.GetTradersParams) ([]db.Trader, error) {
 	m.ctrl.T.Helper()
@@ -184,34 +184,4 @@ func (m *MockDatabaseContract) UpdateTrader(arg0 context.Context, arg1 db.Update
 func (mr *MockDatabaseContractMockRecorder) UpdateTrader(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateTrader", reflect.TypeOf((*MockDatabaseContract)(nil).UpdateTrader), arg0, arg1)
-}
-
-// UpdateVerifyEmail mocks base method.
-func (m *MockDatabaseContract) UpdateVerifyEmail(arg0 context.Context, arg1 db.UpdateVerifyEmailParams) (db.VerifyEmail, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateVerifyEmail", arg0, arg1)
-	ret0, _ := ret[0].(db.VerifyEmail)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// UpdateVerifyEmail indicates an expected call of UpdateVerifyEmail.
-func (mr *MockDatabaseContractMockRecorder) UpdateVerifyEmail(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateVerifyEmail", reflect.TypeOf((*MockDatabaseContract)(nil).UpdateVerifyEmail), arg0, arg1)
-}
-
-// VerifyEmailTx mocks base method.
-func (m *MockDatabaseContract) VerifyEmailTx(arg0 context.Context, arg1 db.VerifyEmailTxParams) (db.VerifyEmailTxResponse, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VerifyEmailTx", arg0, arg1)
-	ret0, _ := ret[0].(db.VerifyEmailTxResponse)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// VerifyEmailTx indicates an expected call of VerifyEmailTx.
-func (mr *MockDatabaseContractMockRecorder) VerifyEmailTx(arg0, arg1 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VerifyEmailTx", reflect.TypeOf((*MockDatabaseContract)(nil).VerifyEmailTx), arg0, arg1)
 }

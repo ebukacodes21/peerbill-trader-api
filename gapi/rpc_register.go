@@ -56,7 +56,7 @@ func (s *Server) RegisterTrader(ctx context.Context, req *pb.RegisterTraderReque
 		if pgErr, ok := err.(*pg.Error); ok {
 			switch pgErr.Code.Name() {
 			case "unique_violation":
-				return nil, status.Errorf(codes.Internal, "already exists")
+				return nil, status.Errorf(codes.Internal, err.Error())
 			}
 		}
 		return nil, status.Errorf(codes.Internal, "failed to create user")

@@ -12,11 +12,11 @@ import (
 
 const createTrader = `-- name: CreateTrader :one
 INSERT INTO traders (
-  first_name, last_name, username, password, email, country, phone
+  first_name, last_name, username, password, email, country, phone, verification_code
 ) VALUES (
-  $1, $2, $3, $4, $5, $6, $7
+  $1, $2, $3, $4, $5, $6, $7, &8
 )
-RETURNING id, first_name, last_name, username, password, email, country, phone, role, profile_pic, created_at, is_verified
+RETURNING id, first_name, last_name, username, password, email, is_verified, verification_code, country, phone, role, profile_pic, created_at
 `
 
 type CreateTraderParams struct {
@@ -47,18 +47,19 @@ func (q *Queries) CreateTrader(ctx context.Context, arg CreateTraderParams) (Tra
 		&i.Username,
 		&i.Password,
 		&i.Email,
+		&i.IsVerified,
+		&i.VerificationCode,
 		&i.Country,
 		&i.Phone,
 		&i.Role,
 		&i.ProfilePic,
 		&i.CreatedAt,
-		&i.IsVerified,
 	)
 	return i, err
 }
 
 const getTrader = `-- name: GetTrader :one
-SELECT id, first_name, last_name, username, password, email, country, phone, role, profile_pic, created_at, is_verified FROM traders 
+SELECT id, first_name, last_name, username, password, email, is_verified, verification_code, country, phone, role, profile_pic, created_at FROM traders 
 WHERE username = $1
 LIMIT 1
 `
@@ -73,18 +74,46 @@ func (q *Queries) GetTrader(ctx context.Context, username string) (Trader, error
 		&i.Username,
 		&i.Password,
 		&i.Email,
+		&i.IsVerified,
+		&i.VerificationCode,
 		&i.Country,
 		&i.Phone,
 		&i.Role,
 		&i.ProfilePic,
 		&i.CreatedAt,
+	)
+	return i, err
+}
+
+const getTraderCode = `-- name: GetTraderCode :one
+SELECT id, first_name, last_name, username, password, email, is_verified, verification_code, country, phone, role, profile_pic, created_at FROM traders 
+WHERE verification_code = $1
+LIMIT 1
+`
+
+func (q *Queries) GetTraderCode(ctx context.Context, verificationCode string) (Trader, error) {
+	row := q.db.QueryRowContext(ctx, getTraderCode, verificationCode)
+	var i Trader
+	err := row.Scan(
+		&i.ID,
+		&i.FirstName,
+		&i.LastName,
+		&i.Username,
+		&i.Password,
+		&i.Email,
 		&i.IsVerified,
+		&i.VerificationCode,
+		&i.Country,
+		&i.Phone,
+		&i.Role,
+		&i.ProfilePic,
+		&i.CreatedAt,
 	)
 	return i, err
 }
 
 const getTraders = `-- name: GetTraders :many
-SELECT id, first_name, last_name, username, password, email, country, phone, role, profile_pic, created_at, is_verified FROM traders 
+SELECT id, first_name, last_name, username, password, email, is_verified, verification_code, country, phone, role, profile_pic, created_at FROM traders 
 ORDER BY id
 LIMIT $1
 OFFSET $2
@@ -111,12 +140,13 @@ func (q *Queries) GetTraders(ctx context.Context, arg GetTradersParams) ([]Trade
 			&i.Username,
 			&i.Password,
 			&i.Email,
+			&i.IsVerified,
+			&i.VerificationCode,
 			&i.Country,
 			&i.Phone,
 			&i.Role,
 			&i.ProfilePic,
 			&i.CreatedAt,
-			&i.IsVerified,
 		); err != nil {
 			return nil, err
 		}
@@ -144,7 +174,7 @@ SET
   is_verified = COALESCE($8, is_verified)
 WHERE 
   id = $9
-RETURNING id, first_name, last_name, username, password, email, country, phone, role, profile_pic, created_at, is_verified
+RETURNING id, first_name, last_name, username, password, email, is_verified, verification_code, country, phone, role, profile_pic, created_at
 `
 
 type UpdateTraderParams struct {
@@ -179,12 +209,13 @@ func (q *Queries) UpdateTrader(ctx context.Context, arg UpdateTraderParams) (Tra
 		&i.Username,
 		&i.Password,
 		&i.Email,
+		&i.IsVerified,
+		&i.VerificationCode,
 		&i.Country,
 		&i.Phone,
 		&i.Role,
 		&i.ProfilePic,
 		&i.CreatedAt,
-		&i.IsVerified,
 	)
 	return i, err
 }

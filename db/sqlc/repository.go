@@ -10,7 +10,6 @@ import (
 type DatabaseContract interface {
 	Querier
 	CreateTraderTx(ctx context.Context, args CreateTraderTxParams) (CreateTraderTxResponse, error)
-	VerifyEmailTx(ctx context.Context, args VerifyEmailTxParams) (VerifyEmailTxResponse, error)
 }
 
 type Repository struct {

@@ -2,8 +2,6 @@ package worker
 
 import (
 	"context"
-	db "peerbill-trader-api/db/sqlc"
-	"peerbill-trader-api/utils"
 
 	// "database/sql"
 	"encoding/json"
@@ -52,18 +50,7 @@ func (rtp *RedisTaskProcessor) ProcessTaskSendVerifyEmail(ctx context.Context, t
 		return fmt.Errorf("failed to get trader")
 	}
 
-	args := db.CreateVerifyEmailParams{
-		UserID:     trader.ID,
-		Email:      trader.Email,
-		SecretCode: utils.RandomString(32),
-	}
-
-	emailData, err := rtp.repository.CreateVerifyEmail(ctx, args)
-	if err != nil {
-		return fmt.Errorf("failed to create verify email")
-	}
-
-	url := fmt.Sprintf("http://localhost:8002/api/verify-email?email_id=%d&secret_code=%s", emailData.ID, emailData.SecretCode)
+	url := fmt.Sprintf("http://localhost:3000/auth/verify?email_id=%d&secret_code=%s", trader.ID, trader.VerificationCode)
 
 	subject := "Welcome to Peerbill"
 	content := fmt.Sprintf(`Hello %s,<br/>

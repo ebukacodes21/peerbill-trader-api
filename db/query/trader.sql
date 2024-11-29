@@ -1,14 +1,19 @@
 -- name: CreateTrader :one
 INSERT INTO traders (
-  first_name, last_name, username, password, email, country, phone
+  first_name, last_name, username, password, email, country, phone, verification_code
 ) VALUES (
-  $1, $2, $3, $4, $5, $6, $7
+  $1, $2, $3, $4, $5, $6, $7, &8
 )
 RETURNING *;
 
 -- name: GetTrader :one
 SELECT * FROM traders 
 WHERE username = $1
+LIMIT 1;
+
+-- name: GetTraderCode :one
+SELECT * FROM traders 
+WHERE verification_code = $1
 LIMIT 1;
 
 -- name: GetTraders :many
