@@ -22,12 +22,28 @@ func convert(trader db.Trader) *pb.Trader {
 
 func convertTradePair(tradePair db.TradePair) *pb.TraderPair {
 	return &pb.TraderPair{
+		Id:       tradePair.ID,
 		Crypto:   tradePair.Crypto,
 		Fiat:     tradePair.Fiat,
 		Username: tradePair.Username,
 		BuyRate:  float32(tradePair.BuyRate),
 		SellRate: float32(tradePair.SellRate),
 	}
+}
+
+func convertTradePairs(tradePairs []db.TradePair) []*pb.TraderPair {
+	var pbTradePairs []*pb.TraderPair
+	for _, tradePair := range tradePairs {
+		pbTradePairs = append(pbTradePairs, &pb.TraderPair{
+			Id:       tradePair.ID,
+			Crypto:   tradePair.Crypto,
+			Fiat:     tradePair.Fiat,
+			Username: tradePair.Username,
+			BuyRate:  float32(tradePair.BuyRate),
+			SellRate: float32(tradePair.SellRate),
+		})
+	}
+	return pbTradePairs
 }
 
 func convertTradersWithDetails(tradersWithDetails []TradersWithDetails) []*pb.TraderWithDetails {

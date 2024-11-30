@@ -63,8 +63,15 @@ func (s *Server) LoginTrader(ctx context.Context, req *pb.LoginTraderRequest) (*
 		return nil, status.Errorf(codes.Internal, "failed to create session")
 	}
 
+	// attach trade pairs to response
+	traderPairs, err := s.repository.GetTraderPairs(ctx, trader.Username)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to fetch trader pairs")
+	}
+
 	resp := &pb.LoginTraderResponse{
 		Trader:                convert(trader),
+		TraderPairs:           convertTradePairs(traderPairs),
 		AccessToken:           accessToken,
 		AccessTokenExpiresAt:  timestamppb.New(accessPayload.ExpiredAt),
 		RefreshToken:          refreshToken,

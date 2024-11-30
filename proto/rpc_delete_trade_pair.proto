@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package pb;
+
+import "trade_pair.proto";
+option go_package = "peerbill-trader-api/pb";
+
+message DeleteTradePairRequest {
+    int64 id = 1;
+    string        username = 2;
+}
+
+message DeleteTradePairResponse {
+    repeated TraderPair tradePairs = 1;
+}

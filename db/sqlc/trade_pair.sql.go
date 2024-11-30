@@ -7,6 +7,7 @@ package db
 
 import (
 	"context"
+	"database/sql"
 )
 
 const createTradePair = `-- name: CreateTradePair :one
@@ -50,6 +51,22 @@ func (q *Queries) CreateTradePair(ctx context.Context, arg CreateTradePairParams
 	return i, err
 }
 
+const deleteTradePair = `-- name: DeleteTradePair :exec
+DELETE FROM trade_pairs
+WHERE id = $1
+AND username = $2
+`
+
+type DeleteTradePairParams struct {
+	ID       int64  `db:"id" json:"id"`
+	Username string `db:"username" json:"username"`
+}
+
+func (q *Queries) DeleteTradePair(ctx context.Context, arg DeleteTradePairParams) error {
+	_, err := q.db.ExecContext(ctx, deleteTradePair, arg.ID, arg.Username)
+	return err
+}
+
 const getTradePairs = `-- name: GetTradePairs :many
 SELECT id, username, crypto, fiat, buy_rate, sell_rate, created_at FROM trade_pairs 
 WHERE crypto = $1
@@ -91,4 +108,74 @@ func (q *Queries) GetTradePairs(ctx context.Context, arg GetTradePairsParams) ([
 		return nil, err
 	}
 	return items, nil
+}
+
+const getTraderPairs = `-- name: GetTraderPairs :many
+SELECT id, username, crypto, fiat, buy_rate, sell_rate, created_at FROM trade_pairs 
+WHERE username = $1
+ORDER BY id
+`
+
+func (q *Queries) GetTraderPairs(ctx context.Context, username string) ([]TradePair, error) {
+	rows, err := q.db.QueryContext(ctx, getTraderPairs, username)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []TradePair{}
+	for rows.Next() {
+		var i TradePair
+		if err := rows.Scan(
+			&i.ID,
+			&i.Username,
+			&i.Crypto,
+			&i.Fiat,
+			&i.BuyRate,
+			&i.SellRate,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const updateTradePair = `-- name: UpdateTradePair :exec
+UPDATE trade_pairs
+SET
+  crypto = COALESCE($1, crypto),
+  fiat = COALESCE($2, fiat),
+  buy_rate = COALESCE($3, buy_rate),
+  sell_rate = COALESCE($4, sell_rate)
+WHERE 
+  id = $5
+AND username = $6
+`
+
+type UpdateTradePairParams struct {
+	Crypto   sql.NullString  `db:"crypto" json:"crypto"`
+	Fiat     sql.NullString  `db:"fiat" json:"fiat"`
+	BuyRate  sql.NullFloat64 `db:"buy_rate" json:"buy_rate"`
+	SellRate sql.NullFloat64 `db:"sell_rate" json:"sell_rate"`
+	ID       int64           `db:"id" json:"id"`
+	Username string          `db:"username" json:"username"`
+}
+
+func (q *Queries) UpdateTradePair(ctx context.Context, arg UpdateTradePairParams) error {
+	_, err := q.db.ExecContext(ctx, updateTradePair,
+		arg.Crypto,
+		arg.Fiat,
+		arg.BuyRate,
+		arg.SellRate,
+		arg.ID,
+		arg.Username,
+	)
+	return err
 }

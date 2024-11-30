@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package pb;
+
+import "trade_pair.proto";
+
+option go_package = "peerbill-trader-api/pb";
+
+message AddTradePairRequest {
+    string        username = 1;
+    string        crypto = 2;
+    string        fiat = 3;
+    float        buy_rate = 4;
+    float        sell_rate = 5;
+}
+
+message AddTradePairResponse {
+   repeated TraderPair tradePairs = 1;
+}

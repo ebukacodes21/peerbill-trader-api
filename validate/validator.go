@@ -2,6 +2,7 @@ package validate
 
 import (
 	"fmt"
+	"math"
 	"net/mail"
 	"regexp"
 )
@@ -84,4 +85,14 @@ func ValidateFiat(value string) error {
 
 func ValidateCrypto(value string) error {
 	return ValidateString(value, 3, 4)
+}
+
+func ValidateNumber(value float32) error {
+	if math.IsNaN(float64(value)) {
+		return fmt.Errorf("value cannot be NaN")
+	}
+	if math.IsInf(float64(value), 0) {
+		return fmt.Errorf("value cannot be infinity")
+	}
+	return nil
 }
