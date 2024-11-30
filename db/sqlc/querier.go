@@ -14,12 +14,15 @@ type Querier interface {
 	CreateSession(ctx context.Context, arg CreateSessionParams) (Session, error)
 	CreateTradePair(ctx context.Context, arg CreateTradePairParams) (TradePair, error)
 	CreateTrader(ctx context.Context, arg CreateTraderParams) (Trader, error)
+	DeleteTradePair(ctx context.Context, arg DeleteTradePairParams) error
 	FindTrader(ctx context.Context, arg FindTraderParams) (Trader, error)
 	GetTradePairs(ctx context.Context, arg GetTradePairsParams) ([]TradePair, error)
 	GetTrader(ctx context.Context, username string) (Trader, error)
 	GetTraderEmail(ctx context.Context, email string) (Trader, error)
+	GetTraderPairs(ctx context.Context, username string) ([]TradePair, error)
 	GetTraders(ctx context.Context, arg GetTradersParams) ([]Trader, error)
 	Logout(ctx context.Context, id uuid.UUID) error
+	UpdateTradePair(ctx context.Context, arg UpdateTradePairParams) error
 	UpdateTrader(ctx context.Context, arg UpdateTraderParams) (Trader, error)
 }
 

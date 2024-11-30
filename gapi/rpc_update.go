@@ -110,37 +110,37 @@ func validateUpdateTraderRequest(req *pb.UpdateTraderRequest) (violations []*err
 
 	if req.FirstName != nil {
 		if err := validate.ValidateFirstname(req.GetFirstName()); err != nil {
-			violations = append(violations, fieldViolation(req.GetFirstName(), err))
+			violations = append(violations, fieldViolation("first_name", err))
 		}
 	}
 
 	if req.LastName != nil {
 		if err := validate.ValidateLastname(req.GetLastName()); err != nil {
-			violations = append(violations, fieldViolation(req.GetFirstName(), err))
+			violations = append(violations, fieldViolation("last_name", err))
 		}
 	}
 
 	if req.Username != nil {
 		if err := validate.ValidateUsername(req.GetUsername()); err != nil {
-			violations = append(violations, fieldViolation(req.GetUsername(), err))
+			violations = append(violations, fieldViolation("username", err))
 		}
 	}
 
 	if req.Email != nil {
 		if err := validate.ValidateEmail(req.GetEmail()); err != nil {
-			violations = append(violations, fieldViolation(req.GetEmail(), err))
+			violations = append(violations, fieldViolation("email", err))
 		}
 	}
 
 	if req.Phone != nil {
 		if err := validate.ValidatePhone(req.GetPhone()); err != nil {
-			violations = append(violations, fieldViolation(req.GetPhone(), err))
+			violations = append(violations, fieldViolation("phone", err))
 		}
 	}
 	if req.Country != nil {
 
 		if err := validate.ValidateCountry(req.GetCountry()); err != nil {
-			violations = append(violations, fieldViolation(req.GetCountry(), err))
+			violations = append(violations, fieldViolation("country", err))
 		}
 	}
 

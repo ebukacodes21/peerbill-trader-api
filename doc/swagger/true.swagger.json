@@ -20,6 +20,74 @@
     "application/json"
   ],
   "paths": {
+    "/api/add-trader-pair": {
+      "post": {
+        "summary": "Add Crypto/Fiat pairs",
+        "description": "Use this API to add Crypto/Fiat pairs",
+        "operationId": "PeerbillTrader_AddTraderPair",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbAddTradePairResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbAddTradePairRequest"
+            }
+          }
+        ],
+        "tags": [
+          "PeerbillTrader"
+        ]
+      }
+    },
+    "/api/delete-trader-pair": {
+      "post": {
+        "summary": "Delete Crypto/Fiat pairs",
+        "description": "Use this API to delete Crypto/Fiat pairs",
+        "operationId": "PeerbillTrader_DeleteTraderPair",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbDeleteTradePairResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbDeleteTradePairRequest"
+            }
+          }
+        ],
+        "tags": [
+          "PeerbillTrader"
+        ]
+      }
+    },
     "/api/forgot": {
       "post": {
         "summary": "Send password reset link",
@@ -258,6 +326,40 @@
         ]
       }
     },
+    "/api/update-trader-pair": {
+      "patch": {
+        "summary": "Update Crypto/Fiat pairs",
+        "description": "Use this API to update Crypto/Fiat pairs",
+        "operationId": "PeerbillTrader_UpdateTraderPair",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbUpdateTradePairResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbUpdateTradePairRequest"
+            }
+          }
+        ],
+        "tags": [
+          "PeerbillTrader"
+        ]
+      }
+    },
     "/api/verify": {
       "post": {
         "summary": "verify email address",
@@ -294,6 +396,64 @@
     }
   },
   "definitions": {
+    "pbAddTradePairRequest": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "crypto": {
+          "type": "string"
+        },
+        "fiat": {
+          "type": "string"
+        },
+        "buyRate": {
+          "type": "number",
+          "format": "float"
+        },
+        "sellRate": {
+          "type": "number",
+          "format": "float"
+        }
+      }
+    },
+    "pbAddTradePairResponse": {
+      "type": "object",
+      "properties": {
+        "tradePairs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/pbTraderPair"
+          }
+        }
+      }
+    },
+    "pbDeleteTradePairRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "username": {
+          "type": "string"
+        }
+      }
+    },
+    "pbDeleteTradePairResponse": {
+      "type": "object",
+      "properties": {
+        "tradePairs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/pbTraderPair"
+          }
+        }
+      }
+    },
     "pbForgotPasswordRequest": {
       "type": "object",
       "properties": {
@@ -366,6 +526,13 @@
         },
         "trader": {
           "$ref": "#/definitions/pbTrader"
+        },
+        "traderPairs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/pbTraderPair"
+          }
         }
       }
     },
@@ -472,6 +639,10 @@
     "pbTraderPair": {
       "type": "object",
       "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
         "username": {
           "type": "string"
         },
@@ -499,6 +670,44 @@
         },
         "tradePair": {
           "$ref": "#/definitions/pbTraderPair"
+        }
+      }
+    },
+    "pbUpdateTradePairRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "username": {
+          "type": "string"
+        },
+        "crypto": {
+          "type": "string"
+        },
+        "fiat": {
+          "type": "string"
+        },
+        "buyRate": {
+          "type": "number",
+          "format": "float"
+        },
+        "sellRate": {
+          "type": "number",
+          "format": "float"
+        }
+      }
+    },
+    "pbUpdateTradePairResponse": {
+      "type": "object",
+      "properties": {
+        "tradePairs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/pbTraderPair"
+          }
         }
       }
     },

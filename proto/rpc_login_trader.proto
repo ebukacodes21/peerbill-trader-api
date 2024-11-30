@@ -3,6 +3,7 @@ syntax = "proto3";
 package pb;
 
 import "trader.proto";
+import "trade_pair.proto";
 import "google/protobuf/timestamp.proto";
 
 option go_package = "peerbill-trader-api/pb";
@@ -19,4 +20,5 @@ message LoginTraderResponse {
     google.protobuf.Timestamp access_token_expires_at = 4;
     google.protobuf.Timestamp refresh_token_expires_at = 5;
     Trader trader = 6;
+    repeated TraderPair traderPairs = 7;
 }

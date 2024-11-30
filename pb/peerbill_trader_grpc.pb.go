@@ -19,14 +19,17 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	PeerbillTrader_RegisterTrader_FullMethodName = "/pb.PeerbillTrader/RegisterTrader"
-	PeerbillTrader_LoginTrader_FullMethodName    = "/pb.PeerbillTrader/LoginTrader"
-	PeerbillTrader_LogoutTrader_FullMethodName   = "/pb.PeerbillTrader/LogoutTrader"
-	PeerbillTrader_UpdateTrader_FullMethodName   = "/pb.PeerbillTrader/UpdateTrader"
-	PeerbillTrader_VerifyEmail_FullMethodName    = "/pb.PeerbillTrader/VerifyEmail"
-	PeerbillTrader_Forgot_FullMethodName         = "/pb.PeerbillTrader/Forgot"
-	PeerbillTrader_Reset_FullMethodName          = "/pb.PeerbillTrader/Reset"
-	PeerbillTrader_GetTraders_FullMethodName     = "/pb.PeerbillTrader/GetTraders"
+	PeerbillTrader_RegisterTrader_FullMethodName   = "/pb.PeerbillTrader/RegisterTrader"
+	PeerbillTrader_LoginTrader_FullMethodName      = "/pb.PeerbillTrader/LoginTrader"
+	PeerbillTrader_LogoutTrader_FullMethodName     = "/pb.PeerbillTrader/LogoutTrader"
+	PeerbillTrader_UpdateTrader_FullMethodName     = "/pb.PeerbillTrader/UpdateTrader"
+	PeerbillTrader_VerifyEmail_FullMethodName      = "/pb.PeerbillTrader/VerifyEmail"
+	PeerbillTrader_Forgot_FullMethodName           = "/pb.PeerbillTrader/Forgot"
+	PeerbillTrader_Reset_FullMethodName            = "/pb.PeerbillTrader/Reset"
+	PeerbillTrader_GetTraders_FullMethodName       = "/pb.PeerbillTrader/GetTraders"
+	PeerbillTrader_AddTraderPair_FullMethodName    = "/pb.PeerbillTrader/AddTraderPair"
+	PeerbillTrader_UpdateTraderPair_FullMethodName = "/pb.PeerbillTrader/UpdateTraderPair"
+	PeerbillTrader_DeleteTraderPair_FullMethodName = "/pb.PeerbillTrader/DeleteTraderPair"
 )
 
 // PeerbillTraderClient is the client API for PeerbillTrader service.
@@ -41,6 +44,9 @@ type PeerbillTraderClient interface {
 	Forgot(ctx context.Context, in *ForgotPasswordRequest, opts ...grpc.CallOption) (*ForgotPasswordResponse, error)
 	Reset(ctx context.Context, in *ResetPasswordRequest, opts ...grpc.CallOption) (*ResetPasswordResponse, error)
 	GetTraders(ctx context.Context, in *GetTradersRequest, opts ...grpc.CallOption) (*GetTradersResponse, error)
+	AddTraderPair(ctx context.Context, in *AddTradePairRequest, opts ...grpc.CallOption) (*AddTradePairResponse, error)
+	UpdateTraderPair(ctx context.Context, in *UpdateTradePairRequest, opts ...grpc.CallOption) (*UpdateTradePairResponse, error)
+	DeleteTraderPair(ctx context.Context, in *DeleteTradePairRequest, opts ...grpc.CallOption) (*DeleteTradePairResponse, error)
 }
 
 type peerbillTraderClient struct {
@@ -131,6 +137,36 @@ func (c *peerbillTraderClient) GetTraders(ctx context.Context, in *GetTradersReq
 	return out, nil
 }
 
+func (c *peerbillTraderClient) AddTraderPair(ctx context.Context, in *AddTradePairRequest, opts ...grpc.CallOption) (*AddTradePairResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AddTradePairResponse)
+	err := c.cc.Invoke(ctx, PeerbillTrader_AddTraderPair_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *peerbillTraderClient) UpdateTraderPair(ctx context.Context, in *UpdateTradePairRequest, opts ...grpc.CallOption) (*UpdateTradePairResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdateTradePairResponse)
+	err := c.cc.Invoke(ctx, PeerbillTrader_UpdateTraderPair_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *peerbillTraderClient) DeleteTraderPair(ctx context.Context, in *DeleteTradePairRequest, opts ...grpc.CallOption) (*DeleteTradePairResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteTradePairResponse)
+	err := c.cc.Invoke(ctx, PeerbillTrader_DeleteTraderPair_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // PeerbillTraderServer is the server API for PeerbillTrader service.
 // All implementations must embed UnimplementedPeerbillTraderServer
 // for forward compatibility.
@@ -143,6 +179,9 @@ type PeerbillTraderServer interface {
 	Forgot(context.Context, *ForgotPasswordRequest) (*ForgotPasswordResponse, error)
 	Reset(context.Context, *ResetPasswordRequest) (*ResetPasswordResponse, error)
 	GetTraders(context.Context, *GetTradersRequest) (*GetTradersResponse, error)
+	AddTraderPair(context.Context, *AddTradePairRequest) (*AddTradePairResponse, error)
+	UpdateTraderPair(context.Context, *UpdateTradePairRequest) (*UpdateTradePairResponse, error)
+	DeleteTraderPair(context.Context, *DeleteTradePairRequest) (*DeleteTradePairResponse, error)
 	mustEmbedUnimplementedPeerbillTraderServer()
 }
 
@@ -176,6 +215,15 @@ func (UnimplementedPeerbillTraderServer) Reset(context.Context, *ResetPasswordRe
 }
 func (UnimplementedPeerbillTraderServer) GetTraders(context.Context, *GetTradersRequest) (*GetTradersResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTraders not implemented")
+}
+func (UnimplementedPeerbillTraderServer) AddTraderPair(context.Context, *AddTradePairRequest) (*AddTradePairResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddTraderPair not implemented")
+}
+func (UnimplementedPeerbillTraderServer) UpdateTraderPair(context.Context, *UpdateTradePairRequest) (*UpdateTradePairResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateTraderPair not implemented")
+}
+func (UnimplementedPeerbillTraderServer) DeleteTraderPair(context.Context, *DeleteTradePairRequest) (*DeleteTradePairResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteTraderPair not implemented")
 }
 func (UnimplementedPeerbillTraderServer) mustEmbedUnimplementedPeerbillTraderServer() {}
 func (UnimplementedPeerbillTraderServer) testEmbeddedByValue()                        {}
@@ -342,6 +390,60 @@ func _PeerbillTrader_GetTraders_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _PeerbillTrader_AddTraderPair_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddTradePairRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PeerbillTraderServer).AddTraderPair(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PeerbillTrader_AddTraderPair_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PeerbillTraderServer).AddTraderPair(ctx, req.(*AddTradePairRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PeerbillTrader_UpdateTraderPair_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateTradePairRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PeerbillTraderServer).UpdateTraderPair(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PeerbillTrader_UpdateTraderPair_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PeerbillTraderServer).UpdateTraderPair(ctx, req.(*UpdateTradePairRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PeerbillTrader_DeleteTraderPair_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteTradePairRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PeerbillTraderServer).DeleteTraderPair(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PeerbillTrader_DeleteTraderPair_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PeerbillTraderServer).DeleteTraderPair(ctx, req.(*DeleteTradePairRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // PeerbillTrader_ServiceDesc is the grpc.ServiceDesc for PeerbillTrader service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -380,6 +482,18 @@ var PeerbillTrader_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetTraders",
 			Handler:    _PeerbillTrader_GetTraders_Handler,
+		},
+		{
+			MethodName: "AddTraderPair",
+			Handler:    _PeerbillTrader_AddTraderPair_Handler,
+		},
+		{
+			MethodName: "UpdateTraderPair",
+			Handler:    _PeerbillTrader_UpdateTraderPair_Handler,
+		},
+		{
+			MethodName: "DeleteTraderPair",
+			Handler:    _PeerbillTrader_DeleteTraderPair_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

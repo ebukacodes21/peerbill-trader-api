@@ -11,6 +11,9 @@ import "rpc_verify_email.proto";
 import "rpc_get_traders.proto";
 import "rpc_forgot_password.proto";
 import "rpc_reset.proto";
+import "rpc_add_trade_pair.proto";
+import "rpc_update_trade_pair.proto";
+import "rpc_delete_trade_pair.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
 option go_package = "peerbill-trader-api/pb";
@@ -106,6 +109,36 @@ service PeerbillTrader {
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
             description: "Use this API to get list of traders";
             summary: "Get a list of traders";
+        };
+    }
+    rpc AddTraderPair (AddTradePairRequest) returns (AddTradePairResponse) {
+        option (google.api.http) = {
+            post: "/api/add-trader-pair"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            description: "Use this API to add Crypto/Fiat pairs";
+            summary: "Add Crypto/Fiat pairs";
+        };
+    }
+    rpc UpdateTraderPair (UpdateTradePairRequest) returns (UpdateTradePairResponse) {
+        option (google.api.http) = {
+            patch: "/api/update-trader-pair"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            description: "Use this API to update Crypto/Fiat pairs";
+            summary: "Update Crypto/Fiat pairs";
+        };
+    }
+    rpc DeleteTraderPair (DeleteTradePairRequest) returns (DeleteTradePairResponse) {
+        option (google.api.http) = {
+            post: "/api/delete-trader-pair"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            description: "Use this API to delete Crypto/Fiat pairs";
+            summary: "Delete Crypto/Fiat pairs";
         };
     }
 }
