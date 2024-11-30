@@ -5,7 +5,7 @@ package pb;
 option go_package = "peerbill-trader-api/pb";
 
 message VerifyEmailRequest {
-    int64 user_id = 1;
+    int64 trader_id = 1;
     string verification_code = 2;
 }
 

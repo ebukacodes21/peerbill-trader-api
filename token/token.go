@@ -26,8 +26,8 @@ func NewToken(symmetricKey string) (TokenMaker, error) {
 	return maker, nil
 }
 
-func (m *Token) CreateToken(username string, role string, duration time.Duration) (string, *Payload, error) {
-	payload, err := NewPayload(username, role, duration)
+func (m *Token) CreateToken(username string, trader_id int64, role string, duration time.Duration) (string, *Payload, error) {
+	payload, err := NewPayload(username, trader_id, role, duration)
 	if err != nil {
 		return "", payload, err
 	}

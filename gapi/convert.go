@@ -9,6 +9,7 @@ import (
 
 func convert(trader db.Trader) *pb.Trader {
 	return &pb.Trader{
+		TraderId:  trader.ID,
 		FirstName: trader.FirstName,
 		LastName:  trader.LastName,
 		Username:  trader.Username,

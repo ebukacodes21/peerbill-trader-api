@@ -14,16 +14,17 @@ import (
 
 const createSession = `-- name: CreateSession :one
 INSERT INTO sessions (
-  id, username, refresh_token, user_agent, client_ip, is_blocked, expired_at
+  id, username, trader_id,refresh_token, user_agent, client_ip, is_blocked, expired_at
 ) VALUES (
-  $1, $2, $3, $4, $5, $6, $7
+  $1, $2, $3, $4, $5, $6, $7, $8
 )
-RETURNING id, username, refresh_token, user_agent, client_ip, is_blocked, expired_at, created_at
+RETURNING id, trader_id, username, refresh_token, user_agent, client_ip, is_blocked, expired_at, created_at
 `
 
 type CreateSessionParams struct {
 	ID           uuid.UUID `db:"id" json:"id"`
 	Username     string    `db:"username" json:"username"`
+	TraderID     int64     `db:"trader_id" json:"trader_id"`
 	RefreshToken string    `db:"refresh_token" json:"refresh_token"`
 	UserAgent    string    `db:"user_agent" json:"user_agent"`
 	ClientIp     string    `db:"client_ip" json:"client_ip"`
@@ -35,6 +36,7 @@ func (q *Queries) CreateSession(ctx context.Context, arg CreateSessionParams) (S
 	row := q.db.QueryRowContext(ctx, createSession,
 		arg.ID,
 		arg.Username,
+		arg.TraderID,
 		arg.RefreshToken,
 		arg.UserAgent,
 		arg.ClientIp,
@@ -44,6 +46,7 @@ func (q *Queries) CreateSession(ctx context.Context, arg CreateSessionParams) (S
 	var i Session
 	err := row.Scan(
 		&i.ID,
+		&i.TraderID,
 		&i.Username,
 		&i.RefreshToken,
 		&i.UserAgent,
@@ -55,24 +58,12 @@ func (q *Queries) CreateSession(ctx context.Context, arg CreateSessionParams) (S
 	return i, err
 }
 
-const getSession = `-- name: GetSession :one
-SELECT id, username, refresh_token, user_agent, client_ip, is_blocked, expired_at, created_at FROM sessions 
+const logout = `-- name: Logout :exec
+DELETE FROM sessions
 WHERE id = $1
-LIMIT 1
 `
 
-func (q *Queries) GetSession(ctx context.Context, id uuid.UUID) (Session, error) {
-	row := q.db.QueryRowContext(ctx, getSession, id)
-	var i Session
-	err := row.Scan(
-		&i.ID,
-		&i.Username,
-		&i.RefreshToken,
-		&i.UserAgent,
-		&i.ClientIp,
-		&i.IsBlocked,
-		&i.ExpiredAt,
-		&i.CreatedAt,
-	)
-	return i, err
+func (q *Queries) Logout(ctx context.Context, id uuid.UUID) error {
+	_, err := q.db.ExecContext(ctx, logout, id)
+	return err
 }

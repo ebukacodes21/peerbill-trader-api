@@ -13,6 +13,7 @@ import (
 
 type Session struct {
 	ID           uuid.UUID `db:"id" json:"id"`
+	TraderID     int64     `db:"trader_id" json:"trader_id"`
 	Username     string    `db:"username" json:"username"`
 	RefreshToken string    `db:"refresh_token" json:"refresh_token"`
 	UserAgent    string    `db:"user_agent" json:"user_agent"`

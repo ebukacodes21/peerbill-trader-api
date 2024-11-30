@@ -3,7 +3,7 @@ package gapi
 import (
 	"context"
 	"database/sql"
-	"log"
+
 	db "peerbill-trader-api/db/sqlc"
 	"peerbill-trader-api/pb"
 	"peerbill-trader-api/utils"
@@ -38,12 +38,12 @@ func (s *Server) LoginTrader(ctx context.Context, req *pb.LoginTraderRequest) (*
 		return nil, status.Errorf(codes.Unauthenticated, "trader yet not verified")
 	}
 
-	accessToken, accessPayload, err := s.token.CreateToken(trader.Username, trader.Role, s.config.TokenAccess)
+	accessToken, accessPayload, err := s.token.CreateToken(trader.Username, trader.ID, trader.Role, s.config.TokenAccess)
 	if err != nil {
 		return nil, status.Errorf(codes.NotFound, "failed to create access token")
 	}
 
-	refreshToken, refreshPayload, err := s.token.CreateToken(trader.Username, trader.Role, s.config.RefreshAccess)
+	refreshToken, refreshPayload, err := s.token.CreateToken(trader.Username, trader.ID, trader.Role, s.config.RefreshAccess)
 	if err != nil {
 		return nil, status.Errorf(codes.NotFound, "failed to create refresh token")
 	}
@@ -52,6 +52,7 @@ func (s *Server) LoginTrader(ctx context.Context, req *pb.LoginTraderRequest) (*
 	session, err := s.repository.CreateSession(ctx, db.CreateSessionParams{
 		ID:           refreshPayload.ID,
 		Username:     trader.Username,
+		TraderID:     trader.ID,
 		RefreshToken: refreshToken,
 		UserAgent:    metaData.UserAgent,
 		ClientIp:     metaData.ClientIp,
@@ -59,7 +60,6 @@ func (s *Server) LoginTrader(ctx context.Context, req *pb.LoginTraderRequest) (*
 		ExpiredAt:    refreshPayload.ExpiredAt,
 	})
 	if err != nil {
-		log.Print(err, "here")
 		return nil, status.Errorf(codes.Internal, "failed to create session")
 	}
 

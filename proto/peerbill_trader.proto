@@ -5,6 +5,7 @@ package pb;
 import "google/api/annotations.proto";
 import "rpc_register_trader.proto";
 import "rpc_login_trader.proto";
+import "rpc_logout_trader.proto";
 import "rpc_update_trader.proto";
 import "rpc_verify_email.proto";
 import "rpc_get_traders.proto";
@@ -45,6 +46,16 @@ service PeerbillTrader {
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
             description: "Use this API to login trader";
             summary: "login trader";
+        };
+    }
+    rpc LogoutTrader (LogoutRequest) returns (LogoutResponse) {
+        option (google.api.http) = {
+            post: "/api/logout-trader"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            description: "Use this API to logout trader";
+            summary: "logout trader";
         };
     }
     rpc UpdateTrader (UpdateTraderRequest) returns (UpdateTraderResponse) {

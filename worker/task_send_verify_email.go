@@ -67,7 +67,7 @@ func (rtp *RedisTaskProcessor) ProcessTaskSendVerifyEmail(ctx context.Context, t
 		return fmt.Errorf("failed to get trader")
 	}
 
-	url := fmt.Sprintf("http://localhost:3000/auth/verify?user_id=%d&verification_code=%s", trader.ID, trader.VerificationCode)
+	url := fmt.Sprintf("http://localhost:3000/auth/verify?trader_id=%d&verification_code=%s", trader.ID, trader.VerificationCode)
 
 	subject := "Welcome to Peerbill"
 	content := fmt.Sprintf(`Hello %s,<br/>
@@ -95,7 +95,7 @@ func (rtp *RedisTaskProcessor) ProcessTaskSendForgotEmail(ctx context.Context, t
 		return fmt.Errorf("failed to get trader")
 	}
 
-	accessToken, _, err := rtp.token.CreateToken(trader.Username, trader.Role, rtp.config.TokenAccess)
+	accessToken, _, err := rtp.token.CreateToken(trader.Username, trader.ID, trader.Role, rtp.config.TokenAccess)
 	if err != nil {
 		return fmt.Errorf("failed to create token")
 	}
