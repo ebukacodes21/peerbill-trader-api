@@ -60,7 +60,7 @@ func ValidateCountry(value string) error {
 	return ValidateString(value, 1, 30)
 }
 
-func ValidateUserId(value int64) error {
+func ValidateTraderId(value int64) error {
 	if value <= 0 {
 		return fmt.Errorf("value must be a positive integer")
 	}

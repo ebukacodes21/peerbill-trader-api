@@ -98,23 +98,18 @@ func (s *Server) GetTraders(ctx context.Context, req *pb.GetTradersRequest) (*pb
 		tradersWithDetails = append(tradersWithDetails, traderWithDetails)
 	}
 
-	// Prepare the response
-	resp := &pb.GetTradersResponse{
-		Result: convertTradersWithDetails(tradersWithDetails),
-	}
-
-	// Cache the result in Redis for future use (with an expiration time, e.g., 1 hour)
+	// Cache the result in Redis - 	// Set the cache
 	cachedData, err := json.Marshal(tradersWithDetails)
 	if err != nil {
 		return nil, fmt.Errorf("failed to marshal traders data: %v", err)
 	}
-
-	// Set the cache with a TTL (time-to-live) of 1 hour
 	if err := s.taskProcessor.Set(cacheKey, string(cachedData)); err != nil {
 		return nil, fmt.Errorf("failed to cache traders data: %v", err)
 	}
 
-	// Return the response
+	resp := &pb.GetTradersResponse{
+		Result: convertTradersWithDetails(tradersWithDetails),
+	}
 	return resp, nil
 }
 

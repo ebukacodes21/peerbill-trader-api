@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	PeerbillTrader_RegisterTrader_FullMethodName = "/pb.PeerbillTrader/RegisterTrader"
 	PeerbillTrader_LoginTrader_FullMethodName    = "/pb.PeerbillTrader/LoginTrader"
+	PeerbillTrader_LogoutTrader_FullMethodName   = "/pb.PeerbillTrader/LogoutTrader"
 	PeerbillTrader_UpdateTrader_FullMethodName   = "/pb.PeerbillTrader/UpdateTrader"
 	PeerbillTrader_VerifyEmail_FullMethodName    = "/pb.PeerbillTrader/VerifyEmail"
 	PeerbillTrader_Forgot_FullMethodName         = "/pb.PeerbillTrader/Forgot"
@@ -34,6 +35,7 @@ const (
 type PeerbillTraderClient interface {
 	RegisterTrader(ctx context.Context, in *RegisterTraderRequest, opts ...grpc.CallOption) (*RegisterTraderResponse, error)
 	LoginTrader(ctx context.Context, in *LoginTraderRequest, opts ...grpc.CallOption) (*LoginTraderResponse, error)
+	LogoutTrader(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*LogoutResponse, error)
 	UpdateTrader(ctx context.Context, in *UpdateTraderRequest, opts ...grpc.CallOption) (*UpdateTraderResponse, error)
 	VerifyEmail(ctx context.Context, in *VerifyEmailRequest, opts ...grpc.CallOption) (*VerifyEmailResponse, error)
 	Forgot(ctx context.Context, in *ForgotPasswordRequest, opts ...grpc.CallOption) (*ForgotPasswordResponse, error)
@@ -63,6 +65,16 @@ func (c *peerbillTraderClient) LoginTrader(ctx context.Context, in *LoginTraderR
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(LoginTraderResponse)
 	err := c.cc.Invoke(ctx, PeerbillTrader_LoginTrader_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *peerbillTraderClient) LogoutTrader(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*LogoutResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(LogoutResponse)
+	err := c.cc.Invoke(ctx, PeerbillTrader_LogoutTrader_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -125,6 +137,7 @@ func (c *peerbillTraderClient) GetTraders(ctx context.Context, in *GetTradersReq
 type PeerbillTraderServer interface {
 	RegisterTrader(context.Context, *RegisterTraderRequest) (*RegisterTraderResponse, error)
 	LoginTrader(context.Context, *LoginTraderRequest) (*LoginTraderResponse, error)
+	LogoutTrader(context.Context, *LogoutRequest) (*LogoutResponse, error)
 	UpdateTrader(context.Context, *UpdateTraderRequest) (*UpdateTraderResponse, error)
 	VerifyEmail(context.Context, *VerifyEmailRequest) (*VerifyEmailResponse, error)
 	Forgot(context.Context, *ForgotPasswordRequest) (*ForgotPasswordResponse, error)
@@ -145,6 +158,9 @@ func (UnimplementedPeerbillTraderServer) RegisterTrader(context.Context, *Regist
 }
 func (UnimplementedPeerbillTraderServer) LoginTrader(context.Context, *LoginTraderRequest) (*LoginTraderResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LoginTrader not implemented")
+}
+func (UnimplementedPeerbillTraderServer) LogoutTrader(context.Context, *LogoutRequest) (*LogoutResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method LogoutTrader not implemented")
 }
 func (UnimplementedPeerbillTraderServer) UpdateTrader(context.Context, *UpdateTraderRequest) (*UpdateTraderResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateTrader not implemented")
@@ -214,6 +230,24 @@ func _PeerbillTrader_LoginTrader_Handler(srv interface{}, ctx context.Context, d
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(PeerbillTraderServer).LoginTrader(ctx, req.(*LoginTraderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PeerbillTrader_LogoutTrader_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LogoutRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PeerbillTraderServer).LogoutTrader(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PeerbillTrader_LogoutTrader_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PeerbillTraderServer).LogoutTrader(ctx, req.(*LogoutRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -322,6 +356,10 @@ var PeerbillTrader_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "LoginTrader",
 			Handler:    _PeerbillTrader_LoginTrader_Handler,
+		},
+		{
+			MethodName: "LogoutTrader",
+			Handler:    _PeerbillTrader_LogoutTrader_Handler,
 		},
 		{
 			MethodName: "UpdateTrader",

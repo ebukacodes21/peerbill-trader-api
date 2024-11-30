@@ -20,7 +20,7 @@ func (s *Server) VerifyEmail(ctx context.Context, req *pb.VerifyEmailRequest) (*
 	}
 
 	verifyArgs := db.FindTraderParams{
-		ID:               req.GetUserId(),
+		ID:               req.GetTraderId(),
 		VerificationCode: req.GetVerificationCode(),
 	}
 
@@ -53,8 +53,8 @@ func (s *Server) VerifyEmail(ctx context.Context, req *pb.VerifyEmailRequest) (*
 }
 
 func validateVerifyEmailRequest(req *pb.VerifyEmailRequest) (violations []*errdetails.BadRequest_FieldViolation) {
-	if err := validate.ValidateUserId(req.GetUserId()); err != nil {
-		violations = append(violations, fieldViolation("user_id", err))
+	if err := validate.ValidateTraderId(req.GetTraderId()); err != nil {
+		violations = append(violations, fieldViolation("trader_id", err))
 	}
 
 	if err := validate.ValidateCode(req.GetVerificationCode()); err != nil {

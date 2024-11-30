@@ -122,6 +122,40 @@
         ]
       }
     },
+    "/api/logout-trader": {
+      "post": {
+        "summary": "logout trader",
+        "description": "Use this API to logout trader",
+        "operationId": "PeerbillTrader_LogoutTrader",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbLogoutResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbLogoutRequest"
+            }
+          }
+        ],
+        "tags": [
+          "PeerbillTrader"
+        ]
+      }
+    },
     "/api/register-trader": {
       "post": {
         "summary": "create a new trader",
@@ -335,6 +369,22 @@
         }
       }
     },
+    "pbLogoutRequest": {
+      "type": "object",
+      "properties": {
+        "sessionId": {
+          "type": "string"
+        }
+      }
+    },
+    "pbLogoutResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        }
+      }
+    },
     "pbRegisterTraderRequest": {
       "type": "object",
       "properties": {
@@ -391,6 +441,10 @@
     "pbTrader": {
       "type": "object",
       "properties": {
+        "traderId": {
+          "type": "string",
+          "format": "int64"
+        },
         "firstName": {
           "type": "string"
         },
@@ -451,7 +505,7 @@
     "pbUpdateTraderRequest": {
       "type": "object",
       "properties": {
-        "id": {
+        "traderId": {
           "type": "string",
           "format": "int64"
         },
@@ -472,9 +526,6 @@
         },
         "phone": {
           "type": "string"
-        },
-        "password": {
-          "type": "string"
         }
       }
     },
@@ -489,7 +540,7 @@
     "pbVerifyEmailRequest": {
       "type": "object",
       "properties": {
-        "userId": {
+        "traderId": {
           "type": "string",
           "format": "int64"
         },

@@ -5,9 +5,11 @@ import (
 	"database/sql"
 	db "peerbill-trader-api/db/sqlc"
 	"peerbill-trader-api/pb"
-	"peerbill-trader-api/utils"
 	"peerbill-trader-api/validate"
+	"peerbill-trader-api/worker"
+	"time"
 
+	"github.com/hibiken/asynq"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -24,12 +26,13 @@ func (s *Server) UpdateTrader(ctx context.Context, req *pb.UpdateTraderRequest) 
 		return nil, invalidArgumentError(violations)
 	}
 
-	if authPayload.Role != "admin" && authPayload.Username != *req.Username {
-		return nil, status.Errorf(codes.PermissionDenied, "cannot update user info: %s", err)
+	if authPayload.Role != "admin" && authPayload.TraderID != req.GetTraderId() {
+		return nil, status.Errorf(codes.PermissionDenied, "cannot update trader info")
 	}
 
+	// Prepare the update parameters
 	args := db.UpdateTraderParams{
-		ID: req.GetId(),
+		ID: req.GetTraderId(),
 		FirstName: sql.NullString{
 			String: req.GetFirstName(),
 			Valid:  req.FirstName != nil,
@@ -56,35 +59,55 @@ func (s *Server) UpdateTrader(ctx context.Context, req *pb.UpdateTraderRequest) 
 		},
 	}
 
-	if req.Password != nil {
-		hash, err := utils.HashPassword(req.GetPassword())
-		if err != nil {
-			return nil, status.Errorf(codes.Internal, "failed to hash password")
+	// compare old and new email
+	trader, err := s.repository.GetTrader(ctx, authPayload.Username)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, status.Errorf(codes.NotFound, "trader not found")
+		}
+		return nil, status.Errorf(codes.Internal, "failed to fetch trader")
+	}
+
+	// Check if the email has changed
+	if req.GetEmail() != "" && trader.Email != req.GetEmail() {
+		args.IsVerified = sql.NullBool{
+			Valid: true,
+			Bool:  false,
 		}
 
-		args.Password = sql.NullString{
-			String: hash,
-			Valid:  true,
+		payload := &worker.SendEmailPayload{
+			Username: authPayload.Username,
+		}
+		opts := []asynq.Option{
+			asynq.MaxRetry(10),
+			asynq.ProcessIn(10 * time.Second),
+			asynq.Queue(worker.Critical),
+		}
+
+		err = s.taskDistributor.DistributeTaskSendVerifyEmail(ctx, payload, opts...)
+		if err != nil {
+			return nil, status.Errorf(codes.Internal, "failed to send verification email")
 		}
 	}
 
-	trader, err := s.repository.UpdateTrader(ctx, args)
+	// Perform the update operation
+	updatedTrader, err := s.repository.UpdateTrader(ctx, args)
 	if err != nil {
-		if err == sql.ErrNoRows {
-			return nil, status.Errorf(codes.NotFound, "user not found")
-		}
-
-		return nil, status.Errorf(codes.Internal, "failed to update user")
+		return nil, status.Errorf(codes.Internal, "failed to update trader %s", err)
 	}
 
 	resp := &pb.UpdateTraderResponse{
-		Trader: convert(trader),
+		Trader: convert(updatedTrader),
 	}
 
 	return resp, nil
 }
 
 func validateUpdateTraderRequest(req *pb.UpdateTraderRequest) (violations []*errdetails.BadRequest_FieldViolation) {
+	if err := validate.ValidateTraderId(req.GetTraderId()); err != nil {
+		violations = append(violations, fieldViolation("trader_id", err))
+	}
+
 	if req.FirstName != nil {
 		if err := validate.ValidateFirstname(req.GetFirstName()); err != nil {
 			violations = append(violations, fieldViolation(req.GetFirstName(), err))
@@ -106,12 +129,6 @@ func validateUpdateTraderRequest(req *pb.UpdateTraderRequest) (violations []*err
 	if req.Email != nil {
 		if err := validate.ValidateEmail(req.GetEmail()); err != nil {
 			violations = append(violations, fieldViolation(req.GetEmail(), err))
-		}
-	}
-
-	if req.Password != nil {
-		if err := validate.ValidatePassword(req.GetPassword()); err != nil {
-			violations = append(violations, fieldViolation(req.GetPassword(), err))
 		}
 	}
 

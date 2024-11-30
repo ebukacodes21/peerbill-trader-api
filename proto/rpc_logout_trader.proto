@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package = "peerbill-trader-api/pb";
+
+message LogoutRequest {
+    string session_id = 1;
+}
+
+message LogoutResponse {
+   string message = 1;
+}
