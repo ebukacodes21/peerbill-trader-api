@@ -54,6 +54,40 @@
         ]
       }
     },
+    "/api/create-buy-order": {
+      "post": {
+        "summary": "Create buy order",
+        "description": "Use this API to create buy order",
+        "operationId": "PeerbillTrader_CreateBuyOrder",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbCreateBuyOrderResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbCreateBuyOrderRequest"
+            }
+          }
+        ],
+        "tags": [
+          "PeerbillTrader"
+        ]
+      }
+    },
     "/api/delete-trader-pair": {
       "post": {
         "summary": "Delete Crypto/Fiat pairs",
@@ -114,6 +148,74 @@
             "required": true,
             "schema": {
               "$ref": "#/definitions/pbForgotPasswordRequest"
+            }
+          }
+        ],
+        "tags": [
+          "PeerbillTrader"
+        ]
+      }
+    },
+    "/api/get-buy-order": {
+      "post": {
+        "summary": "Get a single buy order",
+        "description": "Use this API to get buy a single buy order",
+        "operationId": "PeerbillTrader_GetBuyOrder",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbGetBuyOrderResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbGetBuyOrderRequest"
+            }
+          }
+        ],
+        "tags": [
+          "PeerbillTrader"
+        ]
+      }
+    },
+    "/api/get-buy-orders": {
+      "post": {
+        "summary": "Get buy orders",
+        "description": "Use this API to get buy orders",
+        "operationId": "PeerbillTrader_GetBuyOrders",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbGetBuyOrdersResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbGetBuyOrdersRequest"
             }
           }
         ],
@@ -430,6 +532,96 @@
         }
       }
     },
+    "pbBuyOrder": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "walletAddress": {
+          "type": "string"
+        },
+        "crypto": {
+          "type": "string"
+        },
+        "fiat": {
+          "type": "string"
+        },
+        "payAmount": {
+          "type": "number",
+          "format": "float"
+        },
+        "receiveAmount": {
+          "type": "number",
+          "format": "float"
+        },
+        "username": {
+          "type": "string"
+        },
+        "sellRate": {
+          "type": "number",
+          "format": "float"
+        },
+        "isAccepted": {
+          "type": "boolean"
+        },
+        "isCompleted": {
+          "type": "boolean"
+        },
+        "isRejected": {
+          "type": "boolean"
+        },
+        "isExpired": {
+          "type": "boolean"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "duration": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "pbCreateBuyOrderRequest": {
+      "type": "object",
+      "properties": {
+        "wallet": {
+          "type": "string"
+        },
+        "crypto": {
+          "type": "string"
+        },
+        "fiat": {
+          "type": "string"
+        },
+        "payAmount": {
+          "type": "number",
+          "format": "float"
+        },
+        "receiveAmount": {
+          "type": "number",
+          "format": "float"
+        },
+        "username": {
+          "type": "string"
+        },
+        "sellRate": {
+          "type": "number",
+          "format": "float"
+        }
+      }
+    },
+    "pbCreateBuyOrderResponse": {
+      "type": "object",
+      "properties": {
+        "buyOrder": {
+          "$ref": "#/definitions/pbBuyOrder"
+        }
+      }
+    },
     "pbDeleteTradePairRequest": {
       "type": "object",
       "properties": {
@@ -467,6 +659,43 @@
       "properties": {
         "message": {
           "type": "string"
+        }
+      }
+    },
+    "pbGetBuyOrderRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
+    "pbGetBuyOrderResponse": {
+      "type": "object",
+      "properties": {
+        "BuyOrder": {
+          "$ref": "#/definitions/pbBuyOrder"
+        }
+      }
+    },
+    "pbGetBuyOrdersRequest": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string"
+        }
+      }
+    },
+    "pbGetBuyOrdersResponse": {
+      "type": "object",
+      "properties": {
+        "BuyOrders": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/pbBuyOrder"
+          }
         }
       }
     },

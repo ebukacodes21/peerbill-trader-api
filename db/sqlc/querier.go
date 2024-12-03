@@ -11,11 +11,14 @@ import (
 )
 
 type Querier interface {
+	CreateBuyOrder(ctx context.Context, arg CreateBuyOrderParams) (BuyOrder, error)
 	CreateSession(ctx context.Context, arg CreateSessionParams) (Session, error)
 	CreateTradePair(ctx context.Context, arg CreateTradePairParams) (TradePair, error)
 	CreateTrader(ctx context.Context, arg CreateTraderParams) (Trader, error)
 	DeleteTradePair(ctx context.Context, arg DeleteTradePairParams) error
 	FindTrader(ctx context.Context, arg FindTraderParams) (Trader, error)
+	GetBuyOrder(ctx context.Context, id int64) (BuyOrder, error)
+	GetBuyOrders(ctx context.Context, username string) ([]BuyOrder, error)
 	GetTradePairs(ctx context.Context, arg GetTradePairsParams) ([]TradePair, error)
 	GetTrader(ctx context.Context, username string) (Trader, error)
 	GetTraderEmail(ctx context.Context, email string) (Trader, error)

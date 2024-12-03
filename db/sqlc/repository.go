@@ -1,7 +1,6 @@
 package db
 
 import (
-	// "context"
 	"context"
 	"database/sql"
 )
@@ -10,6 +9,7 @@ import (
 type DatabaseContract interface {
 	Querier
 	CreateTraderTx(ctx context.Context, args CreateTraderTxParams) (CreateTraderTxResponse, error)
+	CreateBuyOrderTx(ctx context.Context, args CreateBuyOrderTxParams) (CreatBuyOrderTxResponse, error)
 }
 
 type Repository struct {

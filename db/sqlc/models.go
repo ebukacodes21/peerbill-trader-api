@@ -11,6 +11,23 @@ import (
 	"github.com/google/uuid"
 )
 
+type BuyOrder struct {
+	ID            int64     `db:"id" json:"id"`
+	Username      string    `db:"username" json:"username"`
+	WalletAddress string    `db:"wallet_address" json:"wallet_address"`
+	Crypto        string    `db:"crypto" json:"crypto"`
+	Fiat          string    `db:"fiat" json:"fiat"`
+	CryptoAmount  float64   `db:"crypto_amount" json:"crypto_amount"`
+	FiatAmount    float64   `db:"fiat_amount" json:"fiat_amount"`
+	Rate          float64   `db:"rate" json:"rate"`
+	IsAccepted    bool      `db:"is_accepted" json:"is_accepted"`
+	IsCompleted   bool      `db:"is_completed" json:"is_completed"`
+	IsRejected    bool      `db:"is_rejected" json:"is_rejected"`
+	IsExpired     bool      `db:"is_expired" json:"is_expired"`
+	CreatedAt     time.Time `db:"created_at" json:"created_at"`
+	Duration      time.Time `db:"duration" json:"duration"`
+}
+
 type Session struct {
 	ID           uuid.UUID `db:"id" json:"id"`
 	TraderID     int64     `db:"trader_id" json:"trader_id"`

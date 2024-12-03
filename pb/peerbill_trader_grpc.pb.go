@@ -30,6 +30,9 @@ const (
 	PeerbillTrader_AddTraderPair_FullMethodName    = "/pb.PeerbillTrader/AddTraderPair"
 	PeerbillTrader_UpdateTraderPair_FullMethodName = "/pb.PeerbillTrader/UpdateTraderPair"
 	PeerbillTrader_DeleteTraderPair_FullMethodName = "/pb.PeerbillTrader/DeleteTraderPair"
+	PeerbillTrader_CreateBuyOrder_FullMethodName   = "/pb.PeerbillTrader/CreateBuyOrder"
+	PeerbillTrader_GetBuyOrders_FullMethodName     = "/pb.PeerbillTrader/GetBuyOrders"
+	PeerbillTrader_GetBuyOrder_FullMethodName      = "/pb.PeerbillTrader/GetBuyOrder"
 )
 
 // PeerbillTraderClient is the client API for PeerbillTrader service.
@@ -47,6 +50,9 @@ type PeerbillTraderClient interface {
 	AddTraderPair(ctx context.Context, in *AddTradePairRequest, opts ...grpc.CallOption) (*AddTradePairResponse, error)
 	UpdateTraderPair(ctx context.Context, in *UpdateTradePairRequest, opts ...grpc.CallOption) (*UpdateTradePairResponse, error)
 	DeleteTraderPair(ctx context.Context, in *DeleteTradePairRequest, opts ...grpc.CallOption) (*DeleteTradePairResponse, error)
+	CreateBuyOrder(ctx context.Context, in *CreateBuyOrderRequest, opts ...grpc.CallOption) (*CreateBuyOrderResponse, error)
+	GetBuyOrders(ctx context.Context, in *GetBuyOrdersRequest, opts ...grpc.CallOption) (*GetBuyOrdersResponse, error)
+	GetBuyOrder(ctx context.Context, in *GetBuyOrderRequest, opts ...grpc.CallOption) (*GetBuyOrderResponse, error)
 }
 
 type peerbillTraderClient struct {
@@ -167,6 +173,36 @@ func (c *peerbillTraderClient) DeleteTraderPair(ctx context.Context, in *DeleteT
 	return out, nil
 }
 
+func (c *peerbillTraderClient) CreateBuyOrder(ctx context.Context, in *CreateBuyOrderRequest, opts ...grpc.CallOption) (*CreateBuyOrderResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateBuyOrderResponse)
+	err := c.cc.Invoke(ctx, PeerbillTrader_CreateBuyOrder_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *peerbillTraderClient) GetBuyOrders(ctx context.Context, in *GetBuyOrdersRequest, opts ...grpc.CallOption) (*GetBuyOrdersResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetBuyOrdersResponse)
+	err := c.cc.Invoke(ctx, PeerbillTrader_GetBuyOrders_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *peerbillTraderClient) GetBuyOrder(ctx context.Context, in *GetBuyOrderRequest, opts ...grpc.CallOption) (*GetBuyOrderResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetBuyOrderResponse)
+	err := c.cc.Invoke(ctx, PeerbillTrader_GetBuyOrder_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // PeerbillTraderServer is the server API for PeerbillTrader service.
 // All implementations must embed UnimplementedPeerbillTraderServer
 // for forward compatibility.
@@ -182,6 +218,9 @@ type PeerbillTraderServer interface {
 	AddTraderPair(context.Context, *AddTradePairRequest) (*AddTradePairResponse, error)
 	UpdateTraderPair(context.Context, *UpdateTradePairRequest) (*UpdateTradePairResponse, error)
 	DeleteTraderPair(context.Context, *DeleteTradePairRequest) (*DeleteTradePairResponse, error)
+	CreateBuyOrder(context.Context, *CreateBuyOrderRequest) (*CreateBuyOrderResponse, error)
+	GetBuyOrders(context.Context, *GetBuyOrdersRequest) (*GetBuyOrdersResponse, error)
+	GetBuyOrder(context.Context, *GetBuyOrderRequest) (*GetBuyOrderResponse, error)
 	mustEmbedUnimplementedPeerbillTraderServer()
 }
 
@@ -224,6 +263,15 @@ func (UnimplementedPeerbillTraderServer) UpdateTraderPair(context.Context, *Upda
 }
 func (UnimplementedPeerbillTraderServer) DeleteTraderPair(context.Context, *DeleteTradePairRequest) (*DeleteTradePairResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteTraderPair not implemented")
+}
+func (UnimplementedPeerbillTraderServer) CreateBuyOrder(context.Context, *CreateBuyOrderRequest) (*CreateBuyOrderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateBuyOrder not implemented")
+}
+func (UnimplementedPeerbillTraderServer) GetBuyOrders(context.Context, *GetBuyOrdersRequest) (*GetBuyOrdersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetBuyOrders not implemented")
+}
+func (UnimplementedPeerbillTraderServer) GetBuyOrder(context.Context, *GetBuyOrderRequest) (*GetBuyOrderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetBuyOrder not implemented")
 }
 func (UnimplementedPeerbillTraderServer) mustEmbedUnimplementedPeerbillTraderServer() {}
 func (UnimplementedPeerbillTraderServer) testEmbeddedByValue()                        {}
@@ -444,6 +492,60 @@ func _PeerbillTrader_DeleteTraderPair_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _PeerbillTrader_CreateBuyOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateBuyOrderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PeerbillTraderServer).CreateBuyOrder(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PeerbillTrader_CreateBuyOrder_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PeerbillTraderServer).CreateBuyOrder(ctx, req.(*CreateBuyOrderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PeerbillTrader_GetBuyOrders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetBuyOrdersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PeerbillTraderServer).GetBuyOrders(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PeerbillTrader_GetBuyOrders_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PeerbillTraderServer).GetBuyOrders(ctx, req.(*GetBuyOrdersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PeerbillTrader_GetBuyOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetBuyOrderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PeerbillTraderServer).GetBuyOrder(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PeerbillTrader_GetBuyOrder_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PeerbillTraderServer).GetBuyOrder(ctx, req.(*GetBuyOrderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // PeerbillTrader_ServiceDesc is the grpc.ServiceDesc for PeerbillTrader service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -494,6 +596,18 @@ var PeerbillTrader_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteTraderPair",
 			Handler:    _PeerbillTrader_DeleteTraderPair_Handler,
+		},
+		{
+			MethodName: "CreateBuyOrder",
+			Handler:    _PeerbillTrader_CreateBuyOrder_Handler,
+		},
+		{
+			MethodName: "GetBuyOrders",
+			Handler:    _PeerbillTrader_GetBuyOrders_Handler,
+		},
+		{
+			MethodName: "GetBuyOrder",
+			Handler:    _PeerbillTrader_GetBuyOrder_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

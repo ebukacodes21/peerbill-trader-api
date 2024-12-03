@@ -9,6 +9,7 @@ import (
 type TaskDistributor interface {
 	DistributeTaskSendVerifyEmail(ctx context.Context, payload *SendEmailPayload, opts ...asynq.Option) error
 	DistributeTaskSendForgotEmail(ctx context.Context, payload *SendEmailPayload, opts ...asynq.Option) error
+	DistributeTaskSendBuyOrderEmail(ctx context.Context, payload *SendBuyOrderEmailPayload, opts ...asynq.Option) error
 }
 
 type RedisTaskDistributor struct {
