@@ -12,12 +12,21 @@ import (
 )
 
 const (
-	send_verify_email_task = "task:send_verify_email"
-	send_forgot_email_task = "task:send_forgot_email"
+	send_verify_email_task    = "task:send_verify_email"
+	send_forgot_email_task    = "task:send_forgot_email"
+	send_buy_order_email_task = "task:send_buy_order_email"
 )
 
 type SendEmailPayload struct {
 	Username string `json:"username"`
+}
+
+type SendBuyOrderEmailPayload struct {
+	Username     string  `json:"username"`
+	Crypto       string  `db:"crypto" json:"crypto"`
+	Fiat         string  `db:"fiat" json:"fiat"`
+	CryptoAmount float64 `db:"crypto_amount" json:"crypto_amount"`
+	FiatAmount   float64 `db:"fiat_amount" json:"fiat_amount"`
 }
 
 func (rtd *RedisTaskDistributor) DistributeTaskSendVerifyEmail(ctx context.Context, payload *SendEmailPayload, opts ...asynq.Option) error {
@@ -42,6 +51,22 @@ func (rtd *RedisTaskDistributor) DistributeTaskSendForgotEmail(ctx context.Conte
 		return fmt.Errorf("failed to marshal payload %w", err)
 	}
 	task := asynq.NewTask(send_forgot_email_task, []byte(data), opts...)
+
+	info, err := rtd.client.EnqueueContext(ctx, task)
+	if err != nil {
+		return fmt.Errorf("failed to queue task")
+	}
+
+	log.Info().Str("type", task.Type()).Bytes("payload", task.Payload()).Str("queue", info.Queue).Int("max_retries", info.MaxRetry).Msg("message enqueued")
+	return nil
+}
+
+func (rtd *RedisTaskDistributor) DistributeTaskSendBuyOrderEmail(ctx context.Context, payload *SendBuyOrderEmailPayload, opts ...asynq.Option) error {
+	data, err := json.Marshal(payload)
+	if err != nil {
+		return fmt.Errorf("failed to marshal payload %w", err)
+	}
+	task := asynq.NewTask(send_buy_order_email_task, []byte(data), opts...)
 
 	info, err := rtd.client.EnqueueContext(ctx, task)
 	if err != nil {
@@ -114,5 +139,49 @@ func (rtp *RedisTaskProcessor) ProcessTaskSendForgotEmail(ctx context.Context, t
 	}
 
 	log.Info().Str("type", task.Type()).Bytes("payload", task.Payload()).Str("email", trader.Email).Msg("message processed")
+	return nil
+}
+
+func (rtp *RedisTaskProcessor) ProcessTaskBuyOrderEmail(ctx context.Context, task *asynq.Task) error {
+	var payload SendBuyOrderEmailPayload
+	if err := json.Unmarshal(task.Payload(), &payload); err != nil {
+		return asynq.SkipRetry
+	}
+
+	trader, err := rtp.repository.GetTrader(ctx, payload.Username)
+	if err != nil {
+		return fmt.Errorf("failed to get trader with username %s: %w", payload.Username, err)
+	}
+
+	// Construct the URL to the login page
+	url := "http://localhost:3000/auth/signin"
+
+	// Prepare the email content
+	subject := "Buy Request"
+	content := fmt.Sprintf(`Hello %s,<br/>
+You have a pending buy request for %.8f %s. <br/>
+You will receive an equivalent of %.2f %s after a successful transaction.<br/>
+Kindly <a href="%s">click this link to log in to your account and complete the transaction</a>.<br/>
+`,
+		trader.Username,
+		payload.CryptoAmount,
+		payload.Crypto,
+		payload.FiatAmount,
+		payload.Fiat,
+		url)
+
+	// Send the email
+	to := []string{trader.Email}
+	if err := rtp.mailer.SendMail(subject, content, to, nil, nil, nil); err != nil {
+		// Log and return a more specific error message
+		return fmt.Errorf("failed to send buy order email to %s: %w", trader.Email, err)
+	}
+
+	log.Info().
+		Str("type", task.Type()).
+		Bytes("payload", task.Payload()).
+		Str("email", trader.Email).
+		Msg("Buy order processed")
+
 	return nil
 }

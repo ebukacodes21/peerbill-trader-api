@@ -5,6 +5,8 @@ import (
 	"math"
 	"net/mail"
 	"regexp"
+
+	"github.com/ethereum/go-ethereum/common"
 )
 
 var (
@@ -93,6 +95,13 @@ func ValidateNumber(value float32) error {
 	}
 	if math.IsInf(float64(value), 0) {
 		return fmt.Errorf("value cannot be infinity")
+	}
+	return nil
+}
+
+func ValidateWalletAddres(value string) error {
+	if ok := common.IsHexAddress(value); !ok {
+		return fmt.Errorf("not a valid address")
 	}
 	return nil
 }

@@ -2,10 +2,11 @@ package gapi
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
+	// "encoding/json"
+	// "fmt"
+	// "log"
 
-	"github.com/go-redis/redis/v8"
+	// "github.com/go-redis/redis/v8"
 
 	db "peerbill-trader-api/db/sqlc"
 	"peerbill-trader-api/pb"
@@ -27,24 +28,25 @@ func (s *Server) GetTraders(ctx context.Context, req *pb.GetTradersRequest) (*pb
 		return nil, invalidArgumentError(violations)
 	}
 
-	cacheKey := fmt.Sprintf("traders:%s:%s", req.Crypto, req.Fiat)
-	cachedResult, err := s.taskProcessor.Get(ctx, cacheKey)
-	if err != nil {
-		if err != redis.Nil {
-			return nil, fmt.Errorf("redis error: %v", err)
-		}
-	} else if cachedResult != "" {
-		var cachedTraders []TradersWithDetails
-		if err := json.Unmarshal([]byte(cachedResult), &cachedTraders); err != nil {
-			return nil, fmt.Errorf("failed to unmarshal cached data: %v", err)
-		}
+	// cacheKey := fmt.Sprintf("traders:%s:%s", req.Crypto, req.Fiat)
+	// cachedResult, err := s.taskProcessor.Get(ctx, cacheKey)
+	// if err != nil {
+	// 	if err != redis.Nil {
+	// 		return nil, fmt.Errorf("redis error: %v", err)
+	// 	}
+	// } else if cachedResult != "" {
+	// 	var cachedTraders []TradersWithDetails
+	// 	if err := json.Unmarshal([]byte(cachedResult), &cachedTraders); err != nil {
+	// 		return nil, fmt.Errorf("failed to unmarshal cached data: %v", err)
+	// 	}
 
-		resp := &pb.GetTradersResponse{
-			Result: convertTradersWithDetails(cachedTraders),
-		}
-		return resp, nil
+	// 	resp := &pb.GetTradersResponse{
+	// 		Result: convertTradersWithDetails(cachedTraders),
+	// 	}
+	// 	log.Print("cached effort")
+	// 	return resp, nil
 
-	}
+	// }
 
 	args := db.GetTradePairsParams{
 		Crypto: req.GetCrypto(),
@@ -79,13 +81,13 @@ func (s *Server) GetTraders(ctx context.Context, req *pb.GetTradersRequest) (*pb
 		tradersWithDetails = append(tradersWithDetails, traderWithDetails)
 	}
 
-	cachedData, err := json.Marshal(tradersWithDetails)
-	if err != nil {
-		return nil, fmt.Errorf("failed to marshal traders data: %v", err)
-	}
-	if err := s.taskProcessor.Set(cacheKey, string(cachedData)); err != nil {
-		return nil, fmt.Errorf("failed to cache traders data: %v", err)
-	}
+	// cachedData, err := json.Marshal(tradersWithDetails)
+	// if err != nil {
+	// 	return nil, fmt.Errorf("failed to marshal traders data: %v", err)
+	// }
+	// if err := s.taskProcessor.Set(cacheKey, string(cachedData)); err != nil {
+	// 	return nil, fmt.Errorf("failed to cache traders data: %v", err)
+	// }
 
 	resp := &pb.GetTradersResponse{
 		Result: convertTradersWithDetails(tradersWithDetails),

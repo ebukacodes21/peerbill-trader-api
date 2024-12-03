@@ -1,3 +1,4 @@
+-- Create the "traders" table first, as other tables depend on it
 CREATE TABLE "traders" (
   "id" bigserial PRIMARY KEY,
   "first_name" varchar NOT NULL,
@@ -14,6 +15,7 @@ CREATE TABLE "traders" (
   "created_at" timestamptz NOT NULL DEFAULT (now())
 );
 
+-- Create the "trade_pairs" table
 CREATE TABLE "trade_pairs" (
   "id" bigserial PRIMARY KEY,
   "username" VARCHAR NOT NULL,
@@ -24,8 +26,10 @@ CREATE TABLE "trade_pairs" (
   "created_at" timestamptz NOT NULL DEFAULT (now())
 );
 
-ALTER TABLE "trade_pairs" ADD CONSTRAINT "fk_username" FOREIGN KEY ("username") REFERENCES "traders" ("username");
+-- Add the foreign key constraint for the "trade_pairs" table to reference the "traders" table
+ALTER TABLE "trade_pairs" 
+  ADD CONSTRAINT "fk_username" FOREIGN KEY ("username") REFERENCES "traders" ("username");
 
--- CREATE UNIQUE INDEX ON "trade_pairs" ("crypto", "fiat", "username")
-ALTER TABLE "trade_pairs" ADD CONSTRAINT "crypto_fiat_trader_key" UNIQUE ("crypto", "fiat", "username");
-
+-- Create a unique constraint to ensure no duplicate trade pairs for the same trader
+ALTER TABLE "trade_pairs" 
+  ADD CONSTRAINT "crypto_fiat_trader_key" UNIQUE ("crypto", "fiat", "username");

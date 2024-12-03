@@ -1,6 +1,7 @@
 package gapi
 
 import (
+	"log"
 	db "peerbill-trader-api/db/sqlc"
 	"peerbill-trader-api/pb"
 
@@ -56,4 +57,49 @@ func convertTradersWithDetails(tradersWithDetails []TradersWithDetails) []*pb.Tr
 		result = append(result, pbTraderWithDetails)
 	}
 	return result
+}
+
+func convertBuyOrder(buyOrder db.BuyOrder) *pb.BuyOrder {
+	return &pb.BuyOrder{
+		Id:            buyOrder.ID,
+		WalletAddress: buyOrder.WalletAddress,
+		Crypto:        buyOrder.Crypto,
+		Fiat:          buyOrder.Fiat,
+		Username:      buyOrder.Username,
+		PayAmount:     float32(buyOrder.CryptoAmount),
+		ReceiveAmount: float32(buyOrder.FiatAmount),
+		SellRate:      float32(buyOrder.Rate),
+		IsAccepted:    buyOrder.IsAccepted,
+		IsRejected:    buyOrder.IsRejected,
+		IsCompleted:   buyOrder.IsCompleted,
+		IsExpired:     buyOrder.IsExpired,
+		Duration:      timestamppb.New(buyOrder.Duration),
+		CreatedAt:     timestamppb.New(buyOrder.CreatedAt),
+	}
+}
+
+func convertBuyOrders(buyOrders []db.BuyOrder) []*pb.BuyOrder {
+	var pbBuyOrders []*pb.BuyOrder
+	log.Print(buyOrders)
+	for _, buyOrder := range buyOrders {
+		pbBuyOrders = append(pbBuyOrders, &pb.BuyOrder{
+			Id:            buyOrder.ID,
+			WalletAddress: buyOrder.WalletAddress,
+			Crypto:        buyOrder.Crypto,
+			Fiat:          buyOrder.Fiat,
+			Username:      buyOrder.Username,
+			PayAmount:     float32(buyOrder.CryptoAmount),
+			ReceiveAmount: float32(buyOrder.FiatAmount),
+			SellRate:      float32(buyOrder.Rate),
+			IsAccepted:    buyOrder.IsAccepted,
+			IsRejected:    buyOrder.IsRejected,
+			IsCompleted:   buyOrder.IsCompleted,
+			IsExpired:     buyOrder.IsExpired,
+			Duration:      timestamppb.New(buyOrder.Duration),
+			CreatedAt:     timestamppb.New(buyOrder.CreatedAt),
+		})
+	}
+
+	log.Print(pbBuyOrders, " here")
+	return pbBuyOrders
 }
