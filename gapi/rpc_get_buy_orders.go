@@ -30,10 +30,14 @@ func (s *Server) GetBuyOrders(ctx context.Context, req *pb.GetBuyOrdersRequest) 
 		return nil, status.Errorf(codes.Internal, "failed to fetch buy orders")
 	}
 
-	// log.Print(buyOrders)
+	// Reverse the buy orders array
+	reversedBuyOrders := convertBuyOrders(buyOrders)
+	for i, j := 0, len(reversedBuyOrders)-1; i < j; i, j = i+1, j-1 {
+		reversedBuyOrders[i], reversedBuyOrders[j] = reversedBuyOrders[j], reversedBuyOrders[i]
+	}
 
 	resp := &pb.GetBuyOrdersResponse{
-		BuyOrders: convertBuyOrders(buyOrders),
+		BuyOrders: reversedBuyOrders,
 	}
 
 	return resp, nil

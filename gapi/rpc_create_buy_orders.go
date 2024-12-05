@@ -69,7 +69,7 @@ func (s *Server) CreateBuyOrder(ctx context.Context, req *pb.CreateBuyOrderReque
 }
 
 func validateCreateBuyOrderRequest(req *pb.CreateBuyOrderRequest) (violations []*errdetails.BadRequest_FieldViolation) {
-	if err := validate.ValidateWalletAddres(req.GetWallet()); err != nil {
+	if err := validate.ValidateWalletAddress(req.GetWallet()); err != nil {
 		violations = append(violations, fieldViolation("wallet", err))
 	}
 

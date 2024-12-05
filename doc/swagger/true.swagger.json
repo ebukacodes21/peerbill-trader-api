@@ -360,6 +360,40 @@
         ]
       }
     },
+    "/api/reject-buy": {
+      "post": {
+        "summary": "Reject a buy order",
+        "description": "Use this API to reject a buy order",
+        "operationId": "PeerbillTrader_RejectBuyOrder",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbRejectBuyOrderResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbRejectBuyOrderRequest"
+            }
+          }
+        ],
+        "tags": [
+          "PeerbillTrader"
+        ]
+      }
+    },
     "/api/reset": {
       "post": {
         "summary": "Password reset link",
@@ -674,7 +708,7 @@
     "pbGetBuyOrderResponse": {
       "type": "object",
       "properties": {
-        "BuyOrder": {
+        "buyOrder": {
           "$ref": "#/definitions/pbBuyOrder"
         }
       }
@@ -690,7 +724,7 @@
     "pbGetBuyOrdersResponse": {
       "type": "object",
       "properties": {
-        "BuyOrders": {
+        "buyOrders": {
           "type": "array",
           "items": {
             "type": "object",
@@ -812,6 +846,30 @@
       "properties": {
         "trader": {
           "$ref": "#/definitions/pbTrader"
+        }
+      }
+    },
+    "pbRejectBuyOrderRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "username": {
+          "type": "string"
+        }
+      }
+    },
+    "pbRejectBuyOrderResponse": {
+      "type": "object",
+      "properties": {
+        "buyOrders": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/pbBuyOrder"
+          }
         }
       }
     },

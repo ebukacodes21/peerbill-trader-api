@@ -10,5 +10,5 @@ message GetBuyOrdersRequest {
 }
 
 message GetBuyOrdersResponse {
-    repeated BuyOrder BuyOrders = 1;
+    repeated BuyOrder buyOrders = 1;
 }

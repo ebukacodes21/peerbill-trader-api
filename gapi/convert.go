@@ -1,7 +1,6 @@
 package gapi
 
 import (
-	"log"
 	db "peerbill-trader-api/db/sqlc"
 	"peerbill-trader-api/pb"
 
@@ -80,7 +79,6 @@ func convertBuyOrder(buyOrder db.BuyOrder) *pb.BuyOrder {
 
 func convertBuyOrders(buyOrders []db.BuyOrder) []*pb.BuyOrder {
 	var pbBuyOrders []*pb.BuyOrder
-	log.Print(buyOrders)
 	for _, buyOrder := range buyOrders {
 		pbBuyOrders = append(pbBuyOrders, &pb.BuyOrder{
 			Id:            buyOrder.ID,
@@ -100,6 +98,5 @@ func convertBuyOrders(buyOrders []db.BuyOrder) []*pb.BuyOrder {
 		})
 	}
 
-	log.Print(pbBuyOrders, " here")
 	return pbBuyOrders
 }
