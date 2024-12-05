@@ -25,6 +25,7 @@ type Querier interface {
 	GetTraderPairs(ctx context.Context, username string) ([]TradePair, error)
 	GetTraders(ctx context.Context, arg GetTradersParams) ([]Trader, error)
 	Logout(ctx context.Context, id uuid.UUID) error
+	UpdateBuyOrder(ctx context.Context, arg UpdateBuyOrderParams) (BuyOrder, error)
 	UpdateTradePair(ctx context.Context, arg UpdateTradePairParams) error
 	UpdateTrader(ctx context.Context, arg UpdateTraderParams) (Trader, error)
 }

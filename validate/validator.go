@@ -99,7 +99,7 @@ func ValidateNumber(value float32) error {
 	return nil
 }
 
-func ValidateWalletAddres(value string) error {
+func ValidateWalletAddress(value string) error {
 	if ok := common.IsHexAddress(value); !ok {
 		return fmt.Errorf("not a valid address")
 	}

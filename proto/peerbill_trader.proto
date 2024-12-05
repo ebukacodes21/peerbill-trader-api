@@ -17,6 +17,7 @@ import "rpc_delete_trade_pair.proto";
 import "rpc_create_buy_order.proto";
 import "rpc_get_buy_orders.proto";
 import "rpc_get_buy_order.proto";
+import "rpc_reject_buy.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
 option go_package = "peerbill-trader-api/pb";
@@ -172,6 +173,16 @@ service PeerbillTrader {
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
             description: "Use this API to get buy a single buy order";
             summary: "Get a single buy order";
+        };
+    }
+    rpc RejectBuyOrder (RejectBuyOrderRequest) returns (RejectBuyOrderResponse) {
+        option (google.api.http) = {
+            post: "/api/reject-buy"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            description: "Use this API to reject a buy order";
+            summary: "Reject a buy order";
         };
     }
 }

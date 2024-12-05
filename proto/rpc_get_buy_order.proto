@@ -10,5 +10,5 @@ message GetBuyOrderRequest {
 }
 
 message GetBuyOrderResponse {
-    BuyOrder BuyOrder = 1;
+    BuyOrder buyOrder = 1;
 }

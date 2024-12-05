@@ -7,6 +7,7 @@ package db
 
 import (
 	"context"
+	"database/sql"
 	"time"
 )
 
@@ -131,4 +132,76 @@ func (q *Queries) GetBuyOrders(ctx context.Context, username string) ([]BuyOrder
 		return nil, err
 	}
 	return items, nil
+}
+
+const updateBuyOrder = `-- name: UpdateBuyOrder :one
+UPDATE buy_orders
+SET
+  wallet_address = COALESCE($1, wallet_address),
+  crypto = COALESCE($2, crypto),
+  fiat = COALESCE($3, fiat),
+  crypto_amount = COALESCE($4, crypto_amount),
+  fiat_amount = COALESCE($5, fiat_amount),
+  rate = COALESCE($6, rate),
+  is_accepted = COALESCE($7, is_accepted),
+  is_completed = COALESCE($8, is_completed),
+  is_rejected = COALESCE($9, is_rejected),
+  is_expired = COALESCE($10, is_expired),
+  duration = COALESCE($11, duration)
+WHERE 
+  id = $12
+  AND username = $13
+RETURNING id, username, wallet_address, crypto, fiat, crypto_amount, fiat_amount, rate, is_accepted, is_completed, is_rejected, is_expired, created_at, duration
+`
+
+type UpdateBuyOrderParams struct {
+	WalletAddress sql.NullString  `db:"wallet_address" json:"wallet_address"`
+	Crypto        sql.NullString  `db:"crypto" json:"crypto"`
+	Fiat          sql.NullString  `db:"fiat" json:"fiat"`
+	CryptoAmount  sql.NullFloat64 `db:"crypto_amount" json:"crypto_amount"`
+	FiatAmount    sql.NullFloat64 `db:"fiat_amount" json:"fiat_amount"`
+	Rate          sql.NullFloat64 `db:"rate" json:"rate"`
+	IsAccepted    sql.NullBool    `db:"is_accepted" json:"is_accepted"`
+	IsCompleted   sql.NullBool    `db:"is_completed" json:"is_completed"`
+	IsRejected    sql.NullBool    `db:"is_rejected" json:"is_rejected"`
+	IsExpired     sql.NullBool    `db:"is_expired" json:"is_expired"`
+	Duration      sql.NullTime    `db:"duration" json:"duration"`
+	ID            int64           `db:"id" json:"id"`
+	Username      string          `db:"username" json:"username"`
+}
+
+func (q *Queries) UpdateBuyOrder(ctx context.Context, arg UpdateBuyOrderParams) (BuyOrder, error) {
+	row := q.db.QueryRowContext(ctx, updateBuyOrder,
+		arg.WalletAddress,
+		arg.Crypto,
+		arg.Fiat,
+		arg.CryptoAmount,
+		arg.FiatAmount,
+		arg.Rate,
+		arg.IsAccepted,
+		arg.IsCompleted,
+		arg.IsRejected,
+		arg.IsExpired,
+		arg.Duration,
+		arg.ID,
+		arg.Username,
+	)
+	var i BuyOrder
+	err := row.Scan(
+		&i.ID,
+		&i.Username,
+		&i.WalletAddress,
+		&i.Crypto,
+		&i.Fiat,
+		&i.CryptoAmount,
+		&i.FiatAmount,
+		&i.Rate,
+		&i.IsAccepted,
+		&i.IsCompleted,
+		&i.IsRejected,
+		&i.IsExpired,
+		&i.CreatedAt,
+		&i.Duration,
+	)
+	return i, err
 }

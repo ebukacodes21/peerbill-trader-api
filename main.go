@@ -38,9 +38,6 @@ func main() {
 		log.Fatal(err)
 	}
 
-	ctx, stop := signal.NotifyContext(context.Background(), signals...)
-	defer stop()
-
 	repository := db.NewRepository(conn)
 	servers.RunDBMigration(config.MigrationURL, config.DBSource)
 	// message broker
@@ -53,6 +50,8 @@ func main() {
 		log.Fatal(err)
 	}
 
+	ctx, stop := signal.NotifyContext(context.Background(), signals...)
+	defer stop()
 	group, ctx := errgroup.WithContext(ctx)
 
 	mailer := mail.NewGmailSender(config.EmailSender, config.EmailAddress, config.EmailPassword)

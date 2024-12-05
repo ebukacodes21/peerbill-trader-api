@@ -33,6 +33,7 @@ const (
 	PeerbillTrader_CreateBuyOrder_FullMethodName   = "/pb.PeerbillTrader/CreateBuyOrder"
 	PeerbillTrader_GetBuyOrders_FullMethodName     = "/pb.PeerbillTrader/GetBuyOrders"
 	PeerbillTrader_GetBuyOrder_FullMethodName      = "/pb.PeerbillTrader/GetBuyOrder"
+	PeerbillTrader_RejectBuyOrder_FullMethodName   = "/pb.PeerbillTrader/RejectBuyOrder"
 )
 
 // PeerbillTraderClient is the client API for PeerbillTrader service.
@@ -53,6 +54,7 @@ type PeerbillTraderClient interface {
 	CreateBuyOrder(ctx context.Context, in *CreateBuyOrderRequest, opts ...grpc.CallOption) (*CreateBuyOrderResponse, error)
 	GetBuyOrders(ctx context.Context, in *GetBuyOrdersRequest, opts ...grpc.CallOption) (*GetBuyOrdersResponse, error)
 	GetBuyOrder(ctx context.Context, in *GetBuyOrderRequest, opts ...grpc.CallOption) (*GetBuyOrderResponse, error)
+	RejectBuyOrder(ctx context.Context, in *RejectBuyOrderRequest, opts ...grpc.CallOption) (*RejectBuyOrderResponse, error)
 }
 
 type peerbillTraderClient struct {
@@ -203,6 +205,16 @@ func (c *peerbillTraderClient) GetBuyOrder(ctx context.Context, in *GetBuyOrderR
 	return out, nil
 }
 
+func (c *peerbillTraderClient) RejectBuyOrder(ctx context.Context, in *RejectBuyOrderRequest, opts ...grpc.CallOption) (*RejectBuyOrderResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RejectBuyOrderResponse)
+	err := c.cc.Invoke(ctx, PeerbillTrader_RejectBuyOrder_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // PeerbillTraderServer is the server API for PeerbillTrader service.
 // All implementations must embed UnimplementedPeerbillTraderServer
 // for forward compatibility.
@@ -221,6 +233,7 @@ type PeerbillTraderServer interface {
 	CreateBuyOrder(context.Context, *CreateBuyOrderRequest) (*CreateBuyOrderResponse, error)
 	GetBuyOrders(context.Context, *GetBuyOrdersRequest) (*GetBuyOrdersResponse, error)
 	GetBuyOrder(context.Context, *GetBuyOrderRequest) (*GetBuyOrderResponse, error)
+	RejectBuyOrder(context.Context, *RejectBuyOrderRequest) (*RejectBuyOrderResponse, error)
 	mustEmbedUnimplementedPeerbillTraderServer()
 }
 
@@ -272,6 +285,9 @@ func (UnimplementedPeerbillTraderServer) GetBuyOrders(context.Context, *GetBuyOr
 }
 func (UnimplementedPeerbillTraderServer) GetBuyOrder(context.Context, *GetBuyOrderRequest) (*GetBuyOrderResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetBuyOrder not implemented")
+}
+func (UnimplementedPeerbillTraderServer) RejectBuyOrder(context.Context, *RejectBuyOrderRequest) (*RejectBuyOrderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RejectBuyOrder not implemented")
 }
 func (UnimplementedPeerbillTraderServer) mustEmbedUnimplementedPeerbillTraderServer() {}
 func (UnimplementedPeerbillTraderServer) testEmbeddedByValue()                        {}
@@ -546,6 +562,24 @@ func _PeerbillTrader_GetBuyOrder_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _PeerbillTrader_RejectBuyOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RejectBuyOrderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PeerbillTraderServer).RejectBuyOrder(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PeerbillTrader_RejectBuyOrder_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PeerbillTraderServer).RejectBuyOrder(ctx, req.(*RejectBuyOrderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // PeerbillTrader_ServiceDesc is the grpc.ServiceDesc for PeerbillTrader service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -608,6 +642,10 @@ var PeerbillTrader_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetBuyOrder",
 			Handler:    _PeerbillTrader_GetBuyOrder_Handler,
+		},
+		{
+			MethodName: "RejectBuyOrder",
+			Handler:    _PeerbillTrader_RejectBuyOrder_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
