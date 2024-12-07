@@ -23,12 +23,12 @@ func (s *Server) CreateBuyOrder(ctx context.Context, req *pb.CreateBuyOrderReque
 
 	args := db.CreateBuyOrderTxParams{
 		CreateBuyOrderParams: db.CreateBuyOrderParams{
-			WalletAddress: req.GetWallet(),
-			FiatAmount:    float64(req.GetPayAmount()),
-			CryptoAmount:  float64(req.GetReceiveAmount()),
+			WalletAddress: req.GetWalletAddress(),
+			FiatAmount:    float64(req.GetFiatAmount()),
+			CryptoAmount:  float64(req.GetCryptoAmount()),
 			Crypto:        req.GetCrypto(),
 			Fiat:          req.GetFiat(),
-			Rate:          float64(req.GetSellRate()),
+			Rate:          float64(req.GetRate()),
 			Username:      req.GetUsername(),
 			Duration:      time.Now().Add(30 * time.Minute),
 		},
@@ -69,16 +69,16 @@ func (s *Server) CreateBuyOrder(ctx context.Context, req *pb.CreateBuyOrderReque
 }
 
 func validateCreateBuyOrderRequest(req *pb.CreateBuyOrderRequest) (violations []*errdetails.BadRequest_FieldViolation) {
-	if err := validate.ValidateWalletAddress(req.GetWallet()); err != nil {
+	if err := validate.ValidateWalletAddress(req.GetWalletAddress()); err != nil {
 		violations = append(violations, fieldViolation("wallet", err))
 	}
 
-	if err := validate.ValidateNumber(req.GetPayAmount()); err != nil {
-		violations = append(violations, fieldViolation("pay_amount", err))
+	if err := validate.ValidateNumber(req.GetCryptoAmount()); err != nil {
+		violations = append(violations, fieldViolation("crypto_amount", err))
 	}
 
-	if err := validate.ValidateNumber(req.GetReceiveAmount()); err != nil {
-		violations = append(violations, fieldViolation("receive_amount", err))
+	if err := validate.ValidateNumber(req.GetFiatAmount()); err != nil {
+		violations = append(violations, fieldViolation("fiat_amount", err))
 	}
 
 	if err := validate.ValidateCrypto(req.GetCrypto()); err != nil {
@@ -89,8 +89,8 @@ func validateCreateBuyOrderRequest(req *pb.CreateBuyOrderRequest) (violations []
 		violations = append(violations, fieldViolation("fiat", err))
 	}
 
-	if err := validate.ValidateNumber(req.GetSellRate()); err != nil {
-		violations = append(violations, fieldViolation("sell_rate", err))
+	if err := validate.ValidateNumber(req.GetRate()); err != nil {
+		violations = append(violations, fieldViolation("rate", err))
 	}
 
 	if err := validate.ValidateUsername(req.GetUsername()); err != nil {

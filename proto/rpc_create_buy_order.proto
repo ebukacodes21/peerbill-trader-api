@@ -6,13 +6,13 @@ import "buy_order.proto";
 option go_package = "peerbill-trader-api/pb";
 
 message CreateBuyOrderRequest {
-    string wallet = 1;
+    string wallet_address = 1;
     string crypto = 2;
     string fiat = 3;
-    float pay_amount = 4;
-    float receive_amount = 5;
+    float fiat_amount = 4;
+    float crypto_amount = 5;
     string username = 6;
-    float sell_rate = 7;
+    float rate = 7;
 }
 
 message CreateBuyOrderResponse {

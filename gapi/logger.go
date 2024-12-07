@@ -59,6 +59,12 @@ func HttpLogger(handler http.Handler) http.Handler {
 			logger = log.Error().Bytes("body", wr.body)
 		}
 
-		logger.Str("protocol", "http").Str("method", r.Method).Str("path", r.RequestURI).Int("status_code", wr.statusCode).Dur("duration", duration).Msg("recieved request")
+		logger.
+			Str("protocol", "http").
+			Str("method", r.Method).
+			Str("path", r.RequestURI).
+			Int("status_code", wr.statusCode).
+			Dur("duration", duration).
+			Msg("received request")
 	})
 }

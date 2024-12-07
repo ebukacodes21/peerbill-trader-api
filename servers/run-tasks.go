@@ -5,6 +5,7 @@ import (
 	"log"
 	db "peerbill-trader-api/db/sqlc"
 	"peerbill-trader-api/mail"
+	"peerbill-trader-api/socket"
 	"peerbill-trader-api/token"
 	"peerbill-trader-api/utils"
 	"peerbill-trader-api/worker"
@@ -13,10 +14,10 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
-func RunTaskProcessor(group *errgroup.Group, ctx context.Context, options asynq.RedisClientOpt, repository db.DatabaseContract, config utils.Config, token token.TokenMaker) {
+func RunTaskProcessor(group *errgroup.Group, ctx context.Context, options asynq.RedisClientOpt, repository db.DatabaseContract, config utils.Config, token token.TokenMaker, manager *socket.WebSocketManager) {
 	log.Print("running processor")
 	mailer := mail.NewGmailSender(config.EmailSender, config.EmailAddress, config.EmailPassword)
-	taskProcessor := worker.NewRedisTaskProcessor(config, options, repository, mailer, token)
+	taskProcessor := worker.NewRedisTaskProcessor(config, options, repository, mailer, token, manager)
 
 	err := taskProcessor.Start()
 	if err != nil {

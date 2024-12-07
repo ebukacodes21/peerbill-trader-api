@@ -25,19 +25,20 @@ func (s *Server) GetBuyOrders(ctx context.Context, req *pb.GetBuyOrdersRequest) 
 		return nil, status.Errorf(codes.PermissionDenied, "not authorized to get buy orders")
 	}
 
-	buyOrders, err := s.repository.GetBuyOrders(ctx, authPayload.Username)
+	// Fetch initial buy orders to send the first response immediately
+	buyOrders, err := s.repository.GetBuyOrders(ctx, req.Username)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to fetch buy orders")
 	}
 
-	// Reverse the buy orders array
-	reversedBuyOrders := convertBuyOrders(buyOrders)
-	for i, j := 0, len(reversedBuyOrders)-1; i < j; i, j = i+1, j-1 {
-		reversedBuyOrders[i], reversedBuyOrders[j] = reversedBuyOrders[j], reversedBuyOrders[i]
+	// Reverse the buy orders only once
+	reversedOrders := convertBuyOrders(buyOrders)
+	for i, j := 0, len(reversedOrders)-1; i < j; i, j = i+1, j-1 {
+		reversedOrders[i], reversedOrders[j] = reversedOrders[j], reversedOrders[i]
 	}
 
 	resp := &pb.GetBuyOrdersResponse{
-		BuyOrders: reversedBuyOrders,
+		BuyOrders: reversedOrders,
 	}
 
 	return resp, nil

@@ -8,28 +8,49 @@ import (
 	"peerbill-trader-api/utils"
 
 	"github.com/gorilla/websocket"
+
 	"golang.org/x/sync/errgroup"
 )
 
-/*
-*
-set up websocket upgrader
-used to upgrade http conn
-to websocket. the Upgrade method
-will accept rw,r and return a websocket
-connection | err
-*/
 var upgrader = websocket.Upgrader{
 	CheckOrigin: func(r *http.Request) bool {
 		return true
 	},
 }
 
-func RunWebSocketServer(group *errgroup.Group, ctx context.Context, config utils.Config) {
-	// Define WebSocket handler route
+func RunWebSocketServer(group *errgroup.Group, ctx context.Context, config utils.Config, manager *socket.WebSocketManager) {
 	httpMux := http.NewServeMux()
-	httpMux.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
-		socket.HandleWebSocketConnection(upgrader, config, w, r)
+
+	handleWebSocket := func(w http.ResponseWriter, r *http.Request, subscription string) {
+		// Upgrade the HTTP connection to a WebSocket connection
+		conn, err := upgrader.Upgrade(w, r, nil)
+		if err != nil {
+			log.Println("Failed to upgrade connection:", err)
+			return
+		}
+		defer conn.Close()
+
+		// Add the new client to the manager
+		manager.AddClient(conn, subscription)
+
+		// Handle the WebSocket connection
+		for {
+			// keep alive 🤔
+			_, _, err := conn.ReadMessage()
+			if err != nil {
+				// If there's an error (e.g., the client disconnects), remove the client
+				manager.RemoveClient(conn)
+				break
+			}
+		}
+	}
+
+	httpMux.HandleFunc("/ws/get-buy-orders", func(w http.ResponseWriter, r *http.Request) {
+		handleWebSocket(w, r, "get-buy-orders")
+	})
+
+	httpMux.HandleFunc("/ws/reject-buy-order", func(w http.ResponseWriter, r *http.Request) {
+		handleWebSocket(w, r, "reject-buy-order")
 	})
 
 	// Set up your HTTP server
