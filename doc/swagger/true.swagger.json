@@ -582,18 +582,18 @@
         "fiat": {
           "type": "string"
         },
-        "payAmount": {
+        "fiatAmount": {
           "type": "number",
           "format": "float"
         },
-        "receiveAmount": {
+        "cryptoAmount": {
           "type": "number",
           "format": "float"
         },
         "username": {
           "type": "string"
         },
-        "sellRate": {
+        "rate": {
           "type": "number",
           "format": "float"
         },
@@ -622,7 +622,7 @@
     "pbCreateBuyOrderRequest": {
       "type": "object",
       "properties": {
-        "wallet": {
+        "walletAddress": {
           "type": "string"
         },
         "crypto": {
@@ -631,18 +631,18 @@
         "fiat": {
           "type": "string"
         },
-        "payAmount": {
+        "fiatAmount": {
           "type": "number",
           "format": "float"
         },
-        "receiveAmount": {
+        "cryptoAmount": {
           "type": "number",
           "format": "float"
         },
         "username": {
           "type": "string"
         },
-        "sellRate": {
+        "rate": {
           "type": "number",
           "format": "float"
         }

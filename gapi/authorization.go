@@ -17,7 +17,7 @@ const (
 func (s *Server) authorizeTrader(ctx context.Context, accessibleRoles []string) (*token.Payload, error) {
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
-		return nil, fmt.Errorf("missing metadata")
+		return nil, fmt.Errorf("missing metadata here")
 	}
 
 	values := md.Get(authorizationHeader)

@@ -9,10 +9,10 @@ message BuyOrder {
     string wallet_address = 2;
     string crypto = 3;
     string fiat = 4;
-    float pay_amount = 5;
-    float receive_amount = 6;
+    float fiat_amount = 5;
+    float crypto_amount = 6;
     string username = 7;
-    float sell_rate = 8;
+    float rate = 8;
     bool is_accepted = 9;
     bool is_completed = 10;
     bool  is_rejected = 11;

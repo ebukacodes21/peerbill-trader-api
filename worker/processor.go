@@ -4,6 +4,7 @@ import (
 	"context"
 	db "peerbill-trader-api/db/sqlc"
 	"peerbill-trader-api/mail"
+	"peerbill-trader-api/socket"
 	"peerbill-trader-api/token"
 	"peerbill-trader-api/utils"
 
@@ -29,6 +30,7 @@ type RedisTaskProcessor struct {
 	mailer     mail.EmailSender
 	config     utils.Config
 	token      token.TokenMaker
+	wsManager  *socket.WebSocketManager
 }
 
 const (
@@ -36,7 +38,7 @@ const (
 	Default  = "default"
 )
 
-func NewRedisTaskProcessor(config utils.Config, redisOpt asynq.RedisConnOpt, repository db.DatabaseContract, mailer mail.EmailSender, token token.TokenMaker) TaskProcessor {
+func NewRedisTaskProcessor(config utils.Config, redisOpt asynq.RedisConnOpt, repository db.DatabaseContract, mailer mail.EmailSender, token token.TokenMaker, wsManager *socket.WebSocketManager) TaskProcessor {
 	redisCache := redis.NewClient(&redis.Options{
 		Addr: config.REDISServerAddr,
 	})
@@ -52,7 +54,7 @@ func NewRedisTaskProcessor(config utils.Config, redisOpt asynq.RedisConnOpt, rep
 			}),
 			Logger: NewLogger(),
 		})
-	return &RedisTaskProcessor{server: server, repository: repository, mailer: mailer, redis: redisCache, config: config, token: token}
+	return &RedisTaskProcessor{server: server, repository: repository, mailer: mailer, redis: redisCache, config: config, token: token, wsManager: wsManager}
 }
 
 func (rtp *RedisTaskProcessor) Start() error {
@@ -61,6 +63,7 @@ func (rtp *RedisTaskProcessor) Start() error {
 	mux.HandleFunc(send_verify_email_task, rtp.ProcessTaskSendVerifyEmail)
 	mux.HandleFunc(send_forgot_email_task, rtp.ProcessTaskSendForgotEmail)
 	mux.HandleFunc(send_buy_order_email_task, rtp.ProcessTaskBuyOrderEmail)
+	mux.HandleFunc(send_reject_buy_order_task, rtp.ProcessTaskRejectBuyOrder)
 
 	return rtp.server.Start(mux)
 }

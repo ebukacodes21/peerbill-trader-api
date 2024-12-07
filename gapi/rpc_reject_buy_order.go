@@ -6,6 +6,7 @@ import (
 	db "peerbill-trader-api/db/sqlc"
 	"peerbill-trader-api/pb"
 	"peerbill-trader-api/validate"
+	"peerbill-trader-api/worker"
 
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc/codes"
@@ -43,6 +44,15 @@ func (s *Server) RejectBuyOrder(ctx context.Context, req *pb.RejectBuyOrderReque
 	_, err = s.repository.UpdateBuyOrder(ctx, args)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to reject buy orders")
+	}
+
+	payload := worker.RejectBuyOrderPayload{
+		ID:       req.GetId(),
+		Username: req.GetUsername(),
+	}
+	err = s.taskDistributor.DistributeTaskRejectBuyOrder(ctx, &payload)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to distribute task")
 	}
 
 	// Reverse the buy orders array

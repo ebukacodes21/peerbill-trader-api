@@ -14,6 +14,7 @@ import (
 
 	db "peerbill-trader-api/db/sqlc"
 	"peerbill-trader-api/mail"
+	"peerbill-trader-api/socket"
 	"peerbill-trader-api/token"
 
 	"peerbill-trader-api/servers"
@@ -54,14 +55,15 @@ func main() {
 	defer stop()
 	group, ctx := errgroup.WithContext(ctx)
 
+	manager := socket.NewWebSocketManager()
 	mailer := mail.NewGmailSender(config.EmailSender, config.EmailAddress, config.EmailPassword)
 	taskDistributor := worker.NewRedisTaskDistributor(redisOption)
-	taskProcessor := worker.NewRedisTaskProcessor(config, redisOption, repository, mailer, token)
+	taskProcessor := worker.NewRedisTaskProcessor(config, redisOption, repository, mailer, token, manager)
 
 	servers.RunGatewayServer(group, ctx, config, repository, taskDistributor, taskProcessor)
-	servers.RunTaskProcessor(group, ctx, redisOption, repository, config, token)
+	servers.RunTaskProcessor(group, ctx, redisOption, repository, config, token, manager)
 	servers.RunGrpcServer(group, ctx, config, repository, taskDistributor, taskProcessor)
-	servers.RunWebSocketServer(group, ctx, config)
+	servers.RunWebSocketServer(group, ctx, config, manager)
 
 	// wait bfr exiting main fn
 	err = group.Wait()
