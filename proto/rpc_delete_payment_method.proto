@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package pb;
+
+import "payment_method.proto";
+
+option go_package = "peerbill-trader-api/pb";
+
+message DeletePaymentMethodRequest {
+    int64 id = 1;
+    string        username = 2;
+}
+
+message DeletePaymentMethodResponse {
+    repeated PaymentMethod paymentMethods = 1;
+}

@@ -69,6 +69,11 @@ func (s *Server) LoginTrader(ctx context.Context, req *pb.LoginTraderRequest) (*
 		return nil, status.Errorf(codes.Internal, "failed to fetch trader pairs")
 	}
 
+	methods, err := s.repository.GetPaymentMethods(ctx, trader.Username)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to fetch payment methods")
+	}
+
 	resp := &pb.LoginTraderResponse{
 		Trader:                convert(trader),
 		TraderPairs:           convertTradePairs(traderPairs),
@@ -77,6 +82,7 @@ func (s *Server) LoginTrader(ctx context.Context, req *pb.LoginTraderRequest) (*
 		RefreshToken:          refreshToken,
 		RefreshTokenExpiresAt: timestamppb.New(refreshPayload.ExpiredAt),
 		SessionId:             session.ID.String(),
+		PaymentMethods:        convertPaymentMethods(methods),
 	}
 
 	return resp, nil

@@ -12,13 +12,17 @@ import (
 
 type Querier interface {
 	CreateBuyOrder(ctx context.Context, arg CreateBuyOrderParams) (BuyOrder, error)
+	CreatePaymentMethod(ctx context.Context, arg CreatePaymentMethodParams) (PaymentMethod, error)
 	CreateSession(ctx context.Context, arg CreateSessionParams) (Session, error)
 	CreateTradePair(ctx context.Context, arg CreateTradePairParams) (TradePair, error)
 	CreateTrader(ctx context.Context, arg CreateTraderParams) (Trader, error)
+	DeletePaymentMethod(ctx context.Context, arg DeletePaymentMethodParams) error
 	DeleteTradePair(ctx context.Context, arg DeleteTradePairParams) error
 	FindTrader(ctx context.Context, arg FindTraderParams) (Trader, error)
 	GetBuyOrder(ctx context.Context, id int64) (BuyOrder, error)
 	GetBuyOrders(ctx context.Context, username string) ([]BuyOrder, error)
+	GetPaymentMethods(ctx context.Context, username string) ([]PaymentMethod, error)
+	GetTradePair(ctx context.Context, arg GetTradePairParams) (TradePair, error)
 	GetTradePairs(ctx context.Context, arg GetTradePairsParams) ([]TradePair, error)
 	GetTrader(ctx context.Context, username string) (Trader, error)
 	GetTraderEmail(ctx context.Context, email string) (Trader, error)
@@ -26,6 +30,7 @@ type Querier interface {
 	GetTraders(ctx context.Context, arg GetTradersParams) ([]Trader, error)
 	Logout(ctx context.Context, id uuid.UUID) error
 	UpdateBuyOrder(ctx context.Context, arg UpdateBuyOrderParams) (BuyOrder, error)
+	UpdatePaymentMethod(ctx context.Context, arg UpdatePaymentMethodParams) error
 	UpdateTradePair(ctx context.Context, arg UpdateTradePairParams) error
 	UpdateTrader(ctx context.Context, arg UpdateTraderParams) (Trader, error)
 }

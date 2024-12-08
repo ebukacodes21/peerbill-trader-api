@@ -19,21 +19,24 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	PeerbillTrader_RegisterTrader_FullMethodName   = "/pb.PeerbillTrader/RegisterTrader"
-	PeerbillTrader_LoginTrader_FullMethodName      = "/pb.PeerbillTrader/LoginTrader"
-	PeerbillTrader_LogoutTrader_FullMethodName     = "/pb.PeerbillTrader/LogoutTrader"
-	PeerbillTrader_UpdateTrader_FullMethodName     = "/pb.PeerbillTrader/UpdateTrader"
-	PeerbillTrader_VerifyEmail_FullMethodName      = "/pb.PeerbillTrader/VerifyEmail"
-	PeerbillTrader_Forgot_FullMethodName           = "/pb.PeerbillTrader/Forgot"
-	PeerbillTrader_Reset_FullMethodName            = "/pb.PeerbillTrader/Reset"
-	PeerbillTrader_GetTraders_FullMethodName       = "/pb.PeerbillTrader/GetTraders"
-	PeerbillTrader_AddTraderPair_FullMethodName    = "/pb.PeerbillTrader/AddTraderPair"
-	PeerbillTrader_UpdateTraderPair_FullMethodName = "/pb.PeerbillTrader/UpdateTraderPair"
-	PeerbillTrader_DeleteTraderPair_FullMethodName = "/pb.PeerbillTrader/DeleteTraderPair"
-	PeerbillTrader_CreateBuyOrder_FullMethodName   = "/pb.PeerbillTrader/CreateBuyOrder"
-	PeerbillTrader_GetBuyOrders_FullMethodName     = "/pb.PeerbillTrader/GetBuyOrders"
-	PeerbillTrader_GetBuyOrder_FullMethodName      = "/pb.PeerbillTrader/GetBuyOrder"
-	PeerbillTrader_RejectBuyOrder_FullMethodName   = "/pb.PeerbillTrader/RejectBuyOrder"
+	PeerbillTrader_RegisterTrader_FullMethodName      = "/pb.PeerbillTrader/RegisterTrader"
+	PeerbillTrader_LoginTrader_FullMethodName         = "/pb.PeerbillTrader/LoginTrader"
+	PeerbillTrader_LogoutTrader_FullMethodName        = "/pb.PeerbillTrader/LogoutTrader"
+	PeerbillTrader_UpdateTrader_FullMethodName        = "/pb.PeerbillTrader/UpdateTrader"
+	PeerbillTrader_VerifyEmail_FullMethodName         = "/pb.PeerbillTrader/VerifyEmail"
+	PeerbillTrader_Forgot_FullMethodName              = "/pb.PeerbillTrader/Forgot"
+	PeerbillTrader_Reset_FullMethodName               = "/pb.PeerbillTrader/Reset"
+	PeerbillTrader_GetTraders_FullMethodName          = "/pb.PeerbillTrader/GetTraders"
+	PeerbillTrader_AddTraderPair_FullMethodName       = "/pb.PeerbillTrader/AddTraderPair"
+	PeerbillTrader_UpdateTraderPair_FullMethodName    = "/pb.PeerbillTrader/UpdateTraderPair"
+	PeerbillTrader_DeleteTraderPair_FullMethodName    = "/pb.PeerbillTrader/DeleteTraderPair"
+	PeerbillTrader_CreateBuyOrder_FullMethodName      = "/pb.PeerbillTrader/CreateBuyOrder"
+	PeerbillTrader_GetBuyOrders_FullMethodName        = "/pb.PeerbillTrader/GetBuyOrders"
+	PeerbillTrader_GetBuyOrder_FullMethodName         = "/pb.PeerbillTrader/GetBuyOrder"
+	PeerbillTrader_RejectBuyOrder_FullMethodName      = "/pb.PeerbillTrader/RejectBuyOrder"
+	PeerbillTrader_AddPaymentMethod_FullMethodName    = "/pb.PeerbillTrader/AddPaymentMethod"
+	PeerbillTrader_UpdatePaymentMethod_FullMethodName = "/pb.PeerbillTrader/UpdatePaymentMethod"
+	PeerbillTrader_DeletePaymentMethod_FullMethodName = "/pb.PeerbillTrader/DeletePaymentMethod"
 )
 
 // PeerbillTraderClient is the client API for PeerbillTrader service.
@@ -55,6 +58,9 @@ type PeerbillTraderClient interface {
 	GetBuyOrders(ctx context.Context, in *GetBuyOrdersRequest, opts ...grpc.CallOption) (*GetBuyOrdersResponse, error)
 	GetBuyOrder(ctx context.Context, in *GetBuyOrderRequest, opts ...grpc.CallOption) (*GetBuyOrderResponse, error)
 	RejectBuyOrder(ctx context.Context, in *RejectBuyOrderRequest, opts ...grpc.CallOption) (*RejectBuyOrderResponse, error)
+	AddPaymentMethod(ctx context.Context, in *AddPaymentMethodRequest, opts ...grpc.CallOption) (*AddPaymentMethodResponse, error)
+	UpdatePaymentMethod(ctx context.Context, in *UpdatePaymentMethodRequest, opts ...grpc.CallOption) (*UpdatePaymentMethodResponse, error)
+	DeletePaymentMethod(ctx context.Context, in *DeletePaymentMethodRequest, opts ...grpc.CallOption) (*DeletePaymentMethodResponse, error)
 }
 
 type peerbillTraderClient struct {
@@ -215,6 +221,36 @@ func (c *peerbillTraderClient) RejectBuyOrder(ctx context.Context, in *RejectBuy
 	return out, nil
 }
 
+func (c *peerbillTraderClient) AddPaymentMethod(ctx context.Context, in *AddPaymentMethodRequest, opts ...grpc.CallOption) (*AddPaymentMethodResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AddPaymentMethodResponse)
+	err := c.cc.Invoke(ctx, PeerbillTrader_AddPaymentMethod_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *peerbillTraderClient) UpdatePaymentMethod(ctx context.Context, in *UpdatePaymentMethodRequest, opts ...grpc.CallOption) (*UpdatePaymentMethodResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdatePaymentMethodResponse)
+	err := c.cc.Invoke(ctx, PeerbillTrader_UpdatePaymentMethod_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *peerbillTraderClient) DeletePaymentMethod(ctx context.Context, in *DeletePaymentMethodRequest, opts ...grpc.CallOption) (*DeletePaymentMethodResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeletePaymentMethodResponse)
+	err := c.cc.Invoke(ctx, PeerbillTrader_DeletePaymentMethod_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // PeerbillTraderServer is the server API for PeerbillTrader service.
 // All implementations must embed UnimplementedPeerbillTraderServer
 // for forward compatibility.
@@ -234,6 +270,9 @@ type PeerbillTraderServer interface {
 	GetBuyOrders(context.Context, *GetBuyOrdersRequest) (*GetBuyOrdersResponse, error)
 	GetBuyOrder(context.Context, *GetBuyOrderRequest) (*GetBuyOrderResponse, error)
 	RejectBuyOrder(context.Context, *RejectBuyOrderRequest) (*RejectBuyOrderResponse, error)
+	AddPaymentMethod(context.Context, *AddPaymentMethodRequest) (*AddPaymentMethodResponse, error)
+	UpdatePaymentMethod(context.Context, *UpdatePaymentMethodRequest) (*UpdatePaymentMethodResponse, error)
+	DeletePaymentMethod(context.Context, *DeletePaymentMethodRequest) (*DeletePaymentMethodResponse, error)
 	mustEmbedUnimplementedPeerbillTraderServer()
 }
 
@@ -288,6 +327,15 @@ func (UnimplementedPeerbillTraderServer) GetBuyOrder(context.Context, *GetBuyOrd
 }
 func (UnimplementedPeerbillTraderServer) RejectBuyOrder(context.Context, *RejectBuyOrderRequest) (*RejectBuyOrderResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RejectBuyOrder not implemented")
+}
+func (UnimplementedPeerbillTraderServer) AddPaymentMethod(context.Context, *AddPaymentMethodRequest) (*AddPaymentMethodResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddPaymentMethod not implemented")
+}
+func (UnimplementedPeerbillTraderServer) UpdatePaymentMethod(context.Context, *UpdatePaymentMethodRequest) (*UpdatePaymentMethodResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdatePaymentMethod not implemented")
+}
+func (UnimplementedPeerbillTraderServer) DeletePaymentMethod(context.Context, *DeletePaymentMethodRequest) (*DeletePaymentMethodResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeletePaymentMethod not implemented")
 }
 func (UnimplementedPeerbillTraderServer) mustEmbedUnimplementedPeerbillTraderServer() {}
 func (UnimplementedPeerbillTraderServer) testEmbeddedByValue()                        {}
@@ -580,6 +628,60 @@ func _PeerbillTrader_RejectBuyOrder_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _PeerbillTrader_AddPaymentMethod_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddPaymentMethodRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PeerbillTraderServer).AddPaymentMethod(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PeerbillTrader_AddPaymentMethod_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PeerbillTraderServer).AddPaymentMethod(ctx, req.(*AddPaymentMethodRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PeerbillTrader_UpdatePaymentMethod_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdatePaymentMethodRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PeerbillTraderServer).UpdatePaymentMethod(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PeerbillTrader_UpdatePaymentMethod_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PeerbillTraderServer).UpdatePaymentMethod(ctx, req.(*UpdatePaymentMethodRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PeerbillTrader_DeletePaymentMethod_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeletePaymentMethodRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PeerbillTraderServer).DeletePaymentMethod(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PeerbillTrader_DeletePaymentMethod_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PeerbillTraderServer).DeletePaymentMethod(ctx, req.(*DeletePaymentMethodRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // PeerbillTrader_ServiceDesc is the grpc.ServiceDesc for PeerbillTrader service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -646,6 +748,18 @@ var PeerbillTrader_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RejectBuyOrder",
 			Handler:    _PeerbillTrader_RejectBuyOrder_Handler,
+		},
+		{
+			MethodName: "AddPaymentMethod",
+			Handler:    _PeerbillTrader_AddPaymentMethod_Handler,
+		},
+		{
+			MethodName: "UpdatePaymentMethod",
+			Handler:    _PeerbillTrader_UpdatePaymentMethod_Handler,
+		},
+		{
+			MethodName: "DeletePaymentMethod",
+			Handler:    _PeerbillTrader_DeletePaymentMethod_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

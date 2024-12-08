@@ -35,3 +35,10 @@ AND username = sqlc.arg(username);
 DELETE FROM trade_pairs
 WHERE id = $1
 AND username = $2;
+
+-- name: GetTradePair :one
+SELECT * FROM trade_pairs 
+WHERE crypto = $1
+AND fiat = $2
+AND username = $3
+LIMIT 1;

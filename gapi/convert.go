@@ -46,6 +46,23 @@ func convertTradePairs(tradePairs []db.TradePair) []*pb.TraderPair {
 	return pbTradePairs
 }
 
+func convertPaymentMethods(methods []db.PaymentMethod) []*pb.PaymentMethod {
+	var pbMethods []*pb.PaymentMethod
+	for _, method := range methods {
+		pbMethods = append(pbMethods, &pb.PaymentMethod{
+			Id:            method.ID,
+			Crypto:        method.Crypto,
+			Fiat:          method.Fiat,
+			Username:      method.Username,
+			AccountHolder: method.AccountHolder,
+			AccountNumber: method.AccountNumber,
+			BankName:      method.BankName,
+			WalletAddress: method.WalletAddress,
+		})
+	}
+	return pbMethods
+}
+
 func convertTradersWithDetails(tradersWithDetails []TradersWithDetails) []*pb.TraderWithDetails {
 	var result []*pb.TraderWithDetails
 	for _, item := range tradersWithDetails {

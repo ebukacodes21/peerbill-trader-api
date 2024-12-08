@@ -67,6 +67,35 @@ func (q *Queries) DeleteTradePair(ctx context.Context, arg DeleteTradePairParams
 	return err
 }
 
+const getTradePair = `-- name: GetTradePair :one
+SELECT id, username, crypto, fiat, buy_rate, sell_rate, created_at FROM trade_pairs 
+WHERE crypto = $1
+AND fiat = $2
+AND username = $3
+LIMIT 1
+`
+
+type GetTradePairParams struct {
+	Crypto   string `db:"crypto" json:"crypto"`
+	Fiat     string `db:"fiat" json:"fiat"`
+	Username string `db:"username" json:"username"`
+}
+
+func (q *Queries) GetTradePair(ctx context.Context, arg GetTradePairParams) (TradePair, error) {
+	row := q.db.QueryRowContext(ctx, getTradePair, arg.Crypto, arg.Fiat, arg.Username)
+	var i TradePair
+	err := row.Scan(
+		&i.ID,
+		&i.Username,
+		&i.Crypto,
+		&i.Fiat,
+		&i.BuyRate,
+		&i.SellRate,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
 const getTradePairs = `-- name: GetTradePairs :many
 SELECT id, username, crypto, fiat, buy_rate, sell_rate, created_at FROM trade_pairs 
 WHERE crypto = $1
