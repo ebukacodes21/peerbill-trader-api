@@ -28,6 +28,19 @@ type BuyOrder struct {
 	Duration      time.Time `db:"duration" json:"duration"`
 }
 
+type PaymentMethod struct {
+	ID            int64     `db:"id" json:"id"`
+	TradePairID   int64     `db:"trade_pair_id" json:"trade_pair_id"`
+	Username      string    `db:"username" json:"username"`
+	WalletAddress string    `db:"wallet_address" json:"wallet_address"`
+	Crypto        string    `db:"crypto" json:"crypto"`
+	Fiat          string    `db:"fiat" json:"fiat"`
+	BankName      string    `db:"bank_name" json:"bank_name"`
+	AccountNumber string    `db:"account_number" json:"account_number"`
+	AccountHolder string    `db:"account_holder" json:"account_holder"`
+	CreatedAt     time.Time `db:"created_at" json:"created_at"`
+}
+
 type Session struct {
 	ID           uuid.UUID `db:"id" json:"id"`
 	TraderID     int64     `db:"trader_id" json:"trader_id"`

@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package = "peerbill-trader-api/pb";
+
+message PaymentMethod {
+    int64         id       = 1;
+    string        username = 2;
+    string        crypto = 3;
+    string        fiat = 4;
+    string        bank_name = 5;
+    string        account_holder = 6;
+    string        account_number = 7;
+    string        wallet_address = 8;
+}

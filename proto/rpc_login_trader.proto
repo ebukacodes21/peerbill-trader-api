@@ -4,6 +4,7 @@ package pb;
 
 import "trader.proto";
 import "trade_pair.proto";
+import "payment_method.proto";
 import "google/protobuf/timestamp.proto";
 
 option go_package = "peerbill-trader-api/pb";
@@ -21,4 +22,5 @@ message LoginTraderResponse {
     google.protobuf.Timestamp refresh_token_expires_at = 5;
     Trader trader = 6;
     repeated TraderPair traderPairs = 7;
+    repeated PaymentMethod paymentMethods = 8;
 }
