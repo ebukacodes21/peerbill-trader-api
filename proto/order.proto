@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package pb;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
+
+option go_package = "peerbill-trader-api/pb";
+
+message Order {
+    int64 id = 1;
+    string escrow_address = 2;
+    string crypto = 3;
+    string fiat = 4;
+    float fiat_amount = 5;
+    float crypto_amount = 6;
+    string username = 7;
+    float rate = 8;
+    bool is_accepted = 9;
+    bool is_completed = 10;
+    bool  is_rejected = 11;
+    bool is_expired = 12;
+    google.protobuf.Timestamp created_at = 13;
+    google.protobuf.Duration duration = 14;
+    string user_address = 15;
+    string order_type = 16;
+}

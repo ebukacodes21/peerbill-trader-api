@@ -1,20 +1,22 @@
 syntax = "proto3";
 
 package pb;
-import "buy_order.proto";
+import "order.proto";
 
 option go_package = "peerbill-trader-api/pb";
 
 message CreateBuyOrderRequest {
-    string wallet_address = 1;
+    string escrow_address = 1;
     string crypto = 2;
     string fiat = 3;
     float fiat_amount = 4;
     float crypto_amount = 5;
     string username = 6;
     float rate = 7;
+    string user_address = 8;
+    string order_type = 9;
 }
 
 message CreateBuyOrderResponse {
-    BuyOrder buyOrder = 1;
+    Order buyOrder = 1;
 }

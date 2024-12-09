@@ -49,7 +49,7 @@ func (s *Server) DeleteTraderPair(ctx context.Context, req *pb.DeleteTradePairRe
 }
 
 func validateDeleteTradePairRequest(req *pb.DeleteTradePairRequest) (violations []*errdetails.BadRequest_FieldViolation) {
-	if err := validate.ValidateTraderId(req.GetId()); err != nil {
+	if err := validate.ValidateId(req.GetId()); err != nil {
 		violations = append(violations, fieldViolation("id", err))
 	}
 

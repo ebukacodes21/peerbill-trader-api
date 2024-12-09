@@ -49,7 +49,7 @@ func (s *Server) DeletePaymentMethod(ctx context.Context, req *pb.DeletePaymentM
 }
 
 func validateDeletePaymentMethodRequest(req *pb.DeletePaymentMethodRequest) (violations []*errdetails.BadRequest_FieldViolation) {
-	if err := validate.ValidateTraderId(req.GetId()); err != nil {
+	if err := validate.ValidateId(req.GetId()); err != nil {
 		violations = append(violations, fieldViolation("id", err))
 	}
 

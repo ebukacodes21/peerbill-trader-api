@@ -2,6 +2,7 @@ package gapi
 
 import (
 	"context"
+	db "peerbill-trader-api/db/sqlc"
 	"peerbill-trader-api/pb"
 	"peerbill-trader-api/validate"
 
@@ -16,20 +17,29 @@ func (s *Server) GetBuyOrder(ctx context.Context, req *pb.GetBuyOrderRequest) (*
 		return nil, invalidArgumentError(violations)
 	}
 
-	buyOrder, err := s.repository.GetBuyOrder(ctx, req.GetId())
+	args := db.GetOrderParams{
+		ID:        req.GetId(),
+		OrderType: req.GetOrderType(),
+	}
+
+	buyOrder, err := s.repository.GetOrder(ctx, args)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to fetch buy order")
 	}
 
 	resp := &pb.GetBuyOrderResponse{
-		BuyOrder: convertBuyOrder(buyOrder),
+		BuyOrder: convertOrder(buyOrder),
 	}
 	return resp, nil
 }
 
 func validateGetBuyOrderRequest(req *pb.GetBuyOrderRequest) (violations []*errdetails.BadRequest_FieldViolation) {
-	if err := validate.ValidateTraderId(req.GetId()); err != nil {
+	if err := validate.ValidateId(req.GetId()); err != nil {
 		violations = append(violations, fieldViolation("id", err))
+	}
+
+	if err := validate.ValidateType(req.GetOrderType()); err != nil {
+		violations = append(violations, fieldViolation("order_type", err))
 	}
 
 	return violations

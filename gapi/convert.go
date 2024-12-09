@@ -3,7 +3,9 @@ package gapi
 import (
 	db "peerbill-trader-api/db/sqlc"
 	"peerbill-trader-api/pb"
+	"time"
 
+	"google.golang.org/protobuf/types/known/durationpb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -88,45 +90,50 @@ func convertTradersWithDetails(tradersWithDetails []TradersWithDetails) []*pb.Tr
 	return result
 }
 
-func convertBuyOrder(buyOrder db.BuyOrder) *pb.BuyOrder {
-	return &pb.BuyOrder{
-		Id:            buyOrder.ID,
-		WalletAddress: buyOrder.WalletAddress,
-		Crypto:        buyOrder.Crypto,
-		Fiat:          buyOrder.Fiat,
-		Username:      buyOrder.Username,
-		FiatAmount:    float32(buyOrder.FiatAmount),
-		CryptoAmount:  float32(buyOrder.CryptoAmount),
-		Rate:          float32(buyOrder.Rate),
-		IsAccepted:    buyOrder.IsAccepted,
-		IsRejected:    buyOrder.IsRejected,
-		IsCompleted:   buyOrder.IsCompleted,
-		IsExpired:     buyOrder.IsExpired,
-		Duration:      timestamppb.New(buyOrder.Duration),
-		CreatedAt:     timestamppb.New(buyOrder.CreatedAt),
+func convertOrder(order db.Order) *pb.Order {
+
+	return &pb.Order{
+		Id:            order.ID,
+		EscrowAddress: order.EscrowAddress,
+		UserAddress:   order.UserAddress,
+		OrderType:     order.OrderType,
+		Crypto:        order.Crypto,
+		Fiat:          order.Fiat,
+		Username:      order.Username,
+		FiatAmount:    float32(order.FiatAmount),
+		CryptoAmount:  float32(order.CryptoAmount),
+		Rate:          float32(order.Rate),
+		IsAccepted:    order.IsAccepted,
+		IsRejected:    order.IsRejected,
+		IsCompleted:   order.IsCompleted,
+		IsExpired:     order.IsExpired,
+		Duration:      durationpb.New(time.Since(order.Duration)),
+		CreatedAt:     timestamppb.New(order.CreatedAt),
 	}
 }
 
-func convertBuyOrders(buyOrders []db.BuyOrder) []*pb.BuyOrder {
-	var pbBuyOrders []*pb.BuyOrder
-	for _, buyOrder := range buyOrders {
-		pbBuyOrders = append(pbBuyOrders, &pb.BuyOrder{
-			Id:            buyOrder.ID,
-			WalletAddress: buyOrder.WalletAddress,
-			Crypto:        buyOrder.Crypto,
-			Fiat:          buyOrder.Fiat,
-			Username:      buyOrder.Username,
-			FiatAmount:    float32(buyOrder.FiatAmount),
-			CryptoAmount:  float32(buyOrder.CryptoAmount),
-			Rate:          float32(buyOrder.Rate),
-			IsAccepted:    buyOrder.IsAccepted,
-			IsRejected:    buyOrder.IsRejected,
-			IsCompleted:   buyOrder.IsCompleted,
-			IsExpired:     buyOrder.IsExpired,
-			Duration:      timestamppb.New(buyOrder.Duration),
-			CreatedAt:     timestamppb.New(buyOrder.CreatedAt),
+func convertOrders(Orders []db.Order) []*pb.Order {
+	var pbOrders []*pb.Order
+	for _, order := range Orders {
+		pbOrders = append(pbOrders, &pb.Order{
+			Id:            order.ID,
+			EscrowAddress: order.EscrowAddress,
+			UserAddress:   order.UserAddress,
+			OrderType:     order.OrderType,
+			Crypto:        order.Crypto,
+			Fiat:          order.Fiat,
+			Username:      order.Username,
+			FiatAmount:    float32(order.FiatAmount),
+			CryptoAmount:  float32(order.CryptoAmount),
+			Rate:          float32(order.Rate),
+			IsAccepted:    order.IsAccepted,
+			IsRejected:    order.IsRejected,
+			IsCompleted:   order.IsCompleted,
+			IsExpired:     order.IsExpired,
+			Duration:      durationpb.New(time.Since(order.Duration)),
+			CreatedAt:     timestamppb.New(order.CreatedAt),
 		})
 	}
 
-	return pbBuyOrders
+	return pbOrders
 }

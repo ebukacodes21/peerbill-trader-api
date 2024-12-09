@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 package pb;
-import "buy_order.proto";
+import "order.proto";
 
 option go_package = "peerbill-trader-api/pb";
 
@@ -10,5 +10,5 @@ message GetBuyOrdersRequest {
 }
 
 message GetBuyOrdersResponse {
-    repeated BuyOrder buyOrders = 1;
+    repeated Order buyOrders = 1;
 }

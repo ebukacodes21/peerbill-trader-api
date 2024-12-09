@@ -731,7 +731,7 @@
           "type": "array",
           "items": {
             "type": "object",
-            "$ref": "#/definitions/pbBuyOrder"
+            "$ref": "#/definitions/pbOrder"
           }
         }
       }
@@ -808,63 +808,10 @@
         }
       }
     },
-    "pbBuyOrder": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "format": "int64"
-        },
-        "walletAddress": {
-          "type": "string"
-        },
-        "crypto": {
-          "type": "string"
-        },
-        "fiat": {
-          "type": "string"
-        },
-        "fiatAmount": {
-          "type": "number",
-          "format": "float"
-        },
-        "cryptoAmount": {
-          "type": "number",
-          "format": "float"
-        },
-        "username": {
-          "type": "string"
-        },
-        "rate": {
-          "type": "number",
-          "format": "float"
-        },
-        "isAccepted": {
-          "type": "boolean"
-        },
-        "isCompleted": {
-          "type": "boolean"
-        },
-        "isRejected": {
-          "type": "boolean"
-        },
-        "isExpired": {
-          "type": "boolean"
-        },
-        "createdAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "duration": {
-          "type": "string",
-          "format": "date-time"
-        }
-      }
-    },
     "pbCreateBuyOrderRequest": {
       "type": "object",
       "properties": {
-        "walletAddress": {
+        "escrowAddress": {
           "type": "string"
         },
         "crypto": {
@@ -887,6 +834,12 @@
         "rate": {
           "type": "number",
           "format": "float"
+        },
+        "userAddress": {
+          "type": "string"
+        },
+        "orderType": {
+          "type": "string"
         }
       }
     },
@@ -894,7 +847,7 @@
       "type": "object",
       "properties": {
         "buyOrder": {
-          "$ref": "#/definitions/pbBuyOrder"
+          "$ref": "#/definitions/pbOrder"
         }
       }
     },
@@ -968,6 +921,9 @@
         "id": {
           "type": "string",
           "format": "int64"
+        },
+        "orderType": {
+          "type": "string"
         }
       }
     },
@@ -975,7 +931,7 @@
       "type": "object",
       "properties": {
         "buyOrder": {
-          "$ref": "#/definitions/pbBuyOrder"
+          "$ref": "#/definitions/pbOrder"
         }
       }
     },
@@ -994,7 +950,7 @@
           "type": "array",
           "items": {
             "type": "object",
-            "$ref": "#/definitions/pbBuyOrder"
+            "$ref": "#/definitions/pbOrder"
           }
         }
       }
@@ -1110,6 +1066,64 @@
         }
       }
     },
+    "pbOrder": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "escrowAddress": {
+          "type": "string"
+        },
+        "crypto": {
+          "type": "string"
+        },
+        "fiat": {
+          "type": "string"
+        },
+        "fiatAmount": {
+          "type": "number",
+          "format": "float"
+        },
+        "cryptoAmount": {
+          "type": "number",
+          "format": "float"
+        },
+        "username": {
+          "type": "string"
+        },
+        "rate": {
+          "type": "number",
+          "format": "float"
+        },
+        "isAccepted": {
+          "type": "boolean"
+        },
+        "isCompleted": {
+          "type": "boolean"
+        },
+        "isRejected": {
+          "type": "boolean"
+        },
+        "isExpired": {
+          "type": "boolean"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "duration": {
+          "type": "string"
+        },
+        "userAddress": {
+          "type": "string"
+        },
+        "orderType": {
+          "type": "string"
+        }
+      }
+    },
     "pbPaymentMethod": {
       "type": "object",
       "properties": {
@@ -1183,6 +1197,9 @@
         },
         "username": {
           "type": "string"
+        },
+        "orderType": {
+          "type": "string"
         }
       }
     },
@@ -1193,7 +1210,7 @@
           "type": "array",
           "items": {
             "type": "object",
-            "$ref": "#/definitions/pbBuyOrder"
+            "$ref": "#/definitions/pbOrder"
           }
         }
       }

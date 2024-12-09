@@ -11,10 +11,12 @@ import (
 	"github.com/google/uuid"
 )
 
-type BuyOrder struct {
+type Order struct {
 	ID            int64     `db:"id" json:"id"`
 	Username      string    `db:"username" json:"username"`
-	WalletAddress string    `db:"wallet_address" json:"wallet_address"`
+	EscrowAddress string    `db:"escrow_address" json:"escrow_address"`
+	UserAddress   string    `db:"user_address" json:"user_address"`
+	OrderType     string    `db:"order_type" json:"order_type"`
 	Crypto        string    `db:"crypto" json:"crypto"`
 	Fiat          string    `db:"fiat" json:"fiat"`
 	CryptoAmount  float64   `db:"crypto_amount" json:"crypto_amount"`
