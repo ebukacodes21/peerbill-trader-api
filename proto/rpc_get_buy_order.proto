@@ -1,14 +1,15 @@
 syntax = "proto3";
 
 package pb;
-import "buy_order.proto";
+import "order.proto";
 
 option go_package = "peerbill-trader-api/pb";
 
 message GetBuyOrderRequest {
     int64 id = 1;
+    string order_type = 2;
 }
 
 message GetBuyOrderResponse {
-    BuyOrder buyOrder = 1;
+    Order buyOrder = 1;
 }

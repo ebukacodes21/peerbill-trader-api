@@ -26,13 +26,13 @@ func (s *Server) GetBuyOrders(ctx context.Context, req *pb.GetBuyOrdersRequest) 
 	}
 
 	// Fetch initial buy orders to send the first response immediately
-	buyOrders, err := s.repository.GetBuyOrders(ctx, req.Username)
+	buyOrders, err := s.repository.GetOrders(ctx, req.Username)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to fetch buy orders")
 	}
 
 	// Reverse the buy orders only once
-	reversedOrders := convertBuyOrders(buyOrders)
+	reversedOrders := convertOrders(buyOrders)
 	for i, j := 0, len(reversedOrders)-1; i < j; i, j = i+1, j-1 {
 		reversedOrders[i], reversedOrders[j] = reversedOrders[j], reversedOrders[i]
 	}

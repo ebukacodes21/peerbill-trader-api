@@ -104,7 +104,7 @@ func (s *Server) UpdateTrader(ctx context.Context, req *pb.UpdateTraderRequest) 
 }
 
 func validateUpdateTraderRequest(req *pb.UpdateTraderRequest) (violations []*errdetails.BadRequest_FieldViolation) {
-	if err := validate.ValidateTraderId(req.GetTraderId()); err != nil {
+	if err := validate.ValidateId(req.GetTraderId()); err != nil {
 		violations = append(violations, fieldViolation("trader_id", err))
 	}
 

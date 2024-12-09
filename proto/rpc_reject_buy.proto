@@ -2,15 +2,16 @@ syntax = "proto3";
 
 package pb;
 
-import "buy_order.proto";
+import "order.proto";
 
 option go_package = "peerbill-trader-api/pb";
 
 message RejectBuyOrderRequest {
     int64 id = 1;
     string username = 2;
+    string order_type = 3;
 }
 
 message RejectBuyOrderResponse {
-   repeated BuyOrder buyOrders = 1;
+   repeated Order buyOrders = 1;
 }

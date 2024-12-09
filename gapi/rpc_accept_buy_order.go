@@ -43,7 +43,7 @@ func (s *Server) AcceptBuyOrder(ctx context.Context, req *pb.AcceptBuyOrderReque
 		return nil, status.Errorf(codes.InvalidArgument, "insufficient balance")
 	}
 
-	args := db.UpdateBuyOrderParams{
+	args := db.UpdateOrderParams{
 		ID:       req.GetId(),
 		Username: req.GetUsername(),
 		IsAccepted: sql.NullBool{
@@ -56,41 +56,41 @@ func (s *Server) AcceptBuyOrder(ctx context.Context, req *pb.AcceptBuyOrderReque
 		},
 	}
 
-	_, err = s.repository.UpdateBuyOrder(ctx, args)
+	err = s.repository.UpdateOrder(ctx, args)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to accept buy orders")
 	}
 
-	payload := worker.UpdateBuyOrderPayload{
+	payload := worker.UpdateOrderPayload{
 		ID:       req.GetId(),
 		Username: req.GetUsername(),
 	}
-	err = s.taskDistributor.DistributeTaskUpdateBuyOrder(ctx, &payload)
+	err = s.taskDistributor.DistributeTaskUpdateOrder(ctx, &payload)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to distribute task")
 	}
 
 	// =========================================
-	// Reverse the buy orders array
-	buyOrders, err := s.repository.GetBuyOrders(ctx, authPayload.Username)
+	// Reverse the orders array
+	orders, err := s.repository.GetOrders(ctx, authPayload.Username)
 	if err != nil {
-		return nil, status.Errorf(codes.Internal, "failed to fetch buy orders")
+		return nil, status.Errorf(codes.Internal, "failed to fetch orders")
 	}
 
-	reversedBuyOrders := convertBuyOrders(buyOrders)
-	for i, j := 0, len(reversedBuyOrders)-1; i < j; i, j = i+1, j-1 {
-		reversedBuyOrders[i], reversedBuyOrders[j] = reversedBuyOrders[j], reversedBuyOrders[i]
+	reversedOrders := convertOrders(orders)
+	for i, j := 0, len(reversedOrders)-1; i < j; i, j = i+1, j-1 {
+		reversedOrders[i], reversedOrders[j] = reversedOrders[j], reversedOrders[i]
 	}
 
 	resp := &pb.AcceptBuyOrderResponse{
-		BuyOrders: reversedBuyOrders,
+		BuyOrders: reversedOrders,
 	}
 
 	return resp, nil
 }
 
 func validateAcceptBuyOrderRequest(req *pb.AcceptBuyOrderRequest) (violations []*errdetails.BadRequest_FieldViolation) {
-	if err := validate.ValidateTraderId(req.GetId()); err != nil {
+	if err := validate.ValidateId(req.GetId()); err != nil {
 		violations = append(violations, fieldViolation("id", err))
 	}
 

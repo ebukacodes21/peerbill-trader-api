@@ -53,7 +53,7 @@ func (s *Server) VerifyEmail(ctx context.Context, req *pb.VerifyEmailRequest) (*
 }
 
 func validateVerifyEmailRequest(req *pb.VerifyEmailRequest) (violations []*errdetails.BadRequest_FieldViolation) {
-	if err := validate.ValidateTraderId(req.GetTraderId()); err != nil {
+	if err := validate.ValidateId(req.GetTraderId()); err != nil {
 		violations = append(violations, fieldViolation("trader_id", err))
 	}
 

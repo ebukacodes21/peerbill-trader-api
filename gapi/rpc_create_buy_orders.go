@@ -21,24 +21,22 @@ func (s *Server) CreateBuyOrder(ctx context.Context, req *pb.CreateBuyOrderReque
 		return nil, invalidArgumentError(violations)
 	}
 
-	args := db.CreateBuyOrderTxParams{
-		CreateBuyOrderParams: db.CreateBuyOrderParams{
-			WalletAddress: req.GetWalletAddress(),
+	args := db.CreateOrderTxParams{
+		CreateOrderParams: db.CreateOrderParams{
+			EscrowAddress: req.GetEscrowAddress(),
+			UserAddress:   req.GetUserAddress(),
+			OrderType:     req.GetOrderType(),
 			FiatAmount:    float64(req.GetFiatAmount()),
 			CryptoAmount:  float64(req.GetCryptoAmount()),
 			Crypto:        req.GetCrypto(),
 			Fiat:          req.GetFiat(),
 			Rate:          float64(req.GetRate()),
 			Username:      req.GetUsername(),
-			Duration:      time.Now().Add(30 * time.Minute),
 		},
-		AfterCreate: func(buyOrder db.BuyOrder) error {
-			payload := worker.SendBuyOrderEmailPayload{
-				Username:     buyOrder.Username,
-				Fiat:         buyOrder.Fiat,
-				Crypto:       buyOrder.Crypto,
-				CryptoAmount: buyOrder.CryptoAmount,
-				FiatAmount:   buyOrder.FiatAmount,
+		AfterCreate: func(buyOrder db.Order) error {
+			payload := worker.SendOrderEmailPayload{
+				Username:  buyOrder.Username,
+				OrderType: buyOrder.OrderType,
 			}
 
 			opts := []asynq.Option{
@@ -46,11 +44,11 @@ func (s *Server) CreateBuyOrder(ctx context.Context, req *pb.CreateBuyOrderReque
 				asynq.ProcessIn(10 * time.Second),
 				asynq.Queue(worker.Critical),
 			}
-			return s.taskDistributor.DistributeTaskSendBuyOrderEmail(ctx, &payload, opts...)
+			return s.taskDistributor.DistributeTaskSendOrderEmail(ctx, &payload, opts...)
 		},
 	}
 
-	result, err := s.repository.CreateBuyOrderTx(ctx, args)
+	result, err := s.repository.CreateOrderTx(ctx, args)
 	if err != nil {
 		if pgErr, ok := err.(*pg.Error); ok {
 			switch pgErr.Code.Name() {
@@ -62,15 +60,19 @@ func (s *Server) CreateBuyOrder(ctx context.Context, req *pb.CreateBuyOrderReque
 	}
 
 	resp := &pb.CreateBuyOrderResponse{
-		BuyOrder: convertBuyOrder(result.BuyOrder),
+		BuyOrder: convertOrder(result.Order),
 	}
 
 	return resp, nil
 }
 
 func validateCreateBuyOrderRequest(req *pb.CreateBuyOrderRequest) (violations []*errdetails.BadRequest_FieldViolation) {
-	if err := validate.ValidateWalletAddress(req.GetWalletAddress()); err != nil {
-		violations = append(violations, fieldViolation("wallet", err))
+	if err := validate.ValidateWalletAddress(req.GetEscrowAddress()); err != nil {
+		violations = append(violations, fieldViolation("escrow_address", err))
+	}
+
+	if err := validate.ValidateWalletAddress(req.GetUserAddress()); err != nil {
+		violations = append(violations, fieldViolation("user_address", err))
 	}
 
 	if err := validate.ValidateNumber(req.GetCryptoAmount()); err != nil {
@@ -81,12 +83,16 @@ func validateCreateBuyOrderRequest(req *pb.CreateBuyOrderRequest) (violations []
 		violations = append(violations, fieldViolation("fiat_amount", err))
 	}
 
-	if err := validate.ValidateCrypto(req.GetCrypto()); err != nil {
-		violations = append(violations, fieldViolation("crypto", err))
+	if err := validate.ValidateType(req.GetOrderType()); err != nil {
+		violations = append(violations, fieldViolation("order_type", err))
 	}
 
 	if err := validate.ValidateFiat(req.GetFiat()); err != nil {
 		violations = append(violations, fieldViolation("fiat", err))
+	}
+
+	if err := validate.ValidateFiat(req.GetCrypto()); err != nil {
+		violations = append(violations, fieldViolation("crypto", err))
 	}
 
 	if err := validate.ValidateNumber(req.GetRate()); err != nil {

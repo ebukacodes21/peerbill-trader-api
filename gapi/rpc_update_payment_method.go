@@ -66,7 +66,7 @@ func (s *Server) UpdatePaymentMethod(ctx context.Context, req *pb.UpdatePaymentM
 }
 
 func validateUpdatePaymentMethodRequest(req *pb.UpdatePaymentMethodRequest) (violations []*errdetails.BadRequest_FieldViolation) {
-	if err := validate.ValidateTraderId(req.GetId()); err != nil {
+	if err := validate.ValidateId(req.GetId()); err != nil {
 		violations = append(violations, fieldViolation("id", err))
 	}
 

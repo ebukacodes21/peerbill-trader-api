@@ -2,6 +2,7 @@ package worker
 
 import (
 	"context"
+	db "peerbill-trader-api/db/sqlc"
 
 	// "database/sql"
 	"encoding/json"
@@ -22,17 +23,15 @@ type SendEmailPayload struct {
 	Username string `json:"username"`
 }
 
-type SendBuyOrderEmailPayload struct {
-	Username     string  `json:"username"`
-	Crypto       string  `db:"crypto" json:"crypto"`
-	Fiat         string  `db:"fiat" json:"fiat"`
-	CryptoAmount float64 `db:"crypto_amount" json:"crypto_amount"`
-	FiatAmount   float64 `db:"fiat_amount" json:"fiat_amount"`
+type SendOrderEmailPayload struct {
+	Username  string `json:"username"`
+	OrderType string `db:"order_type" json:"order_type"`
 }
 
-type UpdateBuyOrderPayload struct {
-	ID       int64  `db:"id" json:"id"`
-	Username string `db:"username" json:"username"`
+type UpdateOrderPayload struct {
+	ID        int64  `db:"id" json:"id"`
+	Username  string `db:"username" json:"username"`
+	OrderType string `db:"order_type" json:"order_type"`
 }
 
 func (rtd *RedisTaskDistributor) DistributeTaskSendVerifyEmail(ctx context.Context, payload *SendEmailPayload, opts ...asynq.Option) error {
@@ -67,7 +66,7 @@ func (rtd *RedisTaskDistributor) DistributeTaskSendForgotEmail(ctx context.Conte
 	return nil
 }
 
-func (rtd *RedisTaskDistributor) DistributeTaskSendBuyOrderEmail(ctx context.Context, payload *SendBuyOrderEmailPayload, opts ...asynq.Option) error {
+func (rtd *RedisTaskDistributor) DistributeTaskSendOrderEmail(ctx context.Context, payload *SendOrderEmailPayload, opts ...asynq.Option) error {
 	data, err := json.Marshal(payload)
 	if err != nil {
 		return fmt.Errorf("failed to marshal payload %w", err)
@@ -83,7 +82,7 @@ func (rtd *RedisTaskDistributor) DistributeTaskSendBuyOrderEmail(ctx context.Con
 	return nil
 }
 
-func (rtd *RedisTaskDistributor) DistributeTaskUpdateBuyOrder(ctx context.Context, payload *UpdateBuyOrderPayload, opts ...asynq.Option) error {
+func (rtd *RedisTaskDistributor) DistributeTaskUpdateOrder(ctx context.Context, payload *UpdateOrderPayload, opts ...asynq.Option) error {
 	data, err := json.Marshal(payload)
 	if err != nil {
 		return fmt.Errorf("failed to marshal payload %w", err)
@@ -165,8 +164,8 @@ func (rtp *RedisTaskProcessor) ProcessTaskSendForgotEmail(ctx context.Context, t
 	return nil
 }
 
-func (rtp *RedisTaskProcessor) ProcessTaskBuyOrderEmail(ctx context.Context, task *asynq.Task) error {
-	var payload SendBuyOrderEmailPayload
+func (rtp *RedisTaskProcessor) ProcessTaskOrderEmail(ctx context.Context, task *asynq.Task) error {
+	var payload SendOrderEmailPayload
 	if err := json.Unmarshal(task.Payload(), &payload); err != nil {
 		return asynq.SkipRetry
 	}
@@ -176,35 +175,31 @@ func (rtp *RedisTaskProcessor) ProcessTaskBuyOrderEmail(ctx context.Context, tas
 		return fmt.Errorf("failed to get trader with username %s: %w", payload.Username, err)
 	}
 
-	buyOrders, err := rtp.repository.GetBuyOrders(ctx, trader.Username)
+	orders, err := rtp.repository.GetOrders(ctx, trader.Username)
 	if err != nil {
-		return fmt.Errorf("failed to fetch updated buy orders: %w", err)
+		return fmt.Errorf("failed to fetch updated orders: %w", err)
 	}
 
-	for i, j := 0, len(buyOrders)-1; i < j; i, j = i+1, j-1 {
-		buyOrders[i], buyOrders[j] = buyOrders[j], buyOrders[i]
+	for i, j := 0, len(orders)-1; i < j; i, j = i+1, j-1 {
+		orders[i], orders[j] = orders[j], orders[i]
 	}
-	// Broadcast the updated buy orders to all connected WebSocket clinets
-	err = rtp.wsManager.Broadcast(buyOrders, "get-buy-orders")
+	// Broadcast the updated orders to all connected WebSocket clinets
+	err = rtp.wsManager.Broadcast(orders, "get-orders")
 	if err != nil {
-		return fmt.Errorf("failed to broadcast buy orders via WebSocket: %w", err)
+		return fmt.Errorf("failed to broadcast orders via WebSocket: %w", err)
 	}
 
 	// Construct the URL to the login page
 	url := "http://localhost:3000/auth/signin"
 
 	// Prepare the email content
-	subject := "Buy Request"
+	subject := "Order Request"
 	content := fmt.Sprintf(`Hello %s,<br/>
-	You have a pending buy request for %.8f %s. <br/>
-	You will receive an equivalent of %.2f %s after a successful transaction.<br/>
+	You have a pending %s order request. <br/>
 	Kindly <a href="%s">click this link to log in to your account and complete the transaction</a>.<br/>
 	`,
 		trader.Username,
-		payload.CryptoAmount,
-		payload.Crypto,
-		payload.FiatAmount,
-		payload.Fiat,
+		payload.OrderType,
 		url)
 
 	// Send the email
@@ -223,21 +218,25 @@ func (rtp *RedisTaskProcessor) ProcessTaskBuyOrderEmail(ctx context.Context, tas
 	return nil
 }
 
-func (rtp *RedisTaskProcessor) ProcessTaskUpdateBuyOrder(ctx context.Context, task *asynq.Task) error {
-	var payload UpdateBuyOrderPayload
+func (rtp *RedisTaskProcessor) ProcessTaskUpdateOrder(ctx context.Context, task *asynq.Task) error {
+	var payload UpdateOrderPayload
 	if err := json.Unmarshal(task.Payload(), &payload); err != nil {
 		return asynq.SkipRetry
 	}
 
-	buyOrder, err := rtp.repository.GetBuyOrder(ctx, payload.ID)
+	args := db.GetOrderParams{
+		ID:        payload.ID,
+		OrderType: payload.OrderType,
+	}
+	order, err := rtp.repository.GetOrder(ctx, args)
 	if err != nil {
-		return fmt.Errorf("failed to fetch updated buy order: %w", err)
+		return fmt.Errorf("failed to fetch updated order: %w", err)
 	}
 
-	// Broadcast the updated buy orders to all connected WebSocket client
-	err = rtp.wsManager.Broadcast(buyOrder, "update-buy-order")
+	// Broadcast the updated orders to all connected WebSocket client
+	err = rtp.wsManager.Broadcast(order, "update-order")
 	if err != nil {
-		return fmt.Errorf("failed to broadcast buy orders via WebSocket: %w", err)
+		return fmt.Errorf("failed to broadcast orders via WebSocket: %w", err)
 	}
 
 	log.Info().
