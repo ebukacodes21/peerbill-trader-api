@@ -21,6 +21,7 @@ type Querier interface {
 	FindTrader(ctx context.Context, arg FindTraderParams) (Trader, error)
 	GetBuyOrder(ctx context.Context, id int64) (BuyOrder, error)
 	GetBuyOrders(ctx context.Context, username string) ([]BuyOrder, error)
+	GetPaymentMethod(ctx context.Context, arg GetPaymentMethodParams) (PaymentMethod, error)
 	GetPaymentMethods(ctx context.Context, username string) ([]PaymentMethod, error)
 	GetTradePair(ctx context.Context, arg GetTradePairParams) (TradePair, error)
 	GetTradePairs(ctx context.Context, arg GetTradePairsParams) ([]TradePair, error)

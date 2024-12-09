@@ -18,9 +18,11 @@ import "rpc_create_buy_order.proto";
 import "rpc_get_buy_orders.proto";
 import "rpc_get_buy_order.proto";
 import "rpc_reject_buy.proto";
+import "rpc_accept_buy_order.proto";
 import "rpc_add_payment_method.proto";
 import "rpc_update_payment_method.proto";
 import "rpc_delete_payment_method.proto";
+import "rpc_get_payment_method.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
 option go_package = "peerbill-trader-api/pb";
@@ -178,6 +180,16 @@ service PeerbillTrader {
             summary: "Get a single buy order";
         };
     }
+    rpc AcceptBuyOrder (AcceptBuyOrderRequest) returns (AcceptBuyOrderResponse) {
+        option (google.api.http) = {
+            post: "/api/accept-buy"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            description: "Use this API to accept a buy order";
+            summary: "Accept a buy order";
+        };
+    }
     rpc RejectBuyOrder (RejectBuyOrderRequest) returns (RejectBuyOrderResponse) {
         option (google.api.http) = {
             post: "/api/reject-buy"
@@ -216,6 +228,16 @@ service PeerbillTrader {
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
             description: "Use this API to delete Crypto/Fiat payment method";
             summary: "Delete Crypto/Fiat payment method";
+        };
+    }
+    rpc GetPaymentMethod (GetPaymentMethodRequest) returns (GetPaymentMethodResponse) {
+        option (google.api.http) = {
+            post: "/api/get-trader-payment-method"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            description: "Use this API to get Crypto/Fiat Payment method";
+            summary: "Get Crypto/Fiat payment method";
         };
     }
 }

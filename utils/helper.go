@@ -1,12 +1,32 @@
 package utils
 
 import (
+	"context"
 	"fmt"
+	"log"
 	"math"
+	"math/big"
 	"math/rand"
 	"strings"
 	"time"
+
+	"github.com/ethereum/go-ethereum"
+	"github.com/ethereum/go-ethereum/accounts/abi"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/ethclient"
 )
+
+const ERC20_ABI = `[{
+	"constant":true,"inputs":[],"name":"decimals","outputs":[{"name":"","type":"uint8"}],"payable":false,"stateMutability":"view","type":"function"
+},{
+	"constant":true,"inputs":[{"name":"account","type":"address"}],"name":"balanceOf","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"
+},{
+	"constant":false,"inputs":[{"name":"recipient","type":"address"},{"name":"amount","type":"uint256"}],"name":"transfer","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"
+},{
+	"constant":false,"inputs":[{"name":"sender","type":"address"},{"name":"recipient","type":"address"},{"name":"amount","type":"uint256"}],"name":"transferFrom","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"
+},{
+	"constant":true,"inputs":[{"name":"spender","type":"address"},{"name":"amount","type":"uint256"}],"name":"approve","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"
+}]`
 
 const alpha = "abcdefghijklmnopqrstuvwxyz"
 
@@ -65,4 +85,106 @@ func RandomCrypto() string {
 
 func RandomEmail() string {
 	return fmt.Sprintf("%s@email.com", RandomString(6))
+}
+
+func CheckBalance(ctx context.Context, crypto string, address string) string {
+	var balance big.Int
+	var formattedBalance string
+
+	switch crypto {
+	case "ETH":
+		balance = getBalance(ctx, "https://eth-mainnet.g.alchemy.com/v2/xtngPwzqpjqcWBvKoVKLiBwYo1kTbWxe", address)
+		formattedBalance = weiToEther(balance, 18)
+	case "BNB":
+		balance = getBalance(ctx, "https://bsc-dataseed.binance.org/", address)
+		formattedBalance = weiToEther(balance, 18)
+	case "USDT", "USDC":
+		formattedBalance = getTokenBalance(ctx, "https://bsc-dataseed.binance.org/", crypto, address)
+	default:
+		log.Printf("Unsupported crypto: %s", crypto)
+		return "Unsupported crypto"
+	}
+
+	return formattedBalance
+}
+
+// get balance of native currencies
+func getBalance(ctx context.Context, provider string, address string) big.Int {
+	client, err := ethclient.Dial(provider)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	account := common.HexToAddress(address)
+	balance, err := client.BalanceAt(ctx, account, nil)
+	if err != nil {
+		log.Fatal(err)
+		return big.Int{}
+	}
+
+	return *balance
+}
+
+// get balance of token currencies
+func getTokenBalance(ctx context.Context, provider string, crypto string, address string) string {
+	var contractAddr string
+	var decimals uint8 = 6
+	var balance *big.Int
+
+	// USDT and USDC smart contract addresses on BNB
+	switch crypto {
+	case "USDT":
+		contractAddr = "0x55d398326f99059fF775485246999027B3197955"
+	case "USDC":
+		contractAddr = "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d"
+	default:
+		log.Printf("Unsupported token: %s", crypto)
+		return "Unsupported token"
+	}
+
+	client, err := ethclient.Dial(provider)
+	if err != nil {
+		log.Printf("Failed to connect to provider %v", err)
+		return "Error connecting to provider"
+	}
+
+	addr := common.HexToAddress(contractAddr)
+	contractABI, err := abi.JSON(strings.NewReader(ERC20_ABI))
+	if err != nil {
+		log.Printf("Failed to parse contract ABI: %v", err)
+		return "Error parsing contract ABI"
+	}
+
+	// call balanceOf func - building a contract object
+	callData, err := contractABI.Pack("balanceOf", common.HexToAddress(address))
+	if err != nil {
+		log.Printf("Failed to call balanceOf method: %v", err)
+		return "Error fetching balance"
+	}
+	result, err := client.CallContract(ctx, ethereum.CallMsg{To: &addr, Data: callData}, nil)
+	if err != nil {
+		log.Printf("Failed to call balanceOf method: %v", err)
+		return "Error fetching balance"
+	}
+
+	// Decode the balance
+	err = contractABI.UnpackIntoInterface(&balance, "balanceOf", result)
+	if err != nil {
+		log.Printf("Failed to decode balance result: %v", err)
+		return "Error decoding balance"
+	}
+
+	// Convert the balance from the smallest unit to the token's standard unit - USDT, USDC is 6 decimal places
+	decimalFactor := new(big.Int).Exp(big.NewInt(10), big.NewInt(int64(decimals)), nil)
+	realBalance := new(big.Rat).SetFrac(balance, decimalFactor)
+
+	// Return the balance as a string with the appropriate decimal places
+	return realBalance.FloatString(int(decimals))
+}
+
+// Converts balance from Wei to Ether (18 decimals)
+func weiToEther(balance big.Int, decimals int) string {
+	divisor := new(big.Int).Exp(big.NewInt(10), big.NewInt(int64(decimals)), nil)
+	etherBalance := new(big.Rat).SetFrac(&balance, divisor)
+	return etherBalance.FloatString(decimals)
 }

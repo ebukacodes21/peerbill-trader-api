@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package pb;
+
+import "payment_method.proto";
+
+option go_package = "peerbill-trader-api/pb";
+
+message GetPaymentMethodRequest {
+    string        username = 1;
+    string        crypto = 2;
+    string        fiat = 3;
+}
+
+message GetPaymentMethodResponse {
+    PaymentMethod paymentMethod = 1;
+}

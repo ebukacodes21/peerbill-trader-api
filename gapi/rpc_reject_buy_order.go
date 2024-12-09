@@ -46,11 +46,11 @@ func (s *Server) RejectBuyOrder(ctx context.Context, req *pb.RejectBuyOrderReque
 		return nil, status.Errorf(codes.Internal, "failed to reject buy orders")
 	}
 
-	payload := worker.RejectBuyOrderPayload{
+	payload := worker.UpdateBuyOrderPayload{
 		ID:       req.GetId(),
 		Username: req.GetUsername(),
 	}
-	err = s.taskDistributor.DistributeTaskRejectBuyOrder(ctx, &payload)
+	err = s.taskDistributor.DistributeTaskUpdateBuyOrder(ctx, &payload)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to distribute task")
 	}
