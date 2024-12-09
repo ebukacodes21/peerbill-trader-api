@@ -10,7 +10,7 @@ type TaskDistributor interface {
 	DistributeTaskSendVerifyEmail(ctx context.Context, payload *SendEmailPayload, opts ...asynq.Option) error
 	DistributeTaskSendForgotEmail(ctx context.Context, payload *SendEmailPayload, opts ...asynq.Option) error
 	DistributeTaskSendBuyOrderEmail(ctx context.Context, payload *SendBuyOrderEmailPayload, opts ...asynq.Option) error
-	DistributeTaskRejectBuyOrder(ctx context.Context, payload *RejectBuyOrderPayload, opts ...asynq.Option) error
+	DistributeTaskUpdateBuyOrder(ctx context.Context, payload *UpdateBuyOrderPayload, opts ...asynq.Option) error
 }
 
 type RedisTaskDistributor struct {

@@ -73,6 +73,38 @@ func (q *Queries) DeletePaymentMethod(ctx context.Context, arg DeletePaymentMeth
 	return err
 }
 
+const getPaymentMethod = `-- name: GetPaymentMethod :one
+SELECT id, trade_pair_id, username, wallet_address, crypto, fiat, bank_name, account_number, account_holder, created_at FROM payment_methods 
+WHERE username = $1
+AND crypto = $2
+AND fiat = $3
+LIMIT 1
+`
+
+type GetPaymentMethodParams struct {
+	Username string `db:"username" json:"username"`
+	Crypto   string `db:"crypto" json:"crypto"`
+	Fiat     string `db:"fiat" json:"fiat"`
+}
+
+func (q *Queries) GetPaymentMethod(ctx context.Context, arg GetPaymentMethodParams) (PaymentMethod, error) {
+	row := q.db.QueryRowContext(ctx, getPaymentMethod, arg.Username, arg.Crypto, arg.Fiat)
+	var i PaymentMethod
+	err := row.Scan(
+		&i.ID,
+		&i.TradePairID,
+		&i.Username,
+		&i.WalletAddress,
+		&i.Crypto,
+		&i.Fiat,
+		&i.BankName,
+		&i.AccountNumber,
+		&i.AccountHolder,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
 const getPaymentMethods = `-- name: GetPaymentMethods :many
 SELECT id, trade_pair_id, username, wallet_address, crypto, fiat, bank_name, account_number, account_holder, created_at FROM payment_methods 
 WHERE username = $1

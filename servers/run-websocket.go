@@ -49,8 +49,8 @@ func RunWebSocketServer(group *errgroup.Group, ctx context.Context, config utils
 		handleWebSocket(w, r, "get-buy-orders")
 	})
 
-	httpMux.HandleFunc("/ws/reject-buy-order", func(w http.ResponseWriter, r *http.Request) {
-		handleWebSocket(w, r, "reject-buy-order")
+	httpMux.HandleFunc("/ws/update-buy-order", func(w http.ResponseWriter, r *http.Request) {
+		handleWebSocket(w, r, "update-buy-order")
 	})
 
 	// Set up your HTTP server

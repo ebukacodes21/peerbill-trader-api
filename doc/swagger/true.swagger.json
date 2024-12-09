@@ -20,6 +20,40 @@
     "application/json"
   ],
   "paths": {
+    "/api/accept-buy": {
+      "post": {
+        "summary": "Accept a buy order",
+        "description": "Use this API to accept a buy order",
+        "operationId": "PeerbillTrader_AcceptBuyOrder",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbAcceptBuyOrderResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbAcceptBuyOrderRequest"
+            }
+          }
+        ],
+        "tags": [
+          "PeerbillTrader"
+        ]
+      }
+    },
     "/api/add-trader-pair": {
       "post": {
         "summary": "Add Crypto/Fiat pairs",
@@ -284,6 +318,40 @@
             "required": true,
             "schema": {
               "$ref": "#/definitions/pbGetBuyOrdersRequest"
+            }
+          }
+        ],
+        "tags": [
+          "PeerbillTrader"
+        ]
+      }
+    },
+    "/api/get-trader-payment-method": {
+      "post": {
+        "summary": "Get Crypto/Fiat payment method",
+        "description": "Use this API to get Crypto/Fiat Payment method",
+        "operationId": "PeerbillTrader_GetPaymentMethod",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbGetPaymentMethodResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbGetPaymentMethodRequest"
             }
           }
         ],
@@ -634,6 +702,40 @@
     }
   },
   "definitions": {
+    "pbAcceptBuyOrderRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "username": {
+          "type": "string"
+        },
+        "walletAddress": {
+          "type": "string"
+        },
+        "crypto": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "number",
+          "format": "float"
+        }
+      }
+    },
+    "pbAcceptBuyOrderResponse": {
+      "type": "object",
+      "properties": {
+        "buyOrders": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/pbBuyOrder"
+          }
+        }
+      }
+    },
     "pbAddPaymentMethodRequest": {
       "type": "object",
       "properties": {
@@ -894,6 +996,28 @@
             "type": "object",
             "$ref": "#/definitions/pbBuyOrder"
           }
+        }
+      }
+    },
+    "pbGetPaymentMethodRequest": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "crypto": {
+          "type": "string"
+        },
+        "fiat": {
+          "type": "string"
+        }
+      }
+    },
+    "pbGetPaymentMethodResponse": {
+      "type": "object",
+      "properties": {
+        "paymentMethod": {
+          "$ref": "#/definitions/pbPaymentMethod"
         }
       }
     },

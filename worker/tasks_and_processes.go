@@ -30,7 +30,7 @@ type SendBuyOrderEmailPayload struct {
 	FiatAmount   float64 `db:"fiat_amount" json:"fiat_amount"`
 }
 
-type RejectBuyOrderPayload struct {
+type UpdateBuyOrderPayload struct {
 	ID       int64  `db:"id" json:"id"`
 	Username string `db:"username" json:"username"`
 }
@@ -83,7 +83,7 @@ func (rtd *RedisTaskDistributor) DistributeTaskSendBuyOrderEmail(ctx context.Con
 	return nil
 }
 
-func (rtd *RedisTaskDistributor) DistributeTaskRejectBuyOrder(ctx context.Context, payload *RejectBuyOrderPayload, opts ...asynq.Option) error {
+func (rtd *RedisTaskDistributor) DistributeTaskUpdateBuyOrder(ctx context.Context, payload *UpdateBuyOrderPayload, opts ...asynq.Option) error {
 	data, err := json.Marshal(payload)
 	if err != nil {
 		return fmt.Errorf("failed to marshal payload %w", err)
@@ -223,8 +223,8 @@ func (rtp *RedisTaskProcessor) ProcessTaskBuyOrderEmail(ctx context.Context, tas
 	return nil
 }
 
-func (rtp *RedisTaskProcessor) ProcessTaskRejectBuyOrder(ctx context.Context, task *asynq.Task) error {
-	var payload RejectBuyOrderPayload
+func (rtp *RedisTaskProcessor) ProcessTaskUpdateBuyOrder(ctx context.Context, task *asynq.Task) error {
+	var payload UpdateBuyOrderPayload
 	if err := json.Unmarshal(task.Payload(), &payload); err != nil {
 		return asynq.SkipRetry
 	}
@@ -235,7 +235,7 @@ func (rtp *RedisTaskProcessor) ProcessTaskRejectBuyOrder(ctx context.Context, ta
 	}
 
 	// Broadcast the updated buy orders to all connected WebSocket client
-	err = rtp.wsManager.Broadcast(buyOrder, "reject-buy-order")
+	err = rtp.wsManager.Broadcast(buyOrder, "update-buy-order")
 	if err != nil {
 		return fmt.Errorf("failed to broadcast buy orders via WebSocket: %w", err)
 	}

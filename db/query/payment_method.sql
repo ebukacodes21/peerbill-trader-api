@@ -11,6 +11,13 @@ SELECT * FROM payment_methods
 WHERE username = $1
 ORDER BY id;
 
+-- name: GetPaymentMethod :one
+SELECT * FROM payment_methods 
+WHERE username = $1
+AND crypto = $2
+AND fiat = $3
+LIMIT 1;
+
 -- name: UpdatePaymentMethod :exec
 UPDATE payment_methods
 SET
