@@ -30,11 +30,12 @@ const (
 	PeerbillTrader_AddTraderPair_FullMethodName       = "/pb.PeerbillTrader/AddTraderPair"
 	PeerbillTrader_UpdateTraderPair_FullMethodName    = "/pb.PeerbillTrader/UpdateTraderPair"
 	PeerbillTrader_DeleteTraderPair_FullMethodName    = "/pb.PeerbillTrader/DeleteTraderPair"
-	PeerbillTrader_CreateBuyOrder_FullMethodName      = "/pb.PeerbillTrader/CreateBuyOrder"
-	PeerbillTrader_GetBuyOrders_FullMethodName        = "/pb.PeerbillTrader/GetBuyOrders"
-	PeerbillTrader_GetBuyOrder_FullMethodName         = "/pb.PeerbillTrader/GetBuyOrder"
-	PeerbillTrader_AcceptBuyOrder_FullMethodName      = "/pb.PeerbillTrader/AcceptBuyOrder"
-	PeerbillTrader_RejectBuyOrder_FullMethodName      = "/pb.PeerbillTrader/RejectBuyOrder"
+	PeerbillTrader_CreateOrder_FullMethodName         = "/pb.PeerbillTrader/CreateOrder"
+	PeerbillTrader_GetOrders_FullMethodName           = "/pb.PeerbillTrader/GetOrders"
+	PeerbillTrader_GetUserOrders_FullMethodName       = "/pb.PeerbillTrader/GetUserOrders"
+	PeerbillTrader_GetOrder_FullMethodName            = "/pb.PeerbillTrader/GetOrder"
+	PeerbillTrader_AcceptOrder_FullMethodName         = "/pb.PeerbillTrader/AcceptOrder"
+	PeerbillTrader_RejectOrder_FullMethodName         = "/pb.PeerbillTrader/RejectOrder"
 	PeerbillTrader_AddPaymentMethod_FullMethodName    = "/pb.PeerbillTrader/AddPaymentMethod"
 	PeerbillTrader_UpdatePaymentMethod_FullMethodName = "/pb.PeerbillTrader/UpdatePaymentMethod"
 	PeerbillTrader_DeletePaymentMethod_FullMethodName = "/pb.PeerbillTrader/DeletePaymentMethod"
@@ -56,11 +57,12 @@ type PeerbillTraderClient interface {
 	AddTraderPair(ctx context.Context, in *AddTradePairRequest, opts ...grpc.CallOption) (*AddTradePairResponse, error)
 	UpdateTraderPair(ctx context.Context, in *UpdateTradePairRequest, opts ...grpc.CallOption) (*UpdateTradePairResponse, error)
 	DeleteTraderPair(ctx context.Context, in *DeleteTradePairRequest, opts ...grpc.CallOption) (*DeleteTradePairResponse, error)
-	CreateBuyOrder(ctx context.Context, in *CreateBuyOrderRequest, opts ...grpc.CallOption) (*CreateBuyOrderResponse, error)
-	GetBuyOrders(ctx context.Context, in *GetBuyOrdersRequest, opts ...grpc.CallOption) (*GetBuyOrdersResponse, error)
-	GetBuyOrder(ctx context.Context, in *GetBuyOrderRequest, opts ...grpc.CallOption) (*GetBuyOrderResponse, error)
-	AcceptBuyOrder(ctx context.Context, in *AcceptBuyOrderRequest, opts ...grpc.CallOption) (*AcceptBuyOrderResponse, error)
-	RejectBuyOrder(ctx context.Context, in *RejectBuyOrderRequest, opts ...grpc.CallOption) (*RejectBuyOrderResponse, error)
+	CreateOrder(ctx context.Context, in *CreateOrderRequest, opts ...grpc.CallOption) (*CreateOrderResponse, error)
+	GetOrders(ctx context.Context, in *GetOrdersRequest, opts ...grpc.CallOption) (*GetOrdersResponse, error)
+	GetUserOrders(ctx context.Context, in *GetUserOrdersRequest, opts ...grpc.CallOption) (*GetUserOrdersResponse, error)
+	GetOrder(ctx context.Context, in *GetOrderRequest, opts ...grpc.CallOption) (*GetOrderResponse, error)
+	AcceptOrder(ctx context.Context, in *AcceptOrderRequest, opts ...grpc.CallOption) (*AcceptOrderResponse, error)
+	RejectOrder(ctx context.Context, in *RejectOrderRequest, opts ...grpc.CallOption) (*RejectOrderResponse, error)
 	AddPaymentMethod(ctx context.Context, in *AddPaymentMethodRequest, opts ...grpc.CallOption) (*AddPaymentMethodResponse, error)
 	UpdatePaymentMethod(ctx context.Context, in *UpdatePaymentMethodRequest, opts ...grpc.CallOption) (*UpdatePaymentMethodResponse, error)
 	DeletePaymentMethod(ctx context.Context, in *DeletePaymentMethodRequest, opts ...grpc.CallOption) (*DeletePaymentMethodResponse, error)
@@ -185,50 +187,60 @@ func (c *peerbillTraderClient) DeleteTraderPair(ctx context.Context, in *DeleteT
 	return out, nil
 }
 
-func (c *peerbillTraderClient) CreateBuyOrder(ctx context.Context, in *CreateBuyOrderRequest, opts ...grpc.CallOption) (*CreateBuyOrderResponse, error) {
+func (c *peerbillTraderClient) CreateOrder(ctx context.Context, in *CreateOrderRequest, opts ...grpc.CallOption) (*CreateOrderResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(CreateBuyOrderResponse)
-	err := c.cc.Invoke(ctx, PeerbillTrader_CreateBuyOrder_FullMethodName, in, out, cOpts...)
+	out := new(CreateOrderResponse)
+	err := c.cc.Invoke(ctx, PeerbillTrader_CreateOrder_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *peerbillTraderClient) GetBuyOrders(ctx context.Context, in *GetBuyOrdersRequest, opts ...grpc.CallOption) (*GetBuyOrdersResponse, error) {
+func (c *peerbillTraderClient) GetOrders(ctx context.Context, in *GetOrdersRequest, opts ...grpc.CallOption) (*GetOrdersResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetBuyOrdersResponse)
-	err := c.cc.Invoke(ctx, PeerbillTrader_GetBuyOrders_FullMethodName, in, out, cOpts...)
+	out := new(GetOrdersResponse)
+	err := c.cc.Invoke(ctx, PeerbillTrader_GetOrders_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *peerbillTraderClient) GetBuyOrder(ctx context.Context, in *GetBuyOrderRequest, opts ...grpc.CallOption) (*GetBuyOrderResponse, error) {
+func (c *peerbillTraderClient) GetUserOrders(ctx context.Context, in *GetUserOrdersRequest, opts ...grpc.CallOption) (*GetUserOrdersResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetBuyOrderResponse)
-	err := c.cc.Invoke(ctx, PeerbillTrader_GetBuyOrder_FullMethodName, in, out, cOpts...)
+	out := new(GetUserOrdersResponse)
+	err := c.cc.Invoke(ctx, PeerbillTrader_GetUserOrders_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *peerbillTraderClient) AcceptBuyOrder(ctx context.Context, in *AcceptBuyOrderRequest, opts ...grpc.CallOption) (*AcceptBuyOrderResponse, error) {
+func (c *peerbillTraderClient) GetOrder(ctx context.Context, in *GetOrderRequest, opts ...grpc.CallOption) (*GetOrderResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(AcceptBuyOrderResponse)
-	err := c.cc.Invoke(ctx, PeerbillTrader_AcceptBuyOrder_FullMethodName, in, out, cOpts...)
+	out := new(GetOrderResponse)
+	err := c.cc.Invoke(ctx, PeerbillTrader_GetOrder_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *peerbillTraderClient) RejectBuyOrder(ctx context.Context, in *RejectBuyOrderRequest, opts ...grpc.CallOption) (*RejectBuyOrderResponse, error) {
+func (c *peerbillTraderClient) AcceptOrder(ctx context.Context, in *AcceptOrderRequest, opts ...grpc.CallOption) (*AcceptOrderResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(RejectBuyOrderResponse)
-	err := c.cc.Invoke(ctx, PeerbillTrader_RejectBuyOrder_FullMethodName, in, out, cOpts...)
+	out := new(AcceptOrderResponse)
+	err := c.cc.Invoke(ctx, PeerbillTrader_AcceptOrder_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *peerbillTraderClient) RejectOrder(ctx context.Context, in *RejectOrderRequest, opts ...grpc.CallOption) (*RejectOrderResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RejectOrderResponse)
+	err := c.cc.Invoke(ctx, PeerbillTrader_RejectOrder_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -290,11 +302,12 @@ type PeerbillTraderServer interface {
 	AddTraderPair(context.Context, *AddTradePairRequest) (*AddTradePairResponse, error)
 	UpdateTraderPair(context.Context, *UpdateTradePairRequest) (*UpdateTradePairResponse, error)
 	DeleteTraderPair(context.Context, *DeleteTradePairRequest) (*DeleteTradePairResponse, error)
-	CreateBuyOrder(context.Context, *CreateBuyOrderRequest) (*CreateBuyOrderResponse, error)
-	GetBuyOrders(context.Context, *GetBuyOrdersRequest) (*GetBuyOrdersResponse, error)
-	GetBuyOrder(context.Context, *GetBuyOrderRequest) (*GetBuyOrderResponse, error)
-	AcceptBuyOrder(context.Context, *AcceptBuyOrderRequest) (*AcceptBuyOrderResponse, error)
-	RejectBuyOrder(context.Context, *RejectBuyOrderRequest) (*RejectBuyOrderResponse, error)
+	CreateOrder(context.Context, *CreateOrderRequest) (*CreateOrderResponse, error)
+	GetOrders(context.Context, *GetOrdersRequest) (*GetOrdersResponse, error)
+	GetUserOrders(context.Context, *GetUserOrdersRequest) (*GetUserOrdersResponse, error)
+	GetOrder(context.Context, *GetOrderRequest) (*GetOrderResponse, error)
+	AcceptOrder(context.Context, *AcceptOrderRequest) (*AcceptOrderResponse, error)
+	RejectOrder(context.Context, *RejectOrderRequest) (*RejectOrderResponse, error)
 	AddPaymentMethod(context.Context, *AddPaymentMethodRequest) (*AddPaymentMethodResponse, error)
 	UpdatePaymentMethod(context.Context, *UpdatePaymentMethodRequest) (*UpdatePaymentMethodResponse, error)
 	DeletePaymentMethod(context.Context, *DeletePaymentMethodRequest) (*DeletePaymentMethodResponse, error)
@@ -342,20 +355,23 @@ func (UnimplementedPeerbillTraderServer) UpdateTraderPair(context.Context, *Upda
 func (UnimplementedPeerbillTraderServer) DeleteTraderPair(context.Context, *DeleteTradePairRequest) (*DeleteTradePairResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteTraderPair not implemented")
 }
-func (UnimplementedPeerbillTraderServer) CreateBuyOrder(context.Context, *CreateBuyOrderRequest) (*CreateBuyOrderResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateBuyOrder not implemented")
+func (UnimplementedPeerbillTraderServer) CreateOrder(context.Context, *CreateOrderRequest) (*CreateOrderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateOrder not implemented")
 }
-func (UnimplementedPeerbillTraderServer) GetBuyOrders(context.Context, *GetBuyOrdersRequest) (*GetBuyOrdersResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetBuyOrders not implemented")
+func (UnimplementedPeerbillTraderServer) GetOrders(context.Context, *GetOrdersRequest) (*GetOrdersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetOrders not implemented")
 }
-func (UnimplementedPeerbillTraderServer) GetBuyOrder(context.Context, *GetBuyOrderRequest) (*GetBuyOrderResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetBuyOrder not implemented")
+func (UnimplementedPeerbillTraderServer) GetUserOrders(context.Context, *GetUserOrdersRequest) (*GetUserOrdersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserOrders not implemented")
 }
-func (UnimplementedPeerbillTraderServer) AcceptBuyOrder(context.Context, *AcceptBuyOrderRequest) (*AcceptBuyOrderResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AcceptBuyOrder not implemented")
+func (UnimplementedPeerbillTraderServer) GetOrder(context.Context, *GetOrderRequest) (*GetOrderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetOrder not implemented")
 }
-func (UnimplementedPeerbillTraderServer) RejectBuyOrder(context.Context, *RejectBuyOrderRequest) (*RejectBuyOrderResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method RejectBuyOrder not implemented")
+func (UnimplementedPeerbillTraderServer) AcceptOrder(context.Context, *AcceptOrderRequest) (*AcceptOrderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AcceptOrder not implemented")
+}
+func (UnimplementedPeerbillTraderServer) RejectOrder(context.Context, *RejectOrderRequest) (*RejectOrderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RejectOrder not implemented")
 }
 func (UnimplementedPeerbillTraderServer) AddPaymentMethod(context.Context, *AddPaymentMethodRequest) (*AddPaymentMethodResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddPaymentMethod not implemented")
@@ -588,92 +604,110 @@ func _PeerbillTrader_DeleteTraderPair_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PeerbillTrader_CreateBuyOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateBuyOrderRequest)
+func _PeerbillTrader_CreateOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateOrderRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PeerbillTraderServer).CreateBuyOrder(ctx, in)
+		return srv.(PeerbillTraderServer).CreateOrder(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: PeerbillTrader_CreateBuyOrder_FullMethodName,
+		FullMethod: PeerbillTrader_CreateOrder_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PeerbillTraderServer).CreateBuyOrder(ctx, req.(*CreateBuyOrderRequest))
+		return srv.(PeerbillTraderServer).CreateOrder(ctx, req.(*CreateOrderRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PeerbillTrader_GetBuyOrders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetBuyOrdersRequest)
+func _PeerbillTrader_GetOrders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetOrdersRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PeerbillTraderServer).GetBuyOrders(ctx, in)
+		return srv.(PeerbillTraderServer).GetOrders(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: PeerbillTrader_GetBuyOrders_FullMethodName,
+		FullMethod: PeerbillTrader_GetOrders_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PeerbillTraderServer).GetBuyOrders(ctx, req.(*GetBuyOrdersRequest))
+		return srv.(PeerbillTraderServer).GetOrders(ctx, req.(*GetOrdersRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PeerbillTrader_GetBuyOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetBuyOrderRequest)
+func _PeerbillTrader_GetUserOrders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserOrdersRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PeerbillTraderServer).GetBuyOrder(ctx, in)
+		return srv.(PeerbillTraderServer).GetUserOrders(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: PeerbillTrader_GetBuyOrder_FullMethodName,
+		FullMethod: PeerbillTrader_GetUserOrders_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PeerbillTraderServer).GetBuyOrder(ctx, req.(*GetBuyOrderRequest))
+		return srv.(PeerbillTraderServer).GetUserOrders(ctx, req.(*GetUserOrdersRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PeerbillTrader_AcceptBuyOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AcceptBuyOrderRequest)
+func _PeerbillTrader_GetOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetOrderRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PeerbillTraderServer).AcceptBuyOrder(ctx, in)
+		return srv.(PeerbillTraderServer).GetOrder(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: PeerbillTrader_AcceptBuyOrder_FullMethodName,
+		FullMethod: PeerbillTrader_GetOrder_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PeerbillTraderServer).AcceptBuyOrder(ctx, req.(*AcceptBuyOrderRequest))
+		return srv.(PeerbillTraderServer).GetOrder(ctx, req.(*GetOrderRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PeerbillTrader_RejectBuyOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RejectBuyOrderRequest)
+func _PeerbillTrader_AcceptOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AcceptOrderRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PeerbillTraderServer).RejectBuyOrder(ctx, in)
+		return srv.(PeerbillTraderServer).AcceptOrder(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: PeerbillTrader_RejectBuyOrder_FullMethodName,
+		FullMethod: PeerbillTrader_AcceptOrder_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PeerbillTraderServer).RejectBuyOrder(ctx, req.(*RejectBuyOrderRequest))
+		return srv.(PeerbillTraderServer).AcceptOrder(ctx, req.(*AcceptOrderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PeerbillTrader_RejectOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RejectOrderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PeerbillTraderServer).RejectOrder(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PeerbillTrader_RejectOrder_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PeerbillTraderServer).RejectOrder(ctx, req.(*RejectOrderRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -802,24 +836,28 @@ var PeerbillTrader_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _PeerbillTrader_DeleteTraderPair_Handler,
 		},
 		{
-			MethodName: "CreateBuyOrder",
-			Handler:    _PeerbillTrader_CreateBuyOrder_Handler,
+			MethodName: "CreateOrder",
+			Handler:    _PeerbillTrader_CreateOrder_Handler,
 		},
 		{
-			MethodName: "GetBuyOrders",
-			Handler:    _PeerbillTrader_GetBuyOrders_Handler,
+			MethodName: "GetOrders",
+			Handler:    _PeerbillTrader_GetOrders_Handler,
 		},
 		{
-			MethodName: "GetBuyOrder",
-			Handler:    _PeerbillTrader_GetBuyOrder_Handler,
+			MethodName: "GetUserOrders",
+			Handler:    _PeerbillTrader_GetUserOrders_Handler,
 		},
 		{
-			MethodName: "AcceptBuyOrder",
-			Handler:    _PeerbillTrader_AcceptBuyOrder_Handler,
+			MethodName: "GetOrder",
+			Handler:    _PeerbillTrader_GetOrder_Handler,
 		},
 		{
-			MethodName: "RejectBuyOrder",
-			Handler:    _PeerbillTrader_RejectBuyOrder_Handler,
+			MethodName: "AcceptOrder",
+			Handler:    _PeerbillTrader_AcceptOrder_Handler,
+		},
+		{
+			MethodName: "RejectOrder",
+			Handler:    _PeerbillTrader_RejectOrder_Handler,
 		},
 		{
 			MethodName: "AddPaymentMethod",

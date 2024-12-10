@@ -8,27 +8,32 @@ package db
 import (
 	"context"
 	"database/sql"
+	"time"
 )
 
 const createOrder = `-- name: CreateOrder :one
 INSERT INTO orders (
-  username, escrow_address, user_address, order_type, crypto, fiat, crypto_amount, fiat_amount, rate
+  username, escrow_address, user_address, order_type, crypto, fiat, crypto_amount, fiat_amount, rate, bank_name, account_number, account_holder, duration
 ) VALUES (
-  $1, $2, $3, $4, $5, $6, $7, $8, $9
+  $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13
 )
-RETURNING id, username, escrow_address, user_address, order_type, crypto, fiat, crypto_amount, fiat_amount, rate, is_accepted, is_completed, is_rejected, is_expired, created_at, duration
+RETURNING id, username, escrow_address, user_address, order_type, crypto, fiat, crypto_amount, fiat_amount, bank_name, account_number, account_holder, rate, is_accepted, is_completed, is_rejected, is_expired, duration, created_at
 `
 
 type CreateOrderParams struct {
-	Username      string  `db:"username" json:"username"`
-	EscrowAddress string  `db:"escrow_address" json:"escrow_address"`
-	UserAddress   string  `db:"user_address" json:"user_address"`
-	OrderType     string  `db:"order_type" json:"order_type"`
-	Crypto        string  `db:"crypto" json:"crypto"`
-	Fiat          string  `db:"fiat" json:"fiat"`
-	CryptoAmount  float64 `db:"crypto_amount" json:"crypto_amount"`
-	FiatAmount    float64 `db:"fiat_amount" json:"fiat_amount"`
-	Rate          float64 `db:"rate" json:"rate"`
+	Username      string         `db:"username" json:"username"`
+	EscrowAddress string         `db:"escrow_address" json:"escrow_address"`
+	UserAddress   string         `db:"user_address" json:"user_address"`
+	OrderType     string         `db:"order_type" json:"order_type"`
+	Crypto        string         `db:"crypto" json:"crypto"`
+	Fiat          string         `db:"fiat" json:"fiat"`
+	CryptoAmount  float64        `db:"crypto_amount" json:"crypto_amount"`
+	FiatAmount    float64        `db:"fiat_amount" json:"fiat_amount"`
+	Rate          float64        `db:"rate" json:"rate"`
+	BankName      sql.NullString `db:"bank_name" json:"bank_name"`
+	AccountNumber sql.NullString `db:"account_number" json:"account_number"`
+	AccountHolder sql.NullString `db:"account_holder" json:"account_holder"`
+	Duration      time.Time      `db:"duration" json:"duration"`
 }
 
 func (q *Queries) CreateOrder(ctx context.Context, arg CreateOrderParams) (Order, error) {
@@ -42,6 +47,10 @@ func (q *Queries) CreateOrder(ctx context.Context, arg CreateOrderParams) (Order
 		arg.CryptoAmount,
 		arg.FiatAmount,
 		arg.Rate,
+		arg.BankName,
+		arg.AccountNumber,
+		arg.AccountHolder,
+		arg.Duration,
 	)
 	var i Order
 	err := row.Scan(
@@ -54,19 +63,22 @@ func (q *Queries) CreateOrder(ctx context.Context, arg CreateOrderParams) (Order
 		&i.Fiat,
 		&i.CryptoAmount,
 		&i.FiatAmount,
+		&i.BankName,
+		&i.AccountNumber,
+		&i.AccountHolder,
 		&i.Rate,
 		&i.IsAccepted,
 		&i.IsCompleted,
 		&i.IsRejected,
 		&i.IsExpired,
-		&i.CreatedAt,
 		&i.Duration,
+		&i.CreatedAt,
 	)
 	return i, err
 }
 
 const getOrder = `-- name: GetOrder :one
-SELECT id, username, escrow_address, user_address, order_type, crypto, fiat, crypto_amount, fiat_amount, rate, is_accepted, is_completed, is_rejected, is_expired, created_at, duration FROM orders
+SELECT id, username, escrow_address, user_address, order_type, crypto, fiat, crypto_amount, fiat_amount, bank_name, account_number, account_holder, rate, is_accepted, is_completed, is_rejected, is_expired, duration, created_at FROM orders
 WHERE id = $1
 AND order_type = $2
 LIMIT 1
@@ -90,20 +102,24 @@ func (q *Queries) GetOrder(ctx context.Context, arg GetOrderParams) (Order, erro
 		&i.Fiat,
 		&i.CryptoAmount,
 		&i.FiatAmount,
+		&i.BankName,
+		&i.AccountNumber,
+		&i.AccountHolder,
 		&i.Rate,
 		&i.IsAccepted,
 		&i.IsCompleted,
 		&i.IsRejected,
 		&i.IsExpired,
-		&i.CreatedAt,
 		&i.Duration,
+		&i.CreatedAt,
 	)
 	return i, err
 }
 
 const getOrders = `-- name: GetOrders :many
-SELECT id, username, escrow_address, user_address, order_type, crypto, fiat, crypto_amount, fiat_amount, rate, is_accepted, is_completed, is_rejected, is_expired, created_at, duration FROM orders
+SELECT id, username, escrow_address, user_address, order_type, crypto, fiat, crypto_amount, fiat_amount, bank_name, account_number, account_holder, rate, is_accepted, is_completed, is_rejected, is_expired, duration, created_at FROM orders
 WHERE username = $1
+AND is_completed = FALSE
 ORDER BY id
 `
 
@@ -126,13 +142,65 @@ func (q *Queries) GetOrders(ctx context.Context, username string) ([]Order, erro
 			&i.Fiat,
 			&i.CryptoAmount,
 			&i.FiatAmount,
+			&i.BankName,
+			&i.AccountNumber,
+			&i.AccountHolder,
 			&i.Rate,
 			&i.IsAccepted,
 			&i.IsCompleted,
 			&i.IsRejected,
 			&i.IsExpired,
-			&i.CreatedAt,
 			&i.Duration,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getUserOrders = `-- name: GetUserOrders :many
+SELECT id, username, escrow_address, user_address, order_type, crypto, fiat, crypto_amount, fiat_amount, bank_name, account_number, account_holder, rate, is_accepted, is_completed, is_rejected, is_expired, duration, created_at FROM orders
+WHERE user_address = $1
+ORDER BY id
+`
+
+func (q *Queries) GetUserOrders(ctx context.Context, userAddress string) ([]Order, error) {
+	rows, err := q.db.QueryContext(ctx, getUserOrders, userAddress)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []Order{}
+	for rows.Next() {
+		var i Order
+		if err := rows.Scan(
+			&i.ID,
+			&i.Username,
+			&i.EscrowAddress,
+			&i.UserAddress,
+			&i.OrderType,
+			&i.Crypto,
+			&i.Fiat,
+			&i.CryptoAmount,
+			&i.FiatAmount,
+			&i.BankName,
+			&i.AccountNumber,
+			&i.AccountHolder,
+			&i.Rate,
+			&i.IsAccepted,
+			&i.IsCompleted,
+			&i.IsRejected,
+			&i.IsExpired,
+			&i.Duration,
+			&i.CreatedAt,
 		); err != nil {
 			return nil, err
 		}

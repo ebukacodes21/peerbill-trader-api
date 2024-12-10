@@ -89,10 +89,6 @@ func ValidateCrypto(value string) error {
 	return ValidateString(value, 3, 4)
 }
 
-func ValidateType(value string) error {
-	return ValidateString(value, 3, 3)
-}
-
 func ValidateNumber(value float32) error {
 	if math.IsNaN(float64(value)) {
 		return fmt.Errorf("value cannot be NaN")
@@ -108,4 +104,14 @@ func ValidateWalletAddress(value string) error {
 		return fmt.Errorf("not a valid address")
 	}
 	return nil
+}
+
+func ValidateType(value string) error {
+	tradeTypes := []string{"buy", "sell"}
+	for _, tradeType := range tradeTypes {
+		if value == tradeType {
+			return nil
+		}
+	}
+	return fmt.Errorf("value must be either 'buy' or 'sell', but got '%s'", value)
 }

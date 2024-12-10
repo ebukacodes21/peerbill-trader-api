@@ -13,10 +13,10 @@ import (
 )
 
 const (
-	send_verify_email_task     = "task:send_verify_email"
-	send_forgot_email_task     = "task:send_forgot_email"
-	send_buy_order_email_task  = "task:send_buy_order_email"
-	send_reject_buy_order_task = "task:send_reject_buy_order"
+	send_verify_email_task = "task:send_verify_email"
+	send_forgot_email_task = "task:send_forgot_email"
+	send_order_email_task  = "task:send_order_email"
+	send_update_order_task = "task:send_update_order"
 )
 
 type SendEmailPayload struct {
@@ -71,7 +71,7 @@ func (rtd *RedisTaskDistributor) DistributeTaskSendOrderEmail(ctx context.Contex
 	if err != nil {
 		return fmt.Errorf("failed to marshal payload %w", err)
 	}
-	task := asynq.NewTask(send_buy_order_email_task, []byte(data), opts...)
+	task := asynq.NewTask(send_order_email_task, []byte(data), opts...)
 
 	info, err := rtd.client.EnqueueContext(ctx, task)
 	if err != nil {
@@ -87,14 +87,14 @@ func (rtd *RedisTaskDistributor) DistributeTaskUpdateOrder(ctx context.Context, 
 	if err != nil {
 		return fmt.Errorf("failed to marshal payload %w", err)
 	}
-	task := asynq.NewTask(send_reject_buy_order_task, []byte(data), opts...)
+	task := asynq.NewTask(send_update_order_task, []byte(data), opts...)
 
 	info, err := rtd.client.EnqueueContext(ctx, task)
 	if err != nil {
 		return fmt.Errorf("failed to queue task")
 	}
 
-	log.Info().Str("type", task.Type()).Bytes("payload", task.Payload()).Str("queue", info.Queue).Int("max_retries", info.MaxRetry).Msg("reject buy order message enqueued")
+	log.Info().Str("type", task.Type()).Bytes("payload", task.Payload()).Str("queue", info.Queue).Int("max_retries", info.MaxRetry).Msg("update order message enqueued")
 	return nil
 }
 

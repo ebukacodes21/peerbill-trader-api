@@ -3,7 +3,6 @@ syntax = "proto3";
 package pb;
 
 import "google/protobuf/timestamp.proto";
-import "google/protobuf/duration.proto";
 
 option go_package = "peerbill-trader-api/pb";
 
@@ -21,7 +20,10 @@ message Order {
     bool  is_rejected = 11;
     bool is_expired = 12;
     google.protobuf.Timestamp created_at = 13;
-    google.protobuf.Duration duration = 14;
+    google.protobuf.Timestamp duration = 14;
     string user_address = 15;
     string order_type = 16;
+    optional string bank_name = 17;
+    optional string account_number = 18;
+    optional string account_holder = 19;
 }

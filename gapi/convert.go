@@ -3,9 +3,7 @@ package gapi
 import (
 	db "peerbill-trader-api/db/sqlc"
 	"peerbill-trader-api/pb"
-	"time"
 
-	"google.golang.org/protobuf/types/known/durationpb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -107,7 +105,7 @@ func convertOrder(order db.Order) *pb.Order {
 		IsRejected:    order.IsRejected,
 		IsCompleted:   order.IsCompleted,
 		IsExpired:     order.IsExpired,
-		Duration:      durationpb.New(time.Since(order.Duration)),
+		Duration:      timestamppb.New(order.Duration),
 		CreatedAt:     timestamppb.New(order.CreatedAt),
 	}
 }
@@ -130,7 +128,7 @@ func convertOrders(Orders []db.Order) []*pb.Order {
 			IsRejected:    order.IsRejected,
 			IsCompleted:   order.IsCompleted,
 			IsExpired:     order.IsExpired,
-			Duration:      durationpb.New(time.Since(order.Duration)),
+			Duration:      timestamppb.New(order.Duration),
 			CreatedAt:     timestamppb.New(order.CreatedAt),
 		})
 	}

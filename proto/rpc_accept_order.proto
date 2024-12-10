@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package pb;
+import "order.proto";
+
+option go_package = "peerbill-trader-api/pb";
+
+message AcceptOrderRequest {
+    int64 id = 1;
+    string username = 2;
+    string escrow_address = 3;
+    string crypto = 4;
+    float amount = 5;
+    string order_type = 6;
+}
+
+message AcceptOrderResponse {
+    repeated Order orders = 1;
+}
