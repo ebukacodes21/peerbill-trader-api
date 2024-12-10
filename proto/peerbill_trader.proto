@@ -14,11 +14,12 @@ import "rpc_reset.proto";
 import "rpc_add_trade_pair.proto";
 import "rpc_update_trade_pair.proto";
 import "rpc_delete_trade_pair.proto";
-import "rpc_create_buy_order.proto";
-import "rpc_get_buy_orders.proto";
-import "rpc_get_buy_order.proto";
-import "rpc_reject_buy.proto";
-import "rpc_accept_buy_order.proto";
+import "rpc_create_order.proto";
+import "rpc_get_orders.proto";
+import "rpc_get_user_orders.proto";
+import "rpc_get_order.proto";
+import "rpc_reject_order.proto";
+import "rpc_accept_order.proto";
 import "rpc_add_payment_method.proto";
 import "rpc_update_payment_method.proto";
 import "rpc_delete_payment_method.proto";
@@ -150,54 +151,64 @@ service PeerbillTrader {
             summary: "Delete Crypto/Fiat pairs";
         };
     }
-    rpc CreateBuyOrder (CreateBuyOrderRequest) returns (CreateBuyOrderResponse) {
+    rpc CreateOrder (CreateOrderRequest) returns (CreateOrderResponse) {
         option (google.api.http) = {
-            post: "/api/create-buy-order"
+            post: "/api/create-order"
             body: "*"
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-            description: "Use this API to create buy order";
-            summary: "Create buy order";
+            description: "Use this API to create an order";
+            summary: "Create an order";
         };
     }
-    rpc GetBuyOrders (GetBuyOrdersRequest) returns (GetBuyOrdersResponse) {
+    rpc GetOrders (GetOrdersRequest) returns (GetOrdersResponse) {
         option (google.api.http) = {
-            post: "/api/get-buy-orders"
+            post: "/api/get-orders"
             body: "*"
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-            description: "Use this API to get buy orders";
-            summary: "Get buy orders";
+            description: "Use this API to get all orders";
+            summary: "Get all orders";
         };
     }
-    rpc GetBuyOrder (GetBuyOrderRequest) returns (GetBuyOrderResponse) {
+    rpc GetUserOrders (GetUserOrdersRequest) returns (GetUserOrdersResponse) {
         option (google.api.http) = {
-            post: "/api/get-buy-order"
+            post: "/api/get-user-orders"
             body: "*"
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-            description: "Use this API to get buy a single buy order";
-            summary: "Get a single buy order";
+            description: "Use this API to get user orders";
+            summary: "Get user orders";
         };
     }
-    rpc AcceptBuyOrder (AcceptBuyOrderRequest) returns (AcceptBuyOrderResponse) {
+    rpc GetOrder (GetOrderRequest) returns (GetOrderResponse) {
         option (google.api.http) = {
-            post: "/api/accept-buy"
+            post: "/api/get-order"
             body: "*"
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-            description: "Use this API to accept a buy order";
-            summary: "Accept a buy order";
+            description: "Use this API to get a single order";
+            summary: "Get a single order";
         };
     }
-    rpc RejectBuyOrder (RejectBuyOrderRequest) returns (RejectBuyOrderResponse) {
+    rpc AcceptOrder (AcceptOrderRequest) returns (AcceptOrderResponse) {
         option (google.api.http) = {
-            post: "/api/reject-buy"
+            post: "/api/accept-order"
             body: "*"
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-            description: "Use this API to reject a buy order";
-            summary: "Reject a buy order";
+            description: "Use this API to accept an order";
+            summary: "Accept an order";
+        };
+    }
+    rpc RejectOrder (RejectOrderRequest) returns (RejectOrderResponse) {
+        option (google.api.http) = {
+            post: "/api/reject-order"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            description: "Use this API to reject an order";
+            summary: "Reject an order";
         };
     }
     rpc AddPaymentMethod (AddPaymentMethodRequest) returns (AddPaymentMethodResponse) {

@@ -62,8 +62,8 @@ func (rtp *RedisTaskProcessor) Start() error {
 
 	mux.HandleFunc(send_verify_email_task, rtp.ProcessTaskSendVerifyEmail)
 	mux.HandleFunc(send_forgot_email_task, rtp.ProcessTaskSendForgotEmail)
-	mux.HandleFunc(send_buy_order_email_task, rtp.ProcessTaskOrderEmail)
-	mux.HandleFunc(send_reject_buy_order_task, rtp.ProcessTaskUpdateOrder)
+	mux.HandleFunc(send_order_email_task, rtp.ProcessTaskOrderEmail)
+	mux.HandleFunc(send_update_order_task, rtp.ProcessTaskUpdateOrder)
 
 	return rtp.server.Start(mux)
 }

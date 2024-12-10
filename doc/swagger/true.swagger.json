@@ -20,16 +20,16 @@
     "application/json"
   ],
   "paths": {
-    "/api/accept-buy": {
+    "/api/accept-order": {
       "post": {
-        "summary": "Accept a buy order",
-        "description": "Use this API to accept a buy order",
-        "operationId": "PeerbillTrader_AcceptBuyOrder",
+        "summary": "Accept an order",
+        "description": "Use this API to accept an order",
+        "operationId": "PeerbillTrader_AcceptOrder",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/pbAcceptBuyOrderResponse"
+              "$ref": "#/definitions/pbAcceptOrderResponse"
             }
           },
           "default": {
@@ -45,7 +45,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/pbAcceptBuyOrderRequest"
+              "$ref": "#/definitions/pbAcceptOrderRequest"
             }
           }
         ],
@@ -122,16 +122,16 @@
         ]
       }
     },
-    "/api/create-buy-order": {
+    "/api/create-order": {
       "post": {
-        "summary": "Create buy order",
-        "description": "Use this API to create buy order",
-        "operationId": "PeerbillTrader_CreateBuyOrder",
+        "summary": "Create an order",
+        "description": "Use this API to create an order",
+        "operationId": "PeerbillTrader_CreateOrder",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/pbCreateBuyOrderResponse"
+              "$ref": "#/definitions/pbCreateOrderResponse"
             }
           },
           "default": {
@@ -147,7 +147,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/pbCreateBuyOrderRequest"
+              "$ref": "#/definitions/pbCreateOrderRequest"
             }
           }
         ],
@@ -258,16 +258,16 @@
         ]
       }
     },
-    "/api/get-buy-order": {
+    "/api/get-order": {
       "post": {
-        "summary": "Get a single buy order",
-        "description": "Use this API to get buy a single buy order",
-        "operationId": "PeerbillTrader_GetBuyOrder",
+        "summary": "Get a single order",
+        "description": "Use this API to get a single order",
+        "operationId": "PeerbillTrader_GetOrder",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/pbGetBuyOrderResponse"
+              "$ref": "#/definitions/pbGetOrderResponse"
             }
           },
           "default": {
@@ -283,7 +283,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/pbGetBuyOrderRequest"
+              "$ref": "#/definitions/pbGetOrderRequest"
             }
           }
         ],
@@ -292,16 +292,16 @@
         ]
       }
     },
-    "/api/get-buy-orders": {
+    "/api/get-orders": {
       "post": {
-        "summary": "Get buy orders",
-        "description": "Use this API to get buy orders",
-        "operationId": "PeerbillTrader_GetBuyOrders",
+        "summary": "Get all orders",
+        "description": "Use this API to get all orders",
+        "operationId": "PeerbillTrader_GetOrders",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/pbGetBuyOrdersResponse"
+              "$ref": "#/definitions/pbGetOrdersResponse"
             }
           },
           "default": {
@@ -317,7 +317,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/pbGetBuyOrdersRequest"
+              "$ref": "#/definitions/pbGetOrdersRequest"
             }
           }
         ],
@@ -386,6 +386,40 @@
             "required": true,
             "schema": {
               "$ref": "#/definitions/pbGetTradersRequest"
+            }
+          }
+        ],
+        "tags": [
+          "PeerbillTrader"
+        ]
+      }
+    },
+    "/api/get-user-orders": {
+      "post": {
+        "summary": "Get user orders",
+        "description": "Use this API to get user orders",
+        "operationId": "PeerbillTrader_GetUserOrders",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbGetUserOrdersResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbGetUserOrdersRequest"
             }
           }
         ],
@@ -496,16 +530,16 @@
         ]
       }
     },
-    "/api/reject-buy": {
+    "/api/reject-order": {
       "post": {
-        "summary": "Reject a buy order",
-        "description": "Use this API to reject a buy order",
-        "operationId": "PeerbillTrader_RejectBuyOrder",
+        "summary": "Reject an order",
+        "description": "Use this API to reject an order",
+        "operationId": "PeerbillTrader_RejectOrder",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/pbRejectBuyOrderResponse"
+              "$ref": "#/definitions/pbRejectOrderResponse"
             }
           },
           "default": {
@@ -521,7 +555,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/pbRejectBuyOrderRequest"
+              "$ref": "#/definitions/pbRejectOrderRequest"
             }
           }
         ],
@@ -702,7 +736,7 @@
     }
   },
   "definitions": {
-    "pbAcceptBuyOrderRequest": {
+    "pbAcceptOrderRequest": {
       "type": "object",
       "properties": {
         "id": {
@@ -712,7 +746,7 @@
         "username": {
           "type": "string"
         },
-        "walletAddress": {
+        "escrowAddress": {
           "type": "string"
         },
         "crypto": {
@@ -721,13 +755,16 @@
         "amount": {
           "type": "number",
           "format": "float"
+        },
+        "orderType": {
+          "type": "string"
         }
       }
     },
-    "pbAcceptBuyOrderResponse": {
+    "pbAcceptOrderResponse": {
       "type": "object",
       "properties": {
-        "buyOrders": {
+        "orders": {
           "type": "array",
           "items": {
             "type": "object",
@@ -808,7 +845,7 @@
         }
       }
     },
-    "pbCreateBuyOrderRequest": {
+    "pbCreateOrderRequest": {
       "type": "object",
       "properties": {
         "escrowAddress": {
@@ -840,13 +877,22 @@
         },
         "orderType": {
           "type": "string"
+        },
+        "bankName": {
+          "type": "string"
+        },
+        "accountNumber": {
+          "type": "string"
+        },
+        "accountHolder": {
+          "type": "string"
         }
       }
     },
-    "pbCreateBuyOrderResponse": {
+    "pbCreateOrderResponse": {
       "type": "object",
       "properties": {
-        "buyOrder": {
+        "order": {
           "$ref": "#/definitions/pbOrder"
         }
       }
@@ -915,7 +961,7 @@
         }
       }
     },
-    "pbGetBuyOrderRequest": {
+    "pbGetOrderRequest": {
       "type": "object",
       "properties": {
         "id": {
@@ -927,15 +973,15 @@
         }
       }
     },
-    "pbGetBuyOrderResponse": {
+    "pbGetOrderResponse": {
       "type": "object",
       "properties": {
-        "buyOrder": {
+        "order": {
           "$ref": "#/definitions/pbOrder"
         }
       }
     },
-    "pbGetBuyOrdersRequest": {
+    "pbGetOrdersRequest": {
       "type": "object",
       "properties": {
         "username": {
@@ -943,10 +989,10 @@
         }
       }
     },
-    "pbGetBuyOrdersResponse": {
+    "pbGetOrdersResponse": {
       "type": "object",
       "properties": {
-        "buyOrders": {
+        "orders": {
           "type": "array",
           "items": {
             "type": "object",
@@ -996,6 +1042,26 @@
           "items": {
             "type": "object",
             "$ref": "#/definitions/pbTraderWithDetails"
+          }
+        }
+      }
+    },
+    "pbGetUserOrdersRequest": {
+      "type": "object",
+      "properties": {
+        "userAddress": {
+          "type": "string"
+        }
+      }
+    },
+    "pbGetUserOrdersResponse": {
+      "type": "object",
+      "properties": {
+        "orders": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/pbOrder"
           }
         }
       }
@@ -1114,12 +1180,22 @@
           "format": "date-time"
         },
         "duration": {
-          "type": "string"
+          "type": "string",
+          "format": "date-time"
         },
         "userAddress": {
           "type": "string"
         },
         "orderType": {
+          "type": "string"
+        },
+        "bankName": {
+          "type": "string"
+        },
+        "accountNumber": {
+          "type": "string"
+        },
+        "accountHolder": {
           "type": "string"
         }
       }
@@ -1188,7 +1264,7 @@
         }
       }
     },
-    "pbRejectBuyOrderRequest": {
+    "pbRejectOrderRequest": {
       "type": "object",
       "properties": {
         "id": {
@@ -1203,10 +1279,10 @@
         }
       }
     },
-    "pbRejectBuyOrderResponse": {
+    "pbRejectOrderResponse": {
       "type": "object",
       "properties": {
-        "buyOrders": {
+        "orders": {
           "type": "array",
           "items": {
             "type": "object",

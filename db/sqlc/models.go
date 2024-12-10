@@ -12,22 +12,25 @@ import (
 )
 
 type Order struct {
-	ID            int64     `db:"id" json:"id"`
-	Username      string    `db:"username" json:"username"`
-	EscrowAddress string    `db:"escrow_address" json:"escrow_address"`
-	UserAddress   string    `db:"user_address" json:"user_address"`
-	OrderType     string    `db:"order_type" json:"order_type"`
-	Crypto        string    `db:"crypto" json:"crypto"`
-	Fiat          string    `db:"fiat" json:"fiat"`
-	CryptoAmount  float64   `db:"crypto_amount" json:"crypto_amount"`
-	FiatAmount    float64   `db:"fiat_amount" json:"fiat_amount"`
-	Rate          float64   `db:"rate" json:"rate"`
-	IsAccepted    bool      `db:"is_accepted" json:"is_accepted"`
-	IsCompleted   bool      `db:"is_completed" json:"is_completed"`
-	IsRejected    bool      `db:"is_rejected" json:"is_rejected"`
-	IsExpired     bool      `db:"is_expired" json:"is_expired"`
-	CreatedAt     time.Time `db:"created_at" json:"created_at"`
-	Duration      time.Time `db:"duration" json:"duration"`
+	ID            int64          `db:"id" json:"id"`
+	Username      string         `db:"username" json:"username"`
+	EscrowAddress string         `db:"escrow_address" json:"escrow_address"`
+	UserAddress   string         `db:"user_address" json:"user_address"`
+	OrderType     string         `db:"order_type" json:"order_type"`
+	Crypto        string         `db:"crypto" json:"crypto"`
+	Fiat          string         `db:"fiat" json:"fiat"`
+	CryptoAmount  float64        `db:"crypto_amount" json:"crypto_amount"`
+	FiatAmount    float64        `db:"fiat_amount" json:"fiat_amount"`
+	BankName      sql.NullString `db:"bank_name" json:"bank_name"`
+	AccountNumber sql.NullString `db:"account_number" json:"account_number"`
+	AccountHolder sql.NullString `db:"account_holder" json:"account_holder"`
+	Rate          float64        `db:"rate" json:"rate"`
+	IsAccepted    bool           `db:"is_accepted" json:"is_accepted"`
+	IsCompleted   bool           `db:"is_completed" json:"is_completed"`
+	IsRejected    bool           `db:"is_rejected" json:"is_rejected"`
+	IsExpired     bool           `db:"is_expired" json:"is_expired"`
+	Duration      time.Time      `db:"duration" json:"duration"`
+	CreatedAt     time.Time      `db:"created_at" json:"created_at"`
 }
 
 type PaymentMethod struct {

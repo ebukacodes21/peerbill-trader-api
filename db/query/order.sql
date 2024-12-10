@@ -1,14 +1,20 @@
 -- name: CreateOrder :one
 INSERT INTO orders (
-  username, escrow_address, user_address, order_type, crypto, fiat, crypto_amount, fiat_amount, rate
+  username, escrow_address, user_address, order_type, crypto, fiat, crypto_amount, fiat_amount, rate, bank_name, account_number, account_holder, duration
 ) VALUES (
-  $1, $2, $3, $4, $5, $6, $7, $8, $9
+  $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13
 )
 RETURNING *;
 
 -- name: GetOrders :many
 SELECT * FROM orders
 WHERE username = $1
+AND is_completed = FALSE
+ORDER BY id;
+
+-- name: GetUserOrders :many
+SELECT * FROM orders
+WHERE user_address = $1
 ORDER BY id;
 
 -- name: GetOrder :one

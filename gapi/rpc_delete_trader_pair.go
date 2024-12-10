@@ -33,7 +33,7 @@ func (s *Server) DeleteTraderPair(ctx context.Context, req *pb.DeleteTradePairRe
 
 	err = s.repository.DeleteTradePair(ctx, args)
 	if err != nil {
-		return nil, status.Errorf(codes.Internal, "unable to delete trade pair")
+		return nil, status.Errorf(codes.Internal, "unable to delete trade pair %s", err)
 	}
 
 	traderPairs, err := s.repository.GetTraderPairs(ctx, authPayload.Username)

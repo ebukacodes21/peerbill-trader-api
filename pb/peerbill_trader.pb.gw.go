@@ -317,132 +317,158 @@ func local_request_PeerbillTrader_DeleteTraderPair_0(ctx context.Context, marsha
 
 }
 
-func request_PeerbillTrader_CreateBuyOrder_0(ctx context.Context, marshaler runtime.Marshaler, client PeerbillTraderClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq CreateBuyOrderRequest
+func request_PeerbillTrader_CreateOrder_0(ctx context.Context, marshaler runtime.Marshaler, client PeerbillTraderClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq CreateOrderRequest
 	var metadata runtime.ServerMetadata
 
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := client.CreateBuyOrder(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.CreateOrder(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
 }
 
-func local_request_PeerbillTrader_CreateBuyOrder_0(ctx context.Context, marshaler runtime.Marshaler, server PeerbillTraderServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq CreateBuyOrderRequest
+func local_request_PeerbillTrader_CreateOrder_0(ctx context.Context, marshaler runtime.Marshaler, server PeerbillTraderServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq CreateOrderRequest
 	var metadata runtime.ServerMetadata
 
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := server.CreateBuyOrder(ctx, &protoReq)
+	msg, err := server.CreateOrder(ctx, &protoReq)
 	return msg, metadata, err
 
 }
 
-func request_PeerbillTrader_GetBuyOrders_0(ctx context.Context, marshaler runtime.Marshaler, client PeerbillTraderClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq GetBuyOrdersRequest
+func request_PeerbillTrader_GetOrders_0(ctx context.Context, marshaler runtime.Marshaler, client PeerbillTraderClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq GetOrdersRequest
 	var metadata runtime.ServerMetadata
 
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := client.GetBuyOrders(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.GetOrders(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
 }
 
-func local_request_PeerbillTrader_GetBuyOrders_0(ctx context.Context, marshaler runtime.Marshaler, server PeerbillTraderServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq GetBuyOrdersRequest
+func local_request_PeerbillTrader_GetOrders_0(ctx context.Context, marshaler runtime.Marshaler, server PeerbillTraderServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq GetOrdersRequest
 	var metadata runtime.ServerMetadata
 
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := server.GetBuyOrders(ctx, &protoReq)
+	msg, err := server.GetOrders(ctx, &protoReq)
 	return msg, metadata, err
 
 }
 
-func request_PeerbillTrader_GetBuyOrder_0(ctx context.Context, marshaler runtime.Marshaler, client PeerbillTraderClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq GetBuyOrderRequest
+func request_PeerbillTrader_GetUserOrders_0(ctx context.Context, marshaler runtime.Marshaler, client PeerbillTraderClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq GetUserOrdersRequest
 	var metadata runtime.ServerMetadata
 
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := client.GetBuyOrder(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.GetUserOrders(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
 }
 
-func local_request_PeerbillTrader_GetBuyOrder_0(ctx context.Context, marshaler runtime.Marshaler, server PeerbillTraderServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq GetBuyOrderRequest
+func local_request_PeerbillTrader_GetUserOrders_0(ctx context.Context, marshaler runtime.Marshaler, server PeerbillTraderServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq GetUserOrdersRequest
 	var metadata runtime.ServerMetadata
 
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := server.GetBuyOrder(ctx, &protoReq)
+	msg, err := server.GetUserOrders(ctx, &protoReq)
 	return msg, metadata, err
 
 }
 
-func request_PeerbillTrader_AcceptBuyOrder_0(ctx context.Context, marshaler runtime.Marshaler, client PeerbillTraderClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq AcceptBuyOrderRequest
+func request_PeerbillTrader_GetOrder_0(ctx context.Context, marshaler runtime.Marshaler, client PeerbillTraderClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq GetOrderRequest
 	var metadata runtime.ServerMetadata
 
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := client.AcceptBuyOrder(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.GetOrder(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
 }
 
-func local_request_PeerbillTrader_AcceptBuyOrder_0(ctx context.Context, marshaler runtime.Marshaler, server PeerbillTraderServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq AcceptBuyOrderRequest
+func local_request_PeerbillTrader_GetOrder_0(ctx context.Context, marshaler runtime.Marshaler, server PeerbillTraderServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq GetOrderRequest
 	var metadata runtime.ServerMetadata
 
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := server.AcceptBuyOrder(ctx, &protoReq)
+	msg, err := server.GetOrder(ctx, &protoReq)
 	return msg, metadata, err
 
 }
 
-func request_PeerbillTrader_RejectBuyOrder_0(ctx context.Context, marshaler runtime.Marshaler, client PeerbillTraderClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq RejectBuyOrderRequest
+func request_PeerbillTrader_AcceptOrder_0(ctx context.Context, marshaler runtime.Marshaler, client PeerbillTraderClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq AcceptOrderRequest
 	var metadata runtime.ServerMetadata
 
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := client.RejectBuyOrder(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.AcceptOrder(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 
 }
 
-func local_request_PeerbillTrader_RejectBuyOrder_0(ctx context.Context, marshaler runtime.Marshaler, server PeerbillTraderServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq RejectBuyOrderRequest
+func local_request_PeerbillTrader_AcceptOrder_0(ctx context.Context, marshaler runtime.Marshaler, server PeerbillTraderServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq AcceptOrderRequest
 	var metadata runtime.ServerMetadata
 
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
-	msg, err := server.RejectBuyOrder(ctx, &protoReq)
+	msg, err := server.AcceptOrder(ctx, &protoReq)
+	return msg, metadata, err
+
+}
+
+func request_PeerbillTrader_RejectOrder_0(ctx context.Context, marshaler runtime.Marshaler, client PeerbillTraderClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq RejectOrderRequest
+	var metadata runtime.ServerMetadata
+
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+
+	msg, err := client.RejectOrder(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+
+}
+
+func local_request_PeerbillTrader_RejectOrder_0(ctx context.Context, marshaler runtime.Marshaler, server PeerbillTraderServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq RejectOrderRequest
+	var metadata runtime.ServerMetadata
+
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+
+	msg, err := server.RejectOrder(ctx, &protoReq)
 	return msg, metadata, err
 
 }
@@ -833,7 +859,7 @@ func RegisterPeerbillTraderHandlerServer(ctx context.Context, mux *runtime.Serve
 
 	})
 
-	mux.Handle("POST", pattern_PeerbillTrader_CreateBuyOrder_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_PeerbillTrader_CreateOrder_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -841,12 +867,12 @@ func RegisterPeerbillTraderHandlerServer(ctx context.Context, mux *runtime.Serve
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pb.PeerbillTrader/CreateBuyOrder", runtime.WithHTTPPathPattern("/api/create-buy-order"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pb.PeerbillTrader/CreateOrder", runtime.WithHTTPPathPattern("/api/create-order"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_PeerbillTrader_CreateBuyOrder_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_PeerbillTrader_CreateOrder_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
@@ -854,11 +880,11 @@ func RegisterPeerbillTraderHandlerServer(ctx context.Context, mux *runtime.Serve
 			return
 		}
 
-		forward_PeerbillTrader_CreateBuyOrder_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_PeerbillTrader_CreateOrder_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("POST", pattern_PeerbillTrader_GetBuyOrders_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_PeerbillTrader_GetOrders_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -866,12 +892,12 @@ func RegisterPeerbillTraderHandlerServer(ctx context.Context, mux *runtime.Serve
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pb.PeerbillTrader/GetBuyOrders", runtime.WithHTTPPathPattern("/api/get-buy-orders"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pb.PeerbillTrader/GetOrders", runtime.WithHTTPPathPattern("/api/get-orders"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_PeerbillTrader_GetBuyOrders_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_PeerbillTrader_GetOrders_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
@@ -879,11 +905,11 @@ func RegisterPeerbillTraderHandlerServer(ctx context.Context, mux *runtime.Serve
 			return
 		}
 
-		forward_PeerbillTrader_GetBuyOrders_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_PeerbillTrader_GetOrders_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("POST", pattern_PeerbillTrader_GetBuyOrder_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_PeerbillTrader_GetUserOrders_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -891,12 +917,12 @@ func RegisterPeerbillTraderHandlerServer(ctx context.Context, mux *runtime.Serve
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pb.PeerbillTrader/GetBuyOrder", runtime.WithHTTPPathPattern("/api/get-buy-order"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pb.PeerbillTrader/GetUserOrders", runtime.WithHTTPPathPattern("/api/get-user-orders"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_PeerbillTrader_GetBuyOrder_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_PeerbillTrader_GetUserOrders_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
@@ -904,11 +930,11 @@ func RegisterPeerbillTraderHandlerServer(ctx context.Context, mux *runtime.Serve
 			return
 		}
 
-		forward_PeerbillTrader_GetBuyOrder_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_PeerbillTrader_GetUserOrders_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("POST", pattern_PeerbillTrader_AcceptBuyOrder_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_PeerbillTrader_GetOrder_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -916,12 +942,12 @@ func RegisterPeerbillTraderHandlerServer(ctx context.Context, mux *runtime.Serve
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pb.PeerbillTrader/AcceptBuyOrder", runtime.WithHTTPPathPattern("/api/accept-buy"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pb.PeerbillTrader/GetOrder", runtime.WithHTTPPathPattern("/api/get-order"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_PeerbillTrader_AcceptBuyOrder_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_PeerbillTrader_GetOrder_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
@@ -929,11 +955,11 @@ func RegisterPeerbillTraderHandlerServer(ctx context.Context, mux *runtime.Serve
 			return
 		}
 
-		forward_PeerbillTrader_AcceptBuyOrder_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_PeerbillTrader_GetOrder_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("POST", pattern_PeerbillTrader_RejectBuyOrder_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_PeerbillTrader_AcceptOrder_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
@@ -941,12 +967,12 @@ func RegisterPeerbillTraderHandlerServer(ctx context.Context, mux *runtime.Serve
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pb.PeerbillTrader/RejectBuyOrder", runtime.WithHTTPPathPattern("/api/reject-buy"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pb.PeerbillTrader/AcceptOrder", runtime.WithHTTPPathPattern("/api/accept-order"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_PeerbillTrader_RejectBuyOrder_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_PeerbillTrader_AcceptOrder_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
@@ -954,7 +980,32 @@ func RegisterPeerbillTraderHandlerServer(ctx context.Context, mux *runtime.Serve
 			return
 		}
 
-		forward_PeerbillTrader_RejectBuyOrder_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_PeerbillTrader_AcceptOrder_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+
+	})
+
+	mux.Handle("POST", pattern_PeerbillTrader_RejectOrder_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/pb.PeerbillTrader/RejectOrder", runtime.WithHTTPPathPattern("/api/reject-order"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_PeerbillTrader_RejectOrder_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		forward_PeerbillTrader_RejectOrder_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -1341,113 +1392,135 @@ func RegisterPeerbillTraderHandlerClient(ctx context.Context, mux *runtime.Serve
 
 	})
 
-	mux.Handle("POST", pattern_PeerbillTrader_CreateBuyOrder_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_PeerbillTrader_CreateOrder_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/pb.PeerbillTrader/CreateBuyOrder", runtime.WithHTTPPathPattern("/api/create-buy-order"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/pb.PeerbillTrader/CreateOrder", runtime.WithHTTPPathPattern("/api/create-order"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_PeerbillTrader_CreateBuyOrder_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_PeerbillTrader_CreateOrder_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_PeerbillTrader_CreateBuyOrder_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_PeerbillTrader_CreateOrder_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("POST", pattern_PeerbillTrader_GetBuyOrders_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_PeerbillTrader_GetOrders_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/pb.PeerbillTrader/GetBuyOrders", runtime.WithHTTPPathPattern("/api/get-buy-orders"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/pb.PeerbillTrader/GetOrders", runtime.WithHTTPPathPattern("/api/get-orders"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_PeerbillTrader_GetBuyOrders_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_PeerbillTrader_GetOrders_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_PeerbillTrader_GetBuyOrders_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_PeerbillTrader_GetOrders_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("POST", pattern_PeerbillTrader_GetBuyOrder_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_PeerbillTrader_GetUserOrders_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/pb.PeerbillTrader/GetBuyOrder", runtime.WithHTTPPathPattern("/api/get-buy-order"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/pb.PeerbillTrader/GetUserOrders", runtime.WithHTTPPathPattern("/api/get-user-orders"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_PeerbillTrader_GetBuyOrder_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_PeerbillTrader_GetUserOrders_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_PeerbillTrader_GetBuyOrder_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_PeerbillTrader_GetUserOrders_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("POST", pattern_PeerbillTrader_AcceptBuyOrder_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_PeerbillTrader_GetOrder_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/pb.PeerbillTrader/AcceptBuyOrder", runtime.WithHTTPPathPattern("/api/accept-buy"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/pb.PeerbillTrader/GetOrder", runtime.WithHTTPPathPattern("/api/get-order"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_PeerbillTrader_AcceptBuyOrder_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_PeerbillTrader_GetOrder_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_PeerbillTrader_AcceptBuyOrder_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_PeerbillTrader_GetOrder_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("POST", pattern_PeerbillTrader_RejectBuyOrder_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_PeerbillTrader_AcceptOrder_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/pb.PeerbillTrader/RejectBuyOrder", runtime.WithHTTPPathPattern("/api/reject-buy"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/pb.PeerbillTrader/AcceptOrder", runtime.WithHTTPPathPattern("/api/accept-order"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_PeerbillTrader_RejectBuyOrder_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_PeerbillTrader_AcceptOrder_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_PeerbillTrader_RejectBuyOrder_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_PeerbillTrader_AcceptOrder_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+
+	})
+
+	mux.Handle("POST", pattern_PeerbillTrader_RejectOrder_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		var err error
+		var annotatedContext context.Context
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/pb.PeerbillTrader/RejectOrder", runtime.WithHTTPPathPattern("/api/reject-order"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_PeerbillTrader_RejectOrder_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		forward_PeerbillTrader_RejectOrder_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -1565,15 +1638,17 @@ var (
 
 	pattern_PeerbillTrader_DeleteTraderPair_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"api", "delete-trader-pair"}, ""))
 
-	pattern_PeerbillTrader_CreateBuyOrder_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"api", "create-buy-order"}, ""))
+	pattern_PeerbillTrader_CreateOrder_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"api", "create-order"}, ""))
 
-	pattern_PeerbillTrader_GetBuyOrders_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"api", "get-buy-orders"}, ""))
+	pattern_PeerbillTrader_GetOrders_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"api", "get-orders"}, ""))
 
-	pattern_PeerbillTrader_GetBuyOrder_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"api", "get-buy-order"}, ""))
+	pattern_PeerbillTrader_GetUserOrders_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"api", "get-user-orders"}, ""))
 
-	pattern_PeerbillTrader_AcceptBuyOrder_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"api", "accept-buy"}, ""))
+	pattern_PeerbillTrader_GetOrder_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"api", "get-order"}, ""))
 
-	pattern_PeerbillTrader_RejectBuyOrder_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"api", "reject-buy"}, ""))
+	pattern_PeerbillTrader_AcceptOrder_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"api", "accept-order"}, ""))
+
+	pattern_PeerbillTrader_RejectOrder_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"api", "reject-order"}, ""))
 
 	pattern_PeerbillTrader_AddPaymentMethod_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"api", "add-trader-payment-method"}, ""))
 
@@ -1607,15 +1682,17 @@ var (
 
 	forward_PeerbillTrader_DeleteTraderPair_0 = runtime.ForwardResponseMessage
 
-	forward_PeerbillTrader_CreateBuyOrder_0 = runtime.ForwardResponseMessage
+	forward_PeerbillTrader_CreateOrder_0 = runtime.ForwardResponseMessage
 
-	forward_PeerbillTrader_GetBuyOrders_0 = runtime.ForwardResponseMessage
+	forward_PeerbillTrader_GetOrders_0 = runtime.ForwardResponseMessage
 
-	forward_PeerbillTrader_GetBuyOrder_0 = runtime.ForwardResponseMessage
+	forward_PeerbillTrader_GetUserOrders_0 = runtime.ForwardResponseMessage
 
-	forward_PeerbillTrader_AcceptBuyOrder_0 = runtime.ForwardResponseMessage
+	forward_PeerbillTrader_GetOrder_0 = runtime.ForwardResponseMessage
 
-	forward_PeerbillTrader_RejectBuyOrder_0 = runtime.ForwardResponseMessage
+	forward_PeerbillTrader_AcceptOrder_0 = runtime.ForwardResponseMessage
+
+	forward_PeerbillTrader_RejectOrder_0 = runtime.ForwardResponseMessage
 
 	forward_PeerbillTrader_AddPaymentMethod_0 = runtime.ForwardResponseMessage
 

@@ -29,6 +29,7 @@ type Querier interface {
 	GetTraderEmail(ctx context.Context, email string) (Trader, error)
 	GetTraderPairs(ctx context.Context, username string) ([]TradePair, error)
 	GetTraders(ctx context.Context, arg GetTradersParams) ([]Trader, error)
+	GetUserOrders(ctx context.Context, userAddress string) ([]Order, error)
 	Logout(ctx context.Context, id uuid.UUID) error
 	UpdateOrder(ctx context.Context, arg UpdateOrderParams) error
 	UpdatePaymentMethod(ctx context.Context, arg UpdatePaymentMethodParams) error
