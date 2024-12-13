@@ -4,7 +4,7 @@ package pb;
 
 import "order.proto";
 
-option go_package = "peerbill-trader-api/pb";
+option go_package = "github.com/ebukacodes21/peerbill-trader-api/pb";
 
 message RejectOrderRequest {
     int64 id = 1;

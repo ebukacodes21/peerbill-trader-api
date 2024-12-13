@@ -4,13 +4,14 @@ import (
 	"context"
 	"log"
 	"net/http"
-	db "peerbill-trader-api/db/sqlc"
-	"peerbill-trader-api/gapi"
-	"peerbill-trader-api/pb"
-	"peerbill-trader-api/utils"
-	"peerbill-trader-api/worker"
 
-	_ "peerbill-trader-api/doc/statik"
+	db "github.com/ebukacodes21/peerbill-trader-api/db/sqlc"
+	"github.com/ebukacodes21/peerbill-trader-api/gapi"
+	"github.com/ebukacodes21/peerbill-trader-api/pb"
+	"github.com/ebukacodes21/peerbill-trader-api/utils"
+	"github.com/ebukacodes21/peerbill-trader-api/worker"
+
+	_ "github.com/ebukacodes21/peerbill-trader-api/doc/statik"
 
 	"github.com/rakyll/statik/fs"
 

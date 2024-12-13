@@ -3,8 +3,8 @@ package gapi
 import (
 	"context"
 
-	"peerbill-trader-api/pb"
-	"peerbill-trader-api/validate"
+	"github.com/ebukacodes21/peerbill-trader-api/pb"
+	"github.com/ebukacodes21/peerbill-trader-api/validate"
 
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc/codes"

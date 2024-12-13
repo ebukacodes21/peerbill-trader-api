@@ -8,9 +8,9 @@ import (
 
 	// "github.com/go-redis/redis/v8"
 
-	db "peerbill-trader-api/db/sqlc"
-	"peerbill-trader-api/pb"
-	"peerbill-trader-api/validate"
+	db "github.com/ebukacodes21/peerbill-trader-api/db/sqlc"
+	"github.com/ebukacodes21/peerbill-trader-api/pb"
+	"github.com/ebukacodes21/peerbill-trader-api/validate"
 
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc/codes"

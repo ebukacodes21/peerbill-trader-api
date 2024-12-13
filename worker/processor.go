@@ -2,11 +2,12 @@ package worker
 
 import (
 	"context"
-	db "peerbill-trader-api/db/sqlc"
-	"peerbill-trader-api/mail"
-	"peerbill-trader-api/socket"
-	"peerbill-trader-api/token"
-	"peerbill-trader-api/utils"
+
+	db "github.com/ebukacodes21/peerbill-trader-api/db/sqlc"
+	"github.com/ebukacodes21/peerbill-trader-api/mail"
+	"github.com/ebukacodes21/peerbill-trader-api/socket"
+	"github.com/ebukacodes21/peerbill-trader-api/token"
+	"github.com/ebukacodes21/peerbill-trader-api/utils"
 
 	"github.com/go-redis/redis/v8"
 	"github.com/hibiken/asynq"

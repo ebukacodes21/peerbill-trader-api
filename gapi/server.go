@@ -2,11 +2,12 @@ package gapi
 
 import (
 	"fmt"
-	db "peerbill-trader-api/db/sqlc"
-	"peerbill-trader-api/pb"
-	"peerbill-trader-api/token"
-	"peerbill-trader-api/utils"
-	"peerbill-trader-api/worker"
+
+	db "github.com/ebukacodes21/peerbill-trader-api/db/sqlc"
+	"github.com/ebukacodes21/peerbill-trader-api/pb"
+	"github.com/ebukacodes21/peerbill-trader-api/token"
+	"github.com/ebukacodes21/peerbill-trader-api/utils"
+	"github.com/ebukacodes21/peerbill-trader-api/worker"
 )
 
 type Server struct {

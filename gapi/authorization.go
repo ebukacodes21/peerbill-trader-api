@@ -3,8 +3,9 @@ package gapi
 import (
 	"context"
 	"fmt"
-	"peerbill-trader-api/token"
 	"strings"
+
+	"github.com/ebukacodes21/peerbill-trader-api/token"
 
 	"google.golang.org/grpc/metadata"
 )

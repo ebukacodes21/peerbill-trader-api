@@ -3,11 +3,12 @@ package gapi
 import (
 	"context"
 	"database/sql"
-	db "peerbill-trader-api/db/sqlc"
-	"peerbill-trader-api/pb"
-	"peerbill-trader-api/validate"
-	"peerbill-trader-api/worker"
 	"time"
+
+	db "github.com/ebukacodes21/peerbill-trader-api/db/sqlc"
+	"github.com/ebukacodes21/peerbill-trader-api/pb"
+	"github.com/ebukacodes21/peerbill-trader-api/validate"
+	"github.com/ebukacodes21/peerbill-trader-api/worker"
 
 	"github.com/hibiken/asynq"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
