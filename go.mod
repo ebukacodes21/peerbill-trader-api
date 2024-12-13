@@ -1,4 +1,4 @@
-module peerbill-trader-api
+module github.com/ebukacodes21/peerbill-trader-api
 
 go 1.23.2
 
