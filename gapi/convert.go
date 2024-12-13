@@ -104,7 +104,7 @@ func convertOrder(order db.Order) *pb.Order {
 		IsAccepted:    order.IsAccepted,
 		IsRejected:    order.IsRejected,
 		IsCompleted:   order.IsCompleted,
-		IsExpired:     order.IsExpired,
+		IsReceived:    order.IsReceived,
 		Duration:      timestamppb.New(order.Duration),
 		CreatedAt:     timestamppb.New(order.CreatedAt),
 	}
@@ -127,7 +127,7 @@ func convertOrders(Orders []db.Order) []*pb.Order {
 			IsAccepted:    order.IsAccepted,
 			IsRejected:    order.IsRejected,
 			IsCompleted:   order.IsCompleted,
-			IsExpired:     order.IsExpired,
+			IsReceived:    order.IsReceived,
 			Duration:      timestamppb.New(order.Duration),
 			CreatedAt:     timestamppb.New(order.CreatedAt),
 		})

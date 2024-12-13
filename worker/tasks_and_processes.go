@@ -13,10 +13,11 @@ import (
 )
 
 const (
-	send_verify_email_task = "task:send_verify_email"
-	send_forgot_email_task = "task:send_forgot_email"
-	send_order_email_task  = "task:send_order_email"
-	send_update_order_task = "task:send_update_order"
+	send_verify_email_task  = "task:send_verify_email"
+	send_forgot_email_task  = "task:send_forgot_email"
+	send_order_email_task   = "task:send_order_email"
+	send_update_order_task  = "task:send_update_order"
+	send_update_orders_task = "task:send_update_orders"
 )
 
 type SendEmailPayload struct {
@@ -95,6 +96,22 @@ func (rtd *RedisTaskDistributor) DistributeTaskUpdateOrder(ctx context.Context, 
 	}
 
 	log.Info().Str("type", task.Type()).Bytes("payload", task.Payload()).Str("queue", info.Queue).Int("max_retries", info.MaxRetry).Msg("update order message enqueued")
+	return nil
+}
+
+func (rtd *RedisTaskDistributor) DistributeTaskUpdateOrders(ctx context.Context, payload *UpdateOrderPayload, opts ...asynq.Option) error {
+	data, err := json.Marshal(payload)
+	if err != nil {
+		return fmt.Errorf("failed to marshal payload %w", err)
+	}
+	task := asynq.NewTask(send_update_orders_task, []byte(data), opts...)
+
+	info, err := rtd.client.EnqueueContext(ctx, task)
+	if err != nil {
+		return fmt.Errorf("failed to queue task")
+	}
+
+	log.Info().Str("type", task.Type()).Bytes("payload", task.Payload()).Str("queue", info.Queue).Int("max_retries", info.MaxRetry).Msg("update orders message enqueued")
 	return nil
 }
 
@@ -243,6 +260,31 @@ func (rtp *RedisTaskProcessor) ProcessTaskUpdateOrder(ctx context.Context, task 
 		Str("type", task.Type()).
 		Bytes("payload", task.Payload()).
 		Msg("order processed")
+
+	return nil
+}
+
+func (rtp *RedisTaskProcessor) ProcessTaskUpdateOrders(ctx context.Context, task *asynq.Task) error {
+	var payload UpdateOrderPayload
+	if err := json.Unmarshal(task.Payload(), &payload); err != nil {
+		return asynq.SkipRetry
+	}
+
+	orders, err := rtp.repository.GetOrders(ctx, payload.Username)
+	if err != nil {
+		return fmt.Errorf("failed to fetch updated orders: %w", err)
+	}
+
+	// Broadcast the updated orders to all connected WebSocket client
+	err = rtp.wsManager.Broadcast(orders, "get-orders")
+	if err != nil {
+		return fmt.Errorf("failed to broadcast orders via WebSocket: %w", err)
+	}
+
+	log.Info().
+		Str("type", task.Type()).
+		Bytes("payload", task.Payload()).
+		Msg("orders processed")
 
 	return nil
 }

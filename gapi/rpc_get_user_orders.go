@@ -2,7 +2,7 @@ package gapi
 
 import (
 	"context"
-	"log"
+
 	"peerbill-trader-api/pb"
 	"peerbill-trader-api/validate"
 
@@ -12,7 +12,6 @@ import (
 )
 
 func (s *Server) GetUserOrders(ctx context.Context, req *pb.GetUserOrdersRequest) (*pb.GetUserOrdersResponse, error) {
-	log.Print(req.GetUserAddress())
 	violations := validateGetUserOrdersRequest(req)
 	if violations != nil {
 		return nil, invalidArgumentError(violations)
@@ -20,6 +19,7 @@ func (s *Server) GetUserOrders(ctx context.Context, req *pb.GetUserOrdersRequest
 
 	// Fetch initial orders to send the first response immediately
 	orders, err := s.repository.GetUserOrders(ctx, req.GetUserAddress())
+
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to fetch user orders")
 	}

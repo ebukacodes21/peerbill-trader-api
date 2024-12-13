@@ -115,3 +115,7 @@ func ValidateType(value string) error {
 	}
 	return fmt.Errorf("value must be either 'buy' or 'sell', but got '%s'", value)
 }
+
+func ValidateReceivedPayment(value bool) error {
+	return nil
+}

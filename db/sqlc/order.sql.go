@@ -17,7 +17,7 @@ INSERT INTO orders (
 ) VALUES (
   $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13
 )
-RETURNING id, username, escrow_address, user_address, order_type, crypto, fiat, crypto_amount, fiat_amount, bank_name, account_number, account_holder, rate, is_accepted, is_completed, is_rejected, is_expired, duration, created_at
+RETURNING id, username, escrow_address, user_address, order_type, crypto, fiat, crypto_amount, fiat_amount, bank_name, account_number, account_holder, rate, is_accepted, is_completed, is_rejected, is_received, duration, created_at
 `
 
 type CreateOrderParams struct {
@@ -70,7 +70,7 @@ func (q *Queries) CreateOrder(ctx context.Context, arg CreateOrderParams) (Order
 		&i.IsAccepted,
 		&i.IsCompleted,
 		&i.IsRejected,
-		&i.IsExpired,
+		&i.IsReceived,
 		&i.Duration,
 		&i.CreatedAt,
 	)
@@ -78,7 +78,7 @@ func (q *Queries) CreateOrder(ctx context.Context, arg CreateOrderParams) (Order
 }
 
 const getOrder = `-- name: GetOrder :one
-SELECT id, username, escrow_address, user_address, order_type, crypto, fiat, crypto_amount, fiat_amount, bank_name, account_number, account_holder, rate, is_accepted, is_completed, is_rejected, is_expired, duration, created_at FROM orders
+SELECT id, username, escrow_address, user_address, order_type, crypto, fiat, crypto_amount, fiat_amount, bank_name, account_number, account_holder, rate, is_accepted, is_completed, is_rejected, is_received, duration, created_at FROM orders
 WHERE id = $1
 AND order_type = $2
 LIMIT 1
@@ -109,7 +109,7 @@ func (q *Queries) GetOrder(ctx context.Context, arg GetOrderParams) (Order, erro
 		&i.IsAccepted,
 		&i.IsCompleted,
 		&i.IsRejected,
-		&i.IsExpired,
+		&i.IsReceived,
 		&i.Duration,
 		&i.CreatedAt,
 	)
@@ -117,9 +117,8 @@ func (q *Queries) GetOrder(ctx context.Context, arg GetOrderParams) (Order, erro
 }
 
 const getOrders = `-- name: GetOrders :many
-SELECT id, username, escrow_address, user_address, order_type, crypto, fiat, crypto_amount, fiat_amount, bank_name, account_number, account_holder, rate, is_accepted, is_completed, is_rejected, is_expired, duration, created_at FROM orders
+SELECT id, username, escrow_address, user_address, order_type, crypto, fiat, crypto_amount, fiat_amount, bank_name, account_number, account_holder, rate, is_accepted, is_completed, is_rejected, is_received, duration, created_at FROM orders
 WHERE username = $1
-AND is_completed = FALSE
 ORDER BY id
 `
 
@@ -149,7 +148,7 @@ func (q *Queries) GetOrders(ctx context.Context, username string) ([]Order, erro
 			&i.IsAccepted,
 			&i.IsCompleted,
 			&i.IsRejected,
-			&i.IsExpired,
+			&i.IsReceived,
 			&i.Duration,
 			&i.CreatedAt,
 		); err != nil {
@@ -167,7 +166,7 @@ func (q *Queries) GetOrders(ctx context.Context, username string) ([]Order, erro
 }
 
 const getUserOrders = `-- name: GetUserOrders :many
-SELECT id, username, escrow_address, user_address, order_type, crypto, fiat, crypto_amount, fiat_amount, bank_name, account_number, account_holder, rate, is_accepted, is_completed, is_rejected, is_expired, duration, created_at FROM orders
+SELECT id, username, escrow_address, user_address, order_type, crypto, fiat, crypto_amount, fiat_amount, bank_name, account_number, account_holder, rate, is_accepted, is_completed, is_rejected, is_received, duration, created_at FROM orders
 WHERE user_address = $1
 ORDER BY id
 `
@@ -198,7 +197,7 @@ func (q *Queries) GetUserOrders(ctx context.Context, userAddress string) ([]Orde
 			&i.IsAccepted,
 			&i.IsCompleted,
 			&i.IsRejected,
-			&i.IsExpired,
+			&i.IsReceived,
 			&i.Duration,
 			&i.CreatedAt,
 		); err != nil {
@@ -229,7 +228,7 @@ SET
   is_accepted = COALESCE($9, is_accepted),
   is_completed = COALESCE($10, is_completed),
   is_rejected = COALESCE($11, is_rejected),
-  is_expired = COALESCE($12, is_expired),
+  is_received = COALESCE($12, is_received),
   duration = COALESCE($13, duration)
 WHERE 
   id = $14
@@ -248,7 +247,7 @@ type UpdateOrderParams struct {
 	IsAccepted    sql.NullBool    `db:"is_accepted" json:"is_accepted"`
 	IsCompleted   sql.NullBool    `db:"is_completed" json:"is_completed"`
 	IsRejected    sql.NullBool    `db:"is_rejected" json:"is_rejected"`
-	IsExpired     sql.NullBool    `db:"is_expired" json:"is_expired"`
+	IsReceived    sql.NullBool    `db:"is_received" json:"is_received"`
 	Duration      sql.NullTime    `db:"duration" json:"duration"`
 	ID            int64           `db:"id" json:"id"`
 	Username      string          `db:"username" json:"username"`
@@ -267,7 +266,7 @@ func (q *Queries) UpdateOrder(ctx context.Context, arg UpdateOrderParams) error 
 		arg.IsAccepted,
 		arg.IsCompleted,
 		arg.IsRejected,
-		arg.IsExpired,
+		arg.IsReceived,
 		arg.Duration,
 		arg.ID,
 		arg.Username,

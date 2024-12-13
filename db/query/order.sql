@@ -9,7 +9,6 @@ RETURNING *;
 -- name: GetOrders :many
 SELECT * FROM orders
 WHERE username = $1
-AND is_completed = FALSE
 ORDER BY id;
 
 -- name: GetUserOrders :many
@@ -37,7 +36,7 @@ SET
   is_accepted = COALESCE(sqlc.narg(is_accepted), is_accepted),
   is_completed = COALESCE(sqlc.narg(is_completed), is_completed),
   is_rejected = COALESCE(sqlc.narg(is_rejected), is_rejected),
-  is_expired = COALESCE(sqlc.narg(is_expired), is_expired),
+  is_received = COALESCE(sqlc.narg(is_received), is_received),
   duration = COALESCE(sqlc.narg(duration), duration)
 WHERE 
   id = sqlc.arg(id)
