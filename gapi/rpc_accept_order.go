@@ -54,7 +54,7 @@ func (s *Server) AcceptOrder(ctx context.Context, req *pb.AcceptOrderRequest) (*
 
 	err = s.repository.UpdateOrder(ctx, args)
 	if err != nil {
-		return nil, status.Errorf(codes.Internal, "failed to accept buy orders")
+		return nil, status.Errorf(codes.Internal, "failed to accept orders")
 	}
 
 	payload := worker.UpdateOrderPayload{

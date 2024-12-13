@@ -496,40 +496,6 @@
         ]
       }
     },
-    "/api/made-payment": {
-      "post": {
-        "summary": "Complete trade orders",
-        "description": "Use this API to complete trade orders",
-        "operationId": "PeerbillTrader_MadePayment",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/pbMadePaymentResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/pbMadePaymentRequest"
-            }
-          }
-        ],
-        "tags": [
-          "PeerbillTrader"
-        ]
-      }
-    },
     "/api/received-payment": {
       "post": {
         "summary": "Complete trade orders",
@@ -1203,32 +1169,6 @@
         }
       }
     },
-    "pbMadePaymentRequest": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "format": "int64"
-        },
-        "username": {
-          "type": "string"
-        },
-        "orderType": {
-          "type": "string"
-        },
-        "userAddress": {
-          "type": "string"
-        }
-      }
-    },
-    "pbMadePaymentResponse": {
-      "type": "object",
-      "properties": {
-        "message": {
-          "type": "string"
-        }
-      }
-    },
     "pbOrder": {
       "type": "object",
       "properties": {
@@ -1502,6 +1442,14 @@
         },
         "tradePair": {
           "$ref": "#/definitions/pbTraderPair"
+        }
+      }
+    },
+    "pbUpdateOrderResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
         }
       }
     },
