@@ -18,7 +18,7 @@ message Order {
     bool is_accepted = 9;
     bool is_completed = 10;
     bool  is_rejected = 11;
-    bool is_expired = 12;
+    bool is_received = 12;
     google.protobuf.Timestamp created_at = 13;
     google.protobuf.Timestamp duration = 14;
     string user_address = 15;

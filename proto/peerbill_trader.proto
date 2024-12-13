@@ -24,6 +24,8 @@ import "rpc_add_payment_method.proto";
 import "rpc_update_payment_method.proto";
 import "rpc_delete_payment_method.proto";
 import "rpc_get_payment_method.proto";
+import "rpc_receive_payment.proto";
+import "rpc_made_payment.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
 option go_package = "peerbill-trader-api/pb";
@@ -249,6 +251,26 @@ service PeerbillTrader {
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
             description: "Use this API to get Crypto/Fiat Payment method";
             summary: "Get Crypto/Fiat payment method";
+        };
+    }
+    rpc ReceivePayment (ReceivedPaymentRequest) returns (ReceivedPaymentResponse) {
+        option (google.api.http) = {
+            post: "/api/received-payment"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            description: "Use this API to complete trade orders";
+            summary: "Complete trade orders";
+        };
+    }
+    rpc MadePayment (MadePaymentRequest) returns (MadePaymentResponse) {
+        option (google.api.http) = {
+            post: "/api/made-payment"
+            body: "*"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            description: "Use this API to complete trade orders";
+            summary: "Complete trade orders";
         };
     }
 }

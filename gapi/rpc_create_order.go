@@ -67,10 +67,10 @@ func (s *Server) CreateOrder(ctx context.Context, req *pb.CreateOrderRequest) (*
 		if pgErr, ok := err.(*pg.Error); ok {
 			switch pgErr.Code.Name() {
 			case "unique_violation":
-				return nil, status.Errorf(codes.Internal, err.Error())
+				return nil, status.Errorf(codes.Internal, "unqiue violation %s ", pgErr)
 			}
 		}
-		return nil, status.Errorf(codes.Internal, "failed to create buy order %s ", err)
+		return nil, status.Errorf(codes.Internal, "failed to create order %s ", err)
 	}
 
 	resp := &pb.CreateOrderResponse{

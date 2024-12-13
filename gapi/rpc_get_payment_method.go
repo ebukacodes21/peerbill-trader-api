@@ -27,8 +27,14 @@ func (s *Server) GetPaymentMethod(ctx context.Context, req *pb.GetPaymentMethodR
 		return nil, status.Errorf(codes.NotFound, "no payment method found")
 	}
 
+	trader, err := s.repository.GetTrader(ctx, req.GetUsername())
+	if err != nil {
+		return nil, status.Errorf(codes.NotFound, "no trader found")
+	}
+
 	resp := &pb.GetPaymentMethodResponse{
 		PaymentMethod: convertPaymentMethod(method),
+		PhoneNumber:   trader.Phone,
 	}
 
 	return resp, nil

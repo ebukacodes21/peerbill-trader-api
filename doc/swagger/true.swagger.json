@@ -496,6 +496,74 @@
         ]
       }
     },
+    "/api/made-payment": {
+      "post": {
+        "summary": "Complete trade orders",
+        "description": "Use this API to complete trade orders",
+        "operationId": "PeerbillTrader_MadePayment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbMadePaymentResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbMadePaymentRequest"
+            }
+          }
+        ],
+        "tags": [
+          "PeerbillTrader"
+        ]
+      }
+    },
+    "/api/received-payment": {
+      "post": {
+        "summary": "Complete trade orders",
+        "description": "Use this API to complete trade orders",
+        "operationId": "PeerbillTrader_ReceivePayment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/pbReceivedPaymentResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/pbReceivedPaymentRequest"
+            }
+          }
+        ],
+        "tags": [
+          "PeerbillTrader"
+        ]
+      }
+    },
     "/api/register-trader": {
       "post": {
         "summary": "create a new trader",
@@ -1020,6 +1088,9 @@
       "properties": {
         "paymentMethod": {
           "$ref": "#/definitions/pbPaymentMethod"
+        },
+        "phoneNumber": {
+          "type": "string"
         }
       }
     },
@@ -1132,6 +1203,32 @@
         }
       }
     },
+    "pbMadePaymentRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "username": {
+          "type": "string"
+        },
+        "orderType": {
+          "type": "string"
+        },
+        "userAddress": {
+          "type": "string"
+        }
+      }
+    },
+    "pbMadePaymentResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        }
+      }
+    },
     "pbOrder": {
       "type": "object",
       "properties": {
@@ -1172,7 +1269,7 @@
         "isRejected": {
           "type": "boolean"
         },
-        "isExpired": {
+        "isReceived": {
           "type": "boolean"
         },
         "createdAt": {
@@ -1227,6 +1324,36 @@
         },
         "walletAddress": {
           "type": "string"
+        }
+      }
+    },
+    "pbReceivedPaymentRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "username": {
+          "type": "string"
+        },
+        "orderType": {
+          "type": "string"
+        },
+        "receivedPayment": {
+          "type": "boolean"
+        }
+      }
+    },
+    "pbReceivedPaymentResponse": {
+      "type": "object",
+      "properties": {
+        "orders": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/pbOrder"
+          }
         }
       }
     },

@@ -11,6 +11,7 @@ type TaskDistributor interface {
 	DistributeTaskSendForgotEmail(ctx context.Context, payload *SendEmailPayload, opts ...asynq.Option) error
 	DistributeTaskSendOrderEmail(ctx context.Context, payload *SendOrderEmailPayload, opts ...asynq.Option) error
 	DistributeTaskUpdateOrder(ctx context.Context, payload *UpdateOrderPayload, opts ...asynq.Option) error
+	DistributeTaskUpdateOrders(ctx context.Context, payload *UpdateOrderPayload, opts ...asynq.Option) error
 }
 
 type RedisTaskDistributor struct {

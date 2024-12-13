@@ -15,7 +15,7 @@ CREATE TABLE "orders" (
     "is_accepted" BOOL NOT NULL DEFAULT false,
     "is_completed" BOOL NOT NULL DEFAULT false,
     "is_rejected" BOOL NOT NULL DEFAULT false,
-    "is_expired" BOOL NOT NULL DEFAULT false,
+    "is_received" BOOL NOT NULL DEFAULT false,
     "duration" TIMESTAMPTZ NOT NULL,
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT now()
 );

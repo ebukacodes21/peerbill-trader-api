@@ -19,6 +19,8 @@ type TaskProcessor interface {
 	ProcessTaskSendVerifyEmail(ctx context.Context, task *asynq.Task) error
 	ProcessTaskSendForgotEmail(ctx context.Context, task *asynq.Task) error
 	ProcessTaskOrderEmail(ctx context.Context, task *asynq.Task) error
+	ProcessTaskUpdateOrder(ctx context.Context, task *asynq.Task) error
+	ProcessTaskUpdateOrders(ctx context.Context, task *asynq.Task) error
 	Get(ctx context.Context, value string) (string, error)
 	Set(key string, value string) error
 }
@@ -64,6 +66,7 @@ func (rtp *RedisTaskProcessor) Start() error {
 	mux.HandleFunc(send_forgot_email_task, rtp.ProcessTaskSendForgotEmail)
 	mux.HandleFunc(send_order_email_task, rtp.ProcessTaskOrderEmail)
 	mux.HandleFunc(send_update_order_task, rtp.ProcessTaskUpdateOrder)
+	mux.HandleFunc(send_update_orders_task, rtp.ProcessTaskUpdateOrders)
 
 	return rtp.server.Start(mux)
 }

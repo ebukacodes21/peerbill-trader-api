@@ -40,6 +40,8 @@ const (
 	PeerbillTrader_UpdatePaymentMethod_FullMethodName = "/pb.PeerbillTrader/UpdatePaymentMethod"
 	PeerbillTrader_DeletePaymentMethod_FullMethodName = "/pb.PeerbillTrader/DeletePaymentMethod"
 	PeerbillTrader_GetPaymentMethod_FullMethodName    = "/pb.PeerbillTrader/GetPaymentMethod"
+	PeerbillTrader_ReceivePayment_FullMethodName      = "/pb.PeerbillTrader/ReceivePayment"
+	PeerbillTrader_MadePayment_FullMethodName         = "/pb.PeerbillTrader/MadePayment"
 )
 
 // PeerbillTraderClient is the client API for PeerbillTrader service.
@@ -67,6 +69,8 @@ type PeerbillTraderClient interface {
 	UpdatePaymentMethod(ctx context.Context, in *UpdatePaymentMethodRequest, opts ...grpc.CallOption) (*UpdatePaymentMethodResponse, error)
 	DeletePaymentMethod(ctx context.Context, in *DeletePaymentMethodRequest, opts ...grpc.CallOption) (*DeletePaymentMethodResponse, error)
 	GetPaymentMethod(ctx context.Context, in *GetPaymentMethodRequest, opts ...grpc.CallOption) (*GetPaymentMethodResponse, error)
+	ReceivePayment(ctx context.Context, in *ReceivedPaymentRequest, opts ...grpc.CallOption) (*ReceivedPaymentResponse, error)
+	MadePayment(ctx context.Context, in *MadePaymentRequest, opts ...grpc.CallOption) (*MadePaymentResponse, error)
 }
 
 type peerbillTraderClient struct {
@@ -287,6 +291,26 @@ func (c *peerbillTraderClient) GetPaymentMethod(ctx context.Context, in *GetPaym
 	return out, nil
 }
 
+func (c *peerbillTraderClient) ReceivePayment(ctx context.Context, in *ReceivedPaymentRequest, opts ...grpc.CallOption) (*ReceivedPaymentResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ReceivedPaymentResponse)
+	err := c.cc.Invoke(ctx, PeerbillTrader_ReceivePayment_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *peerbillTraderClient) MadePayment(ctx context.Context, in *MadePaymentRequest, opts ...grpc.CallOption) (*MadePaymentResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MadePaymentResponse)
+	err := c.cc.Invoke(ctx, PeerbillTrader_MadePayment_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // PeerbillTraderServer is the server API for PeerbillTrader service.
 // All implementations must embed UnimplementedPeerbillTraderServer
 // for forward compatibility.
@@ -312,6 +336,8 @@ type PeerbillTraderServer interface {
 	UpdatePaymentMethod(context.Context, *UpdatePaymentMethodRequest) (*UpdatePaymentMethodResponse, error)
 	DeletePaymentMethod(context.Context, *DeletePaymentMethodRequest) (*DeletePaymentMethodResponse, error)
 	GetPaymentMethod(context.Context, *GetPaymentMethodRequest) (*GetPaymentMethodResponse, error)
+	ReceivePayment(context.Context, *ReceivedPaymentRequest) (*ReceivedPaymentResponse, error)
+	MadePayment(context.Context, *MadePaymentRequest) (*MadePaymentResponse, error)
 	mustEmbedUnimplementedPeerbillTraderServer()
 }
 
@@ -384,6 +410,12 @@ func (UnimplementedPeerbillTraderServer) DeletePaymentMethod(context.Context, *D
 }
 func (UnimplementedPeerbillTraderServer) GetPaymentMethod(context.Context, *GetPaymentMethodRequest) (*GetPaymentMethodResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPaymentMethod not implemented")
+}
+func (UnimplementedPeerbillTraderServer) ReceivePayment(context.Context, *ReceivedPaymentRequest) (*ReceivedPaymentResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ReceivePayment not implemented")
+}
+func (UnimplementedPeerbillTraderServer) MadePayment(context.Context, *MadePaymentRequest) (*MadePaymentResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MadePayment not implemented")
 }
 func (UnimplementedPeerbillTraderServer) mustEmbedUnimplementedPeerbillTraderServer() {}
 func (UnimplementedPeerbillTraderServer) testEmbeddedByValue()                        {}
@@ -784,6 +816,42 @@ func _PeerbillTrader_GetPaymentMethod_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _PeerbillTrader_ReceivePayment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ReceivedPaymentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PeerbillTraderServer).ReceivePayment(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PeerbillTrader_ReceivePayment_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PeerbillTraderServer).ReceivePayment(ctx, req.(*ReceivedPaymentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PeerbillTrader_MadePayment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MadePaymentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PeerbillTraderServer).MadePayment(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PeerbillTrader_MadePayment_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PeerbillTraderServer).MadePayment(ctx, req.(*MadePaymentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // PeerbillTrader_ServiceDesc is the grpc.ServiceDesc for PeerbillTrader service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -874,6 +942,14 @@ var PeerbillTrader_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetPaymentMethod",
 			Handler:    _PeerbillTrader_GetPaymentMethod_Handler,
+		},
+		{
+			MethodName: "ReceivePayment",
+			Handler:    _PeerbillTrader_ReceivePayment_Handler,
+		},
+		{
+			MethodName: "MadePayment",
+			Handler:    _PeerbillTrader_MadePayment_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
