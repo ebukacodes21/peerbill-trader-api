@@ -18,6 +18,7 @@ import "rpc_create_order.proto";
 import "rpc_get_orders.proto";
 import "rpc_get_user_orders.proto";
 import "rpc_get_order.proto";
+import "rpc_update_order.proto";
 import "rpc_reject_order.proto";
 import "rpc_accept_order.proto";
 import "rpc_add_payment_method.proto";
@@ -262,4 +263,5 @@ service PeerbillTrader {
             summary: "Complete trade orders";
         };
     }
+    rpc UpdateOrder (UpdateOrderRequest) returns (UpdateOrderResponse) {}
 }
