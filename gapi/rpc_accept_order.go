@@ -6,12 +6,12 @@ import (
 
 	"database/sql"
 
-	db "peerbill-trader-api/db/sqlc"
-	"peerbill-trader-api/pb"
-	"peerbill-trader-api/utils"
-	"peerbill-trader-api/validate"
+	db "github.com/ebukacodes21/peerbill-trader-api/db/sqlc"
+	"github.com/ebukacodes21/peerbill-trader-api/pb"
+	"github.com/ebukacodes21/peerbill-trader-api/utils"
+	"github.com/ebukacodes21/peerbill-trader-api/validate"
 
-	"peerbill-trader-api/worker"
+	"github.com/ebukacodes21/peerbill-trader-api/worker"
 
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc/codes"

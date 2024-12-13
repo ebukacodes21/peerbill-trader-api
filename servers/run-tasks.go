@@ -3,12 +3,13 @@ package servers
 import (
 	"context"
 	"log"
-	db "peerbill-trader-api/db/sqlc"
-	"peerbill-trader-api/mail"
-	"peerbill-trader-api/socket"
-	"peerbill-trader-api/token"
-	"peerbill-trader-api/utils"
-	"peerbill-trader-api/worker"
+
+	db "github.com/ebukacodes21/peerbill-trader-api/db/sqlc"
+	"github.com/ebukacodes21/peerbill-trader-api/mail"
+	"github.com/ebukacodes21/peerbill-trader-api/socket"
+	"github.com/ebukacodes21/peerbill-trader-api/token"
+	"github.com/ebukacodes21/peerbill-trader-api/utils"
+	"github.com/ebukacodes21/peerbill-trader-api/worker"
 
 	"github.com/hibiken/asynq"
 	"golang.org/x/sync/errgroup"

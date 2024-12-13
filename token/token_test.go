@@ -1,9 +1,10 @@
 package token
 
 import (
-	"peerbill-trader-api/utils"
 	"testing"
 	"time"
+
+	"github.com/ebukacodes21/peerbill-trader-api/utils"
 
 	"github.com/stretchr/testify/require"
 )

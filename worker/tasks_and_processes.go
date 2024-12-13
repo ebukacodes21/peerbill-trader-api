@@ -2,7 +2,8 @@ package worker
 
 import (
 	"context"
-	db "peerbill-trader-api/db/sqlc"
+
+	db "github.com/ebukacodes21/peerbill-trader-api/db/sqlc"
 
 	// "database/sql"
 	"encoding/json"

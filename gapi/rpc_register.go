@@ -2,12 +2,13 @@ package gapi
 
 import (
 	"context"
-	db "peerbill-trader-api/db/sqlc"
-	"peerbill-trader-api/pb"
-	"peerbill-trader-api/utils"
-	"peerbill-trader-api/validate"
-	"peerbill-trader-api/worker"
 	"time"
+
+	db "github.com/ebukacodes21/peerbill-trader-api/db/sqlc"
+	"github.com/ebukacodes21/peerbill-trader-api/pb"
+	"github.com/ebukacodes21/peerbill-trader-api/utils"
+	"github.com/ebukacodes21/peerbill-trader-api/validate"
+	"github.com/ebukacodes21/peerbill-trader-api/worker"
 
 	"github.com/hibiken/asynq"
 	pg "github.com/lib/pq"

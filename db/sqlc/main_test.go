@@ -4,8 +4,9 @@ import (
 	"database/sql"
 	"log"
 	"os"
-	"peerbill-trader-api/utils"
 	"testing"
+
+	"github.com/ebukacodes21/peerbill-trader-api/utils"
 
 	_ "github.com/lib/pq"
 )

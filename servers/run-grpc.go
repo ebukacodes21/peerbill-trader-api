@@ -4,11 +4,12 @@ import (
 	"context"
 	"log"
 	"net"
-	db "peerbill-trader-api/db/sqlc"
-	"peerbill-trader-api/gapi"
-	"peerbill-trader-api/pb"
-	"peerbill-trader-api/utils"
-	"peerbill-trader-api/worker"
+
+	db "github.com/ebukacodes21/peerbill-trader-api/db/sqlc"
+	"github.com/ebukacodes21/peerbill-trader-api/gapi"
+	"github.com/ebukacodes21/peerbill-trader-api/pb"
+	"github.com/ebukacodes21/peerbill-trader-api/utils"
+	"github.com/ebukacodes21/peerbill-trader-api/worker"
 
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"

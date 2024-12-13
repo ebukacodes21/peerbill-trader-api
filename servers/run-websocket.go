@@ -4,8 +4,9 @@ import (
 	"context"
 	"log"
 	"net/http"
-	"peerbill-trader-api/socket"
-	"peerbill-trader-api/utils"
+
+	"github.com/ebukacodes21/peerbill-trader-api/socket"
+	"github.com/ebukacodes21/peerbill-trader-api/utils"
 
 	"github.com/gorilla/websocket"
 
