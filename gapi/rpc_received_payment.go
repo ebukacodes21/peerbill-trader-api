@@ -61,7 +61,7 @@ func validateReceivedPaymentRequest(req *pb.ReceivedPaymentRequest) (violations 
 		violations = append(violations, fieldViolation("order_type", err))
 	}
 
-	if err := validate.ValidateReceivedPayment(req.GetReceivedPayment()); err != nil {
+	if err := validate.ValidateBool(req.GetReceivedPayment()); err != nil {
 		violations = append(violations, fieldViolation("received_payment", err))
 	}
 

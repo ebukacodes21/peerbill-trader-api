@@ -8,6 +8,7 @@ message UpdateOrderRequest {
     int64 id = 1;
     string username = 2;
     string order_type = 3;
+    bool isExpired = 4;
 }
 
 message UpdateOrderResponse {

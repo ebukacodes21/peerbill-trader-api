@@ -29,6 +29,7 @@ type Order struct {
 	IsCompleted   bool           `db:"is_completed" json:"is_completed"`
 	IsRejected    bool           `db:"is_rejected" json:"is_rejected"`
 	IsReceived    bool           `db:"is_received" json:"is_received"`
+	IsExpired     bool           `db:"is_expired" json:"is_expired"`
 	Duration      time.Time      `db:"duration" json:"duration"`
 	CreatedAt     time.Time      `db:"created_at" json:"created_at"`
 }
