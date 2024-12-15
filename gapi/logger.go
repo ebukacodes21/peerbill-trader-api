@@ -26,7 +26,12 @@ func Logger(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, ha
 		logger = log.Error().Err(err)
 	}
 
-	logger.Str("protocol", "grpc").Str("method", info.FullMethod).Int("status_code", int(statusCode)).Dur("duration", duration).Msg("recieved request")
+	logger.
+		Str("protocol", "grpc").
+		Str("method", info.FullMethod).
+		Int("status_code", int(statusCode)).
+		Dur("duration", duration).
+		Msg("received request")
 	return result, err
 }
 

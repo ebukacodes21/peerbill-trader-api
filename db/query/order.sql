@@ -37,6 +37,7 @@ SET
   is_completed = COALESCE(sqlc.narg(is_completed), is_completed),
   is_rejected = COALESCE(sqlc.narg(is_rejected), is_rejected),
   is_received = COALESCE(sqlc.narg(is_received), is_received),
+  is_expired = COALESCE(sqlc.narg(is_expired), is_expired),
   duration = COALESCE(sqlc.narg(duration), duration)
 WHERE 
   id = sqlc.arg(id)

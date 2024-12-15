@@ -38,6 +38,8 @@ func RunWebSocketServer(group *errgroup.Group, ctx context.Context, config utils
 		for {
 			// keep alive 🤔
 			_, _, err := conn.ReadMessage()
+			// can call client here
+			// conn.wr
 			if err != nil {
 				// If there's an error (e.g., the client disconnects), remove the client
 				manager.RemoveClient(conn)

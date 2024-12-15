@@ -31,6 +31,10 @@ func (s *Server) UpdateOrder(ctx context.Context, req *pb.UpdateOrderRequest) (*
 			Valid: true,
 			Bool:  true,
 		},
+		IsExpired: sql.NullBool{
+			Valid: true,
+			Bool:  req.GetIsExpired(),
+		},
 	}
 
 	err := s.repository.UpdateOrder(ctx, args)
@@ -65,5 +69,8 @@ func validateUpdateOrderRequest(req *pb.UpdateOrderRequest) (violations []*errde
 		violations = append(violations, fieldViolation("username", err))
 	}
 
+	if err := validate.ValidateBool(req.GetIsExpired()); err != nil {
+		violations = append(violations, fieldViolation("is_expired", err))
+	}
 	return violations
 }
