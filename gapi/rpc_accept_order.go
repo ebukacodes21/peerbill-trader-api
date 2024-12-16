@@ -39,9 +39,8 @@ func (s *Server) AcceptOrder(ctx context.Context, req *pb.AcceptOrderRequest) (*
 		return nil, status.Errorf(codes.InvalidArgument, "failed to parse balance as float")
 	}
 
-	// <
-	if float32(balanceFloat) > req.GetAmount() {
-		return nil, status.Errorf(codes.InvalidArgument, "insufficient balance")
+	if float32(balanceFloat) < req.GetAmount() {
+		return nil, status.Errorf(codes.InvalidArgument, "insufficient escrow balance")
 	}
 
 	args := db.UpdateOrderParams{

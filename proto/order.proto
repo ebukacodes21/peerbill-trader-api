@@ -26,4 +26,5 @@ message Order {
     optional string bank_name = 17;
     optional string account_number = 18;
     optional string account_holder = 19;
+    bool is_expired = 20;
 }
