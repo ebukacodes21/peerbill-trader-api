@@ -17,9 +17,7 @@ func (s *Server) GetUserOrders(ctx context.Context, req *pb.GetUserOrdersRequest
 		return nil, invalidArgumentError(violations)
 	}
 
-	// Fetch initial orders to send the first response immediately
 	orders, err := s.repository.GetUserOrders(ctx, req.GetUserAddress())
-
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to fetch user orders")
 	}

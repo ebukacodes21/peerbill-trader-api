@@ -3,6 +3,7 @@ package gapi
 import (
 	"context"
 	"database/sql"
+	"time"
 
 	db "github.com/ebukacodes21/peerbill-trader-api/db/sqlc"
 	"github.com/ebukacodes21/peerbill-trader-api/pb"
@@ -35,6 +36,10 @@ func (s *Server) RejectOrder(ctx context.Context, req *pb.RejectOrderRequest) (*
 		IsRejected: sql.NullBool{
 			Valid: true,
 			Bool:  true,
+		},
+		Duration: sql.NullTime{
+			Valid: true,
+			Time:  time.Now().Add(0),
 		},
 		IsCompleted: sql.NullBool{
 			Valid: true,

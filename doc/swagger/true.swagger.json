@@ -1234,6 +1234,9 @@
         },
         "accountHolder": {
           "type": "string"
+        },
+        "isExpired": {
+          "type": "boolean"
         }
       }
     },
