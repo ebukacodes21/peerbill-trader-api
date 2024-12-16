@@ -1,5 +1,8 @@
 PEERBILL TRADER API
 
-FEATURES ENDPOINTS FOR
-1. FETCHING EXCHANGE RATES FOR CRYPTO/FIAT PAIRS
-2. FETCHING DATA PLANS FROM A THIRD PARTY API
+Service handles all trader requests
+- signup
+- signin
+- verify
+- forgot password
+- reset password etc
