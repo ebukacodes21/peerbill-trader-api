@@ -83,8 +83,10 @@ func validateUpdateOrderRequest(req *pb.UpdateOrderRequest) (violations []*errde
 		violations = append(violations, fieldViolation("username", err))
 	}
 
-	if err := validate.ValidateBool(req.GetIsExpired()); err != nil {
-		violations = append(violations, fieldViolation("is_expired", err))
+	if req.IsExpired != nil {
+		if err := validate.ValidateBool(req.GetIsExpired()); err != nil {
+			violations = append(violations, fieldViolation("is_expired", err))
+		}
 	}
 
 	if req.AccountHolder != nil {
