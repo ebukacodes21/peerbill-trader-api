@@ -1,7 +1,7 @@
 CREATE TABLE "orders" (
     "id" bigserial PRIMARY KEY,
     "username" VARCHAR NOT NULL,
-    "escrow_address" VARCHAR NOT NULL,
+    "escrow_address" VARCHAR,
     "user_address" VARCHAR NOT NULL,
     "order_type" VARCHAR NOT NULL,
     "crypto" VARCHAR NOT NULL,

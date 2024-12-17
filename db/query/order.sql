@@ -38,7 +38,10 @@ SET
   is_rejected = COALESCE(sqlc.narg(is_rejected), is_rejected),
   is_received = COALESCE(sqlc.narg(is_received), is_received),
   is_expired = COALESCE(sqlc.narg(is_expired), is_expired),
-  duration = COALESCE(sqlc.narg(duration), duration)
+  duration = COALESCE(sqlc.narg(duration), duration),
+  bank_name = COALESCE(sqlc.narg(bank_name), bank_name),
+  account_number = COALESCE(sqlc.narg(account_number), account_number),
+  account_holder = COALESCE(sqlc.narg(account_holder), account_holder)
 WHERE 
   id = sqlc.arg(id)
   AND username = sqlc.arg (username);

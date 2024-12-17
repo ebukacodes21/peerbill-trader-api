@@ -20,24 +20,40 @@ func (s *Server) UpdateOrder(ctx context.Context, req *pb.UpdateOrderRequest) (*
 		return nil, invalidArgumentError(violations)
 	}
 
-	args := db.UpdateOrderParams{
+	updateParams := db.UpdateOrderParams{
 		ID:       req.GetId(),
 		Username: req.GetUsername(),
-		Duration: sql.NullTime{
-			Valid: true,
-			Time:  time.Now(),
-		},
-		IsCompleted: sql.NullBool{
-			Valid: true,
-			Bool:  true,
-		},
-		IsExpired: sql.NullBool{
-			Valid: true,
-			Bool:  req.GetIsExpired(),
-		},
 	}
 
-	err := s.repository.UpdateOrder(ctx, args)
+	if req.GetOrderType() == "sell" && req.AccountHolder != nil {
+		updateParams.BankName = sql.NullString{
+			Valid:  true,
+			String: req.GetBankName(),
+		}
+		updateParams.AccountNumber = sql.NullString{
+			Valid:  true,
+			String: req.GetAccountNumber(),
+		}
+		updateParams.AccountHolder = sql.NullString{
+			Valid:  true,
+			String: req.GetAccountHolder(),
+		}
+	} else {
+		updateParams.Duration = sql.NullTime{
+			Valid: true,
+			Time:  time.Now(),
+		}
+		updateParams.IsCompleted = sql.NullBool{
+			Valid: true,
+			Bool:  true,
+		}
+		updateParams.IsExpired = sql.NullBool{
+			Valid: true,
+			Bool:  req.GetIsExpired(),
+		}
+	}
+
+	err := s.repository.UpdateOrder(ctx, updateParams)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to update order")
 	}
@@ -47,7 +63,6 @@ func (s *Server) UpdateOrder(ctx context.Context, req *pb.UpdateOrderRequest) (*
 		Username:  req.GetUsername(),
 		OrderType: req.GetOrderType(),
 	}
-
 	err = s.taskDistributor.DistributeTaskUpdateOrders(ctx, &payload)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to distribute task")
@@ -56,7 +71,6 @@ func (s *Server) UpdateOrder(ctx context.Context, req *pb.UpdateOrderRequest) (*
 	resp := &pb.UpdateOrderResponse{
 		Message: "order completed",
 	}
-
 	return resp, nil
 }
 
@@ -71,6 +85,24 @@ func validateUpdateOrderRequest(req *pb.UpdateOrderRequest) (violations []*errde
 
 	if err := validate.ValidateBool(req.GetIsExpired()); err != nil {
 		violations = append(violations, fieldViolation("is_expired", err))
+	}
+
+	if req.AccountHolder != nil {
+		if err := validate.ValidateFirstname(req.GetAccountHolder()); err != nil {
+			violations = append(violations, fieldViolation("account_holder", err))
+		}
+	}
+
+	if req.BankName != nil {
+		if err := validate.ValidateFirstname(req.GetBankName()); err != nil {
+			violations = append(violations, fieldViolation("bank_name", err))
+		}
+	}
+
+	if req.AccountNumber != nil {
+		if err := validate.ValidateFirstname(req.GetAccountNumber()); err != nil {
+			violations = append(violations, fieldViolation("account_number", err))
+		}
 	}
 	return violations
 }

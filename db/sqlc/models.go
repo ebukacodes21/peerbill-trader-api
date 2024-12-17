@@ -14,7 +14,7 @@ import (
 type Order struct {
 	ID            int64          `db:"id" json:"id"`
 	Username      string         `db:"username" json:"username"`
-	EscrowAddress string         `db:"escrow_address" json:"escrow_address"`
+	EscrowAddress sql.NullString `db:"escrow_address" json:"escrow_address"`
 	UserAddress   string         `db:"user_address" json:"user_address"`
 	OrderType     string         `db:"order_type" json:"order_type"`
 	Crypto        string         `db:"crypto" json:"crypto"`

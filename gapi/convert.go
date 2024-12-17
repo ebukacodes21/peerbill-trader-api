@@ -92,7 +92,7 @@ func convertOrder(order db.Order) *pb.Order {
 
 	return &pb.Order{
 		Id:            order.ID,
-		EscrowAddress: order.EscrowAddress,
+		EscrowAddress: order.EscrowAddress.String,
 		UserAddress:   order.UserAddress,
 		OrderType:     order.OrderType,
 		Crypto:        order.Crypto,
@@ -116,7 +116,7 @@ func convertOrders(Orders []db.Order) []*pb.Order {
 	for _, order := range Orders {
 		pbOrders = append(pbOrders, &pb.Order{
 			Id:            order.ID,
-			EscrowAddress: order.EscrowAddress,
+			EscrowAddress: order.EscrowAddress.String,
 			UserAddress:   order.UserAddress,
 			OrderType:     order.OrderType,
 			Crypto:        order.Crypto,

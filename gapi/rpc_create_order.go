@@ -25,16 +25,19 @@ func (s *Server) CreateOrder(ctx context.Context, req *pb.CreateOrderRequest) (*
 
 	args := db.CreateOrderTxParams{
 		CreateOrderParams: db.CreateOrderParams{
-			EscrowAddress: req.GetEscrowAddress(),
-			UserAddress:   req.GetUserAddress(),
-			OrderType:     req.GetOrderType(),
-			FiatAmount:    float64(req.GetFiatAmount()),
-			CryptoAmount:  float64(req.GetCryptoAmount()),
-			Crypto:        req.GetCrypto(),
-			Fiat:          req.GetFiat(),
-			Rate:          float64(req.GetRate()),
-			Username:      req.GetUsername(),
-			Duration:      time.Now().Add(30 * time.Minute),
+			EscrowAddress: sql.NullString{
+				Valid:  true,
+				String: req.GetEscrowAddress(),
+			},
+			UserAddress:  req.GetUserAddress(),
+			OrderType:    req.GetOrderType(),
+			FiatAmount:   float64(req.GetFiatAmount()),
+			CryptoAmount: float64(req.GetCryptoAmount()),
+			Crypto:       req.GetCrypto(),
+			Fiat:         req.GetFiat(),
+			Rate:         float64(req.GetRate()),
+			Username:     req.GetUsername(),
+			Duration:     time.Now().Add(30 * time.Minute),
 			BankName: sql.NullString{
 				Valid:  true,
 				String: req.GetBankName(),
@@ -82,8 +85,10 @@ func (s *Server) CreateOrder(ctx context.Context, req *pb.CreateOrderRequest) (*
 }
 
 func validateCreateOrderRequest(req *pb.CreateOrderRequest) (violations []*errdetails.BadRequest_FieldViolation) {
-	if err := validate.ValidateWalletAddress(req.GetEscrowAddress()); err != nil {
-		violations = append(violations, fieldViolation("escrow_address", err))
+	if req.EscrowAddress != nil {
+		if err := validate.ValidateWalletAddress(req.GetEscrowAddress()); err != nil {
+			violations = append(violations, fieldViolation("escrow_address", err))
+		}
 	}
 
 	if err := validate.ValidateWalletAddress(req.GetUserAddress()); err != nil {
