@@ -83,6 +83,10 @@ func validateUpdateOrderRequest(req *pb.UpdateOrderRequest) (violations []*errde
 		violations = append(violations, fieldViolation("username", err))
 	}
 
+	if err := validate.ValidateType(req.GetOrderType()); err != nil {
+		violations = append(violations, fieldViolation("order_type", err))
+	}
+
 	if req.IsExpired != nil {
 		if err := validate.ValidateBool(req.GetIsExpired()); err != nil {
 			violations = append(violations, fieldViolation("is_expired", err))
