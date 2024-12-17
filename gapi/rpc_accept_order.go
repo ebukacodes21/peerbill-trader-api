@@ -33,14 +33,16 @@ func (s *Server) AcceptOrder(ctx context.Context, req *pb.AcceptOrderRequest) (*
 		return nil, status.Errorf(codes.PermissionDenied, "not authorized to accept orders")
 	}
 
-	balance := utils.CheckBalance(ctx, req.GetCrypto(), req.GetEscrowAddress())
-	balanceFloat, err := strconv.ParseFloat(balance, 64)
-	if err != nil {
-		return nil, status.Errorf(codes.InvalidArgument, "failed to parse balance as float")
-	}
+	if req.GetOrderType() == "buy" {
+		balance := utils.CheckBalance(ctx, req.GetCrypto(), req.GetEscrowAddress())
+		balanceFloat, err := strconv.ParseFloat(balance, 64)
+		if err != nil {
+			return nil, status.Errorf(codes.InvalidArgument, "failed to parse balance as float")
+		}
 
-	if float32(balanceFloat) < req.GetAmount() {
-		return nil, status.Errorf(codes.InvalidArgument, "insufficient escrow balance")
+		if float32(balanceFloat) < req.GetAmount() {
+			return nil, status.Errorf(codes.InvalidArgument, "insufficient escrow balance")
+		}
 	}
 
 	args := db.UpdateOrderParams{
@@ -95,8 +97,10 @@ func validateAcceptOrderRequest(req *pb.AcceptOrderRequest) (violations []*errde
 		violations = append(violations, fieldViolation("username", err))
 	}
 
-	if err := validate.ValidateWalletAddress(req.GetEscrowAddress()); err != nil {
-		violations = append(violations, fieldViolation("escrow_address", err))
+	if req.EscrowAddress != nil {
+		if err := validate.ValidateWalletAddress(req.GetEscrowAddress()); err != nil {
+			violations = append(violations, fieldViolation("escrow_address", err))
+		}
 	}
 
 	if err := validate.ValidateCrypto(req.GetCrypto()); err != nil {

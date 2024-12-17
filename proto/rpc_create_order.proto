@@ -6,7 +6,7 @@ import "order.proto";
 option go_package = "github.com/ebukacodes21/peerbill-trader-api/pb";
 
 message CreateOrderRequest {
-    string escrow_address = 1;
+    optional string escrow_address = 1;
     string crypto = 2;
     string fiat = 3;
     float fiat_amount = 4;

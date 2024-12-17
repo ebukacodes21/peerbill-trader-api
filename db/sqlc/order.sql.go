@@ -22,7 +22,7 @@ RETURNING id, username, escrow_address, user_address, order_type, crypto, fiat, 
 
 type CreateOrderParams struct {
 	Username      string         `db:"username" json:"username"`
-	EscrowAddress string         `db:"escrow_address" json:"escrow_address"`
+	EscrowAddress sql.NullString `db:"escrow_address" json:"escrow_address"`
 	UserAddress   string         `db:"user_address" json:"user_address"`
 	OrderType     string         `db:"order_type" json:"order_type"`
 	Crypto        string         `db:"crypto" json:"crypto"`
@@ -234,10 +234,13 @@ SET
   is_rejected = COALESCE($11, is_rejected),
   is_received = COALESCE($12, is_received),
   is_expired = COALESCE($13, is_expired),
-  duration = COALESCE($14, duration)
+  duration = COALESCE($14, duration),
+  bank_name = COALESCE($15, bank_name),
+  account_number = COALESCE($16, account_number),
+  account_holder = COALESCE($17, account_holder)
 WHERE 
-  id = $15
-  AND username = $16
+  id = $18
+  AND username = $19
 `
 
 type UpdateOrderParams struct {
@@ -255,6 +258,9 @@ type UpdateOrderParams struct {
 	IsReceived    sql.NullBool    `db:"is_received" json:"is_received"`
 	IsExpired     sql.NullBool    `db:"is_expired" json:"is_expired"`
 	Duration      sql.NullTime    `db:"duration" json:"duration"`
+	BankName      sql.NullString  `db:"bank_name" json:"bank_name"`
+	AccountNumber sql.NullString  `db:"account_number" json:"account_number"`
+	AccountHolder sql.NullString  `db:"account_holder" json:"account_holder"`
 	ID            int64           `db:"id" json:"id"`
 	Username      string          `db:"username" json:"username"`
 }
@@ -275,6 +281,9 @@ func (q *Queries) UpdateOrder(ctx context.Context, arg UpdateOrderParams) error 
 		arg.IsReceived,
 		arg.IsExpired,
 		arg.Duration,
+		arg.BankName,
+		arg.AccountNumber,
+		arg.AccountHolder,
 		arg.ID,
 		arg.Username,
 	)
