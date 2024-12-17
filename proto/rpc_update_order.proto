@@ -8,7 +8,7 @@ message UpdateOrderRequest {
     int64 id = 1;
     string username = 2;
     string order_type = 3;
-    bool isExpired = 4;
+    optional bool isExpired = 4;
     optional string bank_name = 5;
     optional string account_number = 6;
     optional string account_holder = 7;
